@@ -1,0 +1,4 @@
+MainPackage=c:\users\jades\documents\visual studio 2015\Projects\ProjectAsahi\ARM\Release\ProjectAsahi\ProjectAsahi_0.0.1.0_ARM.appx
+SymbolPackage=c:\users\jades\documents\visual studio 2015\Projects\ProjectAsahi\AppPackages\ProjectAsahi\ProjectAsahi_0.0.1.0\ProjectAsahi_0.0.1.0_ARM.appxsym
+ResourcePack=c:\users\jades\documents\visual studio 2015\Projects\ProjectAsahi\ARM\Release\ProjectAsahi\ProjectAsahi_0.0.1.0_scale-100.appx
+ResourcePack=c:\users\jades\documents\visual studio 2015\Projects\ProjectAsahi\ARM\Release\ProjectAsahi\ProjectAsahi_0.0.1.0_scale-400.appx

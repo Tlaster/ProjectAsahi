@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>09768926-8675-41c7-b7c8-df232471a458</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Script.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Lexer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\PublicToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Token.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser.cs" />
+  </ItemGroup>
+</Project>

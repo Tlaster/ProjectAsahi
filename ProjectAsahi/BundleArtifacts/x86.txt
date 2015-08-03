@@ -1,0 +1,2 @@
+MainPackage=c:\users\jades\documents\visual studio 2015\Projects\ProjectAsahi\Release\ProjectAsahi\ProjectAsahi_0.0.1.0_Win32.appx
+SymbolPackage=c:\users\jades\documents\visual studio 2015\Projects\ProjectAsahi\AppPackages\ProjectAsahi\ProjectAsahi_0.0.1.0\ProjectAsahi_0.0.1.0_Win32.appxsym

@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="通用">
+      <UniqueIdentifier>1bfab579-860e-4157-b420-50b10a830ade</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资产">
+      <UniqueIdentifier>f22cb80a-428b-41cb-bcc7-7da2ad617e75</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <ClInclude Include="Common\DirectXHelper.h">
+      <Filter>通用</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeviceResources.h">
+      <Filter>通用</Filter>
+    </ClInclude>
+    <ClCompile Include="Common\DeviceResources.cpp">
+      <Filter>通用</Filter>
+    </ClCompile>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{889dbb8f-591a-46ea-bf7d-72d92a2d02cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameScreens">
+      <UniqueIdentifier>{fd0b47e2-f34c-4342-b99f-1d1244a883b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{27415a64-078c-47b4-92ea-99de69234f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{0bb907a6-ea30-41ac-a12a-95b907d9301c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Image">
+      <UniqueIdentifier>{849965da-b62f-45fc-bc1d-c3731bc4717e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Script">
+      <UniqueIdentifier>{359932a3-026a-4053-aca1-5a74f5b980bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Sound">
+      <UniqueIdentifier>{1110970e-c9ea-4bc5-bb68-71c633202ba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Image\BackGround">
+      <UniqueIdentifier>{659e5a1f-8a15-4306-84da-2128eaf31d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Image\Character">
+      <UniqueIdentifier>{5c560c9c-9076-4ae1-b927-f19c26f819b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Image\Face">
+      <UniqueIdentifier>{2d1ec256-3fd4-4c8e-b6ef-9ca377732157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Image\System">
+      <UniqueIdentifier>{ca153d08-b5a5-43b7-b6d3-068eb8220cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Image\Event">
+      <UniqueIdentifier>{cbeba093-4254-4d85-b94f-2fa8d5f115b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Sound\BGM">
+      <UniqueIdentifier>{4813ee38-6150-4669-8567-81e00a63241a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Sound\Voice">
+      <UniqueIdentifier>{79a098fe-e505-46e3-ae60-c798031f5f13}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="ProjectAsahiMain.cpp" />
+    <ClCompile Include="DirectXPage.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Common\Timer.cpp">
+      <Filter>通用</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScreens\GamePlayScreen.cpp">
+      <Filter>GameScreens</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScreens\GameScreenBase.cpp">
+      <Filter>GameScreens</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScreens\MenuScreen.cpp">
+      <Filter>GameScreens</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Interpreter.cpp">
+      <Filter>通用</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Loader.cpp">
+      <Filter>通用</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\MediaEngine.cpp">
+      <Filter>通用</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\TextRenderer.cpp">
+      <Filter>通用</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="ProjectAsahiMain.h" />
+    <ClInclude Include="DirectXPage.xaml.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Common\Timer.h">
+      <Filter>通用</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\GameState.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScreens\GamePlayScreen.h">
+      <Filter>GameScreens</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScreens\GameScreenBase.h">
+      <Filter>GameScreens</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScreens\MenuScreen.h">
+      <Filter>GameScreens</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Interpreter.h">
+      <Filter>通用</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Loader.h">
+      <Filter>通用</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\MediaEngine.h">
+      <Filter>通用</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TextRenderer.h">
+      <Filter>通用</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\CharaModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Data\Image\BackGround\bg01k.bmp">
+      <Filter>Data\Image\BackGround</Filter>
+    </Image>
+    <Image Include="Data\Image\BackGround\bg03a.bmp">
+      <Filter>Data\Image\BackGround</Filter>
+    </Image>
+    <Image Include="Data\Image\BackGround\bg32a.bmp">
+      <Filter>Data\Image\BackGround</Filter>
+    </Image>
+    <Image Include="Data\Image\BackGround\Title.png">
+      <Filter>Data\Image\BackGround</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\yat_s_0_0_07.png">
+      <Filter>Data\Image\Character</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\asa_s_5_0_00.png">
+      <Filter>Data\Image\Character</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\lun_m_0_0_00.png">
+      <Filter>Data\Image\Character</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\lun_m_1_0_02.png">
+      <Filter>Data\Image\Character</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\res_s_0_0_01.png">
+      <Filter>Data\Image\Character</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\res_s_0_0_09.png">
+      <Filter>Data\Image\Character</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\yat_s_0_0_01.png">
+      <Filter>Data\Image\Character</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\yat_s_0_0_04.png">
+      <Filter>Data\Image\Character</Filter>
+    </Image>
+    <Image Include="Data\Image\Event\lun04a.bmp">
+      <Filter>Data\Image\Event</Filter>
+    </Image>
+    <Image Include="Data\Image\Event\lun01a.bmp">
+      <Filter>Data\Image\Event</Filter>
+    </Image>
+    <Image Include="Data\Image\Event\lun02a.bmp">
+      <Filter>Data\Image\Event</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\yat_f_0_0_07.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\asa_f_2_0_00.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\asa_f_2_0_01.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\asa_f_2_0_06.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\asa_f_5_0_07.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\res_f_0_0_01.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\res_f_0_0_09.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\yat_f_0_0_01.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\yat_f_0_0_04.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\System\TextLayoutBackground.png">
+      <Filter>Data\Image\System</Filter>
+    </Image>
+    <Image Include="Data\Image\System\button_click.png">
+      <Filter>Data\Image\System</Filter>
+    </Image>
+    <Image Include="Data\Image\System\button_normal.png">
+      <Filter>Data\Image\System</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-400.png">
+      <Filter>资产</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>资产</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-400.png">
+      <Filter>资产</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-100.png">
+      <Filter>资产</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.scale-400.png">
+      <Filter>资产</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ProjectAsahi_TemporaryKey.pfx" />
+    <None Include="Package.StoreAssociation.xml" />
+    <None Include="ProjectAsahi_StoreKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="DirectXPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Data\logo.mp4">
+      <Filter>Data</Filter>
+    </Media>
+    <Media Include="Data\Sound\BGM\bgm00.m4a">
+      <Filter>Data\Sound\BGM</Filter>
+    </Media>
+    <Media Include="Data\Sound\BGM\bgm13.m4a">
+      <Filter>Data\Sound\BGM</Filter>
+    </Media>
+    <Media Include="Data\Sound\BGM\bgm50.m4a">
+      <Filter>Data\Sound\BGM</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa0001.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa0002.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa0003.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa1329.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_lun0658.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_res0104.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_res0105.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0001.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0002.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0003.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0004.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0005.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Data\Script\GameScript.jtt">
+      <Filter>Data\Script</Filter>
+    </Text>
+    <Text Include="Data\Script\MenuScript.jtt">
+      <Filter>Data\Script</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
