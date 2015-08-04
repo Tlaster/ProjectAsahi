@@ -25,10 +25,10 @@ void ProjectAsahi::Common::Interpreter::Push(ScriptReader::Model::Block ^ block)
 		break;
 	case BlockTypes::SELECTION:
 		break;
-	case BlockTypes::SETTING:
-		for (auto element = block->ElementList; element != nullptr; element = element->Next)
+	case BlockTypes::SETTINGS:
+		for (auto element = block->ElementList->AttributeList; element != nullptr; element = element->Next)
 		{
-			PushSettingElement(element);
+			PushSettingAttribute(element);
 		}
 		break;
 	default:
@@ -308,13 +308,13 @@ void ProjectAsahi::Common::Interpreter::PushTABElement(Element ^ element)
 	}
 }
 
-void ProjectAsahi::Common::Interpreter::PushSettingElement(ScriptReader::Model::Element ^ element)
+void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model::Attribute ^ attribute)
 {
-	switch (element->ElementType)
+	switch (attribute->AttributeType)
 	{
-	case ElementTypes::NextFile:
+	case AttributeTypes::NextFile:
 		break;
-	case ElementTypes::MultipleLanguage:
+	case AttributeTypes::MultipleLanguage:
 
 		break;
 	default:

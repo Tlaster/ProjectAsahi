@@ -52,7 +52,7 @@ namespace ProjectAsahi
 			void CreateWindowSizeDependentResources();
 
 			void PushTABElement(ScriptReader::Model::Element^ element);
-			void PushSettingElement(ScriptReader::Model::Element^ element);
+			void PushSettingAttribute(ScriptReader::Model::Attribute^ attribute);
 
 			~Interpreter();
 

@@ -6,7 +6,7 @@ namespace ScriptReader
 {
     internal class Lexer
     {
-        private const string regexPat = "(?s)((//.*)|([0-9]+)|(\"(\\\\\"|\\\\\\\\|\\\\n|[^\"])*\")|(BGM|Chara|Background|Face|Content|NextFile|MultipleLanguage)|(Path|Position_X|Position_Y|Name|Value|Method|Title|Time|Voice)|(TAB|SELECTION|SETTING)|(END)|(true|false)|(;)|(=)|({|})|[A-Z_a-z][A-Z_a-z0-9]*|\\p{P})";
+        private const string regexPat = "(?s)((//.*)|([0-9]+)|(\"(\\\\\"|\\\\\\\\|\\\\n|[^\"])*\")|(BGM|Chara|Background|Face|Content)|(Path|Position_X|Position_Y|Name|Value|Method|Title|Time|Voice|NextFile|MultipleLanguage)|(TAB|SELECTION)|(#)|(true|false)|(;)|(=)|({|})|[A-Z_a-z][A-Z_a-z0-9]*|\\p{P})";
 
         internal IEnumerable<Token> ReadLine(string str, int line)
         {
@@ -39,7 +39,7 @@ namespace ScriptReader
                     }
                     else if (matches[i].Groups[9].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.END));
+                        tokenList.Add(new Token(line, matches[i].Value, TokenType.Sharp));
                     }
                     else if (matches[i].Groups[10].Success)
                     {

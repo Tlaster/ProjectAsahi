@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ScriptReader.Model;
 using Windows.Foundation;
@@ -23,10 +24,16 @@ namespace ScriptReader
 
         private async Task ReadFileTask()
         {
+            var lines = await GetFileTextLinesAsync();
+            var block = ReadLines(lines);
+            Block = block.ToArray();
+        }
+
+        private IEnumerable<Block> ReadLines(IList<string> lines)
+        {
+            List<Block> block = new List<Block>();
             Lexer lexer = new Lexer();
             Parser parser = new Parser();
-            var lines = await GetFileTextLinesAsync();
-            List<Block> block = new List<Block>();
             for (int i = 0; i < lines.Count; i++)
             {
                 var tokenList = lexer.ReadLine(lines[i], i);
@@ -35,18 +42,23 @@ namespace ScriptReader
                     do
                     {
                         parser.Push(item);
-                    } while (parser.IsLoopForReduce);
+                    } while (parser.IsLoopingForReduce);
                     if (parser.IsAccepted)
                     {
                         block.Add(parser.Block);
                         parser.Reset();
+                        if (block[block.Count - 1].BlockType == BlockTypes.SETTINGS)
+                        /// ACC will not push current item,
+                        /// it will cause error when item is a TAB or SECEION block's header after ACC for Settings
+                        {
+                            parser.Push(item);
+                        }
                     }
 
                 }
             }
-            Block = block.ToArray();
+            return block;
         }
-
         private async Task<IList<string>> GetFileTextLinesAsync()
         {
             var path = $"ms-appx:///{FilePath}";

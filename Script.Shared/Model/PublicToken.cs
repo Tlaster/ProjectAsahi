@@ -1,5 +1,4 @@
-﻿
-namespace ScriptReader.Model
+﻿namespace ScriptReader.Model
 {
 
     public sealed class Attribute

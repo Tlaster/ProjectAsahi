@@ -278,8 +278,7 @@ namespace ScriptReader.Model
         Background,
         Face,
         Content,
-        NextFile,
-        MultipleLanguage,
+        SETTING,
     }
 
     public enum AttributeTypes
@@ -293,18 +292,20 @@ namespace ScriptReader.Model
         Voice,
         Time,
         Title,
+        NextFile,
+        MultipleLanguage,
     }
 
     public enum TokenType
     {
+        Sharp,
         Type,
-        END,
+        Bracket,
         ElementName,
         Attribute,
         Equals,
         String,
         Break,
-        Bracket,
         Number,
         Boolean,
     }
@@ -313,7 +314,7 @@ namespace ScriptReader.Model
     {
         TAB,
         SELECTION,
-        SETTING,
+        SETTINGS,
     }
 
 }

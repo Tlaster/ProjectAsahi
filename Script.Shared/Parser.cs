@@ -5,50 +5,76 @@ namespace ScriptReader
 {
     internal class Parser
     {
+        /// <summary>
+        /// Grammar expression:
+        /// Block -> Type Bracket Elements Bracket
+        ///        | Settings
+        /// Settings -> Setting
+        ///           | Settings Setting
+        /// Setting -> Sharp Att
+        /// Elements -> Element
+        ///           | Elements Element
+        /// Element -> EName Bracket Atts Bracket
+        /// Atts -> Att
+        ///       | Atts Att
+        /// Att -> Name Equals Value Break
+        /// </summary>
+
         private readonly string[][] _action = new string[][]
         {
-            new[] {"S1",null,null,null,null,null,null,null },
-            new[] {null,null,"S4",null,null,null,null,null },
-            new[] {null,"ACC","S4",null,null,null,null,null },
-            new[] {null,"R2","R2",null,null,null,null,null },
-            new[] {null,null,null,null,null,null,null,"S7" },
-            new string[] {null,null,null,null,null,null,null,null },
-            new[] {null,"R3","R3",null,null,null,null,null },
-            new[] {null,null,null,"S10",null,null,null,null },
-            new[] {null,null,null,"S10",null,null,null,"S11" },
-            new[] {null,null,null,"R5",null,null,null,"R5" },
-            new[] {null,null,null,null,"S13",null,null,null },
-            new[] {null,"R4","R4",null,null,null,null,null },
-            new[] {null,null,null,"R6",null,null,null,"R6" },
-            new[] {null,null,null,null,null,"S14",null,null },
-            new[] {null,null,null,null,null,null,"S15",null },
-            new[] {null,null,null,"R7",null,null,null,"R7" },
+            new[] {"S4","S1",null,null,null,null,null,null},
+            new[] {null,null,"S5",null,null,null,null,null},
+            new[] {"S4","ACC",null,null,null,null,null,null},
+            new[] {"R3","R3",null,null,null,null,null,null},
+            new[] {null,null,null,null,"S8",null,null,null},
+            new[] {null,null,null,"S11",null,null,null,null},
+            new[] {"R4","R4",null,null,null,null,null,null},
+            new[] {"R5","R5",null,null,null,null,null,null},
+            new[] {null,null,null,null,null,"S12",null,null},
+            new[] {null,null,"ACC","S11",null,null,null,null},
+            new[] {null,null,"R6","R6",null,null,null,null},
+            new[] {null,null,"S15",null,null,null,null,null},
+            new[] {null,null,null,null,null,null,"S16",null},
+            new[] {null,"R1",null,null,null,null,null,null},
+            new[] {null,null,"R7","R7",null,null,null,null},
+            new[] {null,null,null,null,"S8",null,null,null},
+            new[] {null,null,null,null,null,null,null,"S19"},
+            new[] {null,null,"S20",null,"S8",null,null,null},
+            new[] {null,null,"R9",null,"R9",null,null,null},
+            new[] {"R11","R11","R11",null,"R11",null,null,null},
+            new[] {null,null,"R8","R8",null,null,null,null},
+            new[] {null,null,"R10",null,"R10",null,null,null},
         };
 
         private readonly int[][] _goto = new int[][]
         {
-            new[] {-1,-1,-1,-1 },
-            new[] {2,3,-1,-1 },
-            new[] {-1,6,-1,-1 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,8,9 },
-            new[] {-1,-1,-1,12 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,-1,-1 },
-            new[] {-1,-1,-1,-1 },
+            new[] {2,3,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,6,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,7},
+            new[] {-1,-1,9,10,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,14,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,17,18},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,21},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
+            new[] {-1,-1,-1,-1,-1,-1},
         };
-
-        private int[] _popCount = new[] { 2, 1, 2, 4, 1, 2, 4 };
+        private readonly int[] _popCount = new[] { 4, 1, 1, 2, 2, 1, 2, 4, 1, 2, 4 };
 
         internal bool IsAccepted { get; set; }
-        internal bool IsLoopForReduce { get; set; }
+        internal bool IsLoopingForReduce { get; set; }
 
         private List<Token> _tokenStack;
         private List<int> _stateStack;
@@ -59,9 +85,9 @@ namespace ScriptReader
         {
             _tokenStack = new List<Token>();
             _stateStack = new List<int>();
-            _tokenStack.Add(new Token(0, null, TokenType.END));
+            _tokenStack.Add(new Token(0, null, TokenType.Bracket));
             _stateStack.Add(0);
-            IsLoopForReduce = false;
+            IsLoopingForReduce = false;
         }
 
         internal BlockToken BlockToken => _blockToken;
@@ -71,10 +97,10 @@ namespace ScriptReader
         {
             _tokenStack = new List<Token>();
             _stateStack = new List<int>();
-            _tokenStack.Add(new Token(0, null, TokenType.END));
+            _tokenStack.Add(new Token(0, null, TokenType.Bracket));
             _stateStack.Add(0);
             _blockToken = null;
-            IsLoopForReduce = false;
+            IsLoopingForReduce = false;
             IsAccepted = false;
         }
 
@@ -85,7 +111,7 @@ namespace ScriptReader
             {
                 case TokenType.Number:
                 case TokenType.Boolean:
-                    wordtype = 5;
+                    wordtype = (int)TokenType.String;
                     break;
                 default:
                     wordtype = (int)token.Type;
@@ -95,16 +121,24 @@ namespace ScriptReader
             var action = _action[_stateStack[_stateStack.Count - 1]][wordtype];
             if (action == null)
             {
-                IsLoopForReduce = false;
+                IsLoopingForReduce = false;
                 throw new ParseException($"Grammar error at line {token.Line}");
             }
             else if (action == "ACC")
             {
-                BlockTypes blocktype = (BlockTypes)System.Enum.Parse(typeof(BlockTypes), _tokenStack[1].Text);
-                _blockToken = new BlockToken(blocktype, _tokenStack[2] as ElementToken);
+                BlockTypes blocktype = BlockTypes.SETTINGS;
+                if (_tokenStack[_tokenStack.Count - 1] as AttributeToken != null)//ACC for Settings
+                {
+                    _blockToken = new BlockToken(BlockTypes.SETTINGS, new ElementToken(_tokenStack[_tokenStack.Count - 1].Line, ElementTypes.SETTING, _tokenStack[_tokenStack.Count - 1] as AttributeToken));
+                }
+                else//ACC for Elements
+                {
+                    blocktype = (BlockTypes)System.Enum.Parse(typeof(BlockTypes), _tokenStack[1].Text);
+                    _blockToken = new BlockToken(blocktype, _tokenStack[_tokenStack.Count - 1] as ElementToken);
+                }
                 _block = new Block(_blockToken);
                 IsAccepted = true;
-                IsLoopForReduce = false;
+                IsLoopingForReduce = false;
             }
             else if (action[0] == 'S')
             {
@@ -116,11 +150,11 @@ namespace ScriptReader
                 var nextstate = int.Parse(statestring);
                 _stateStack.Add(nextstate);
                 _tokenStack.Add(token);
-                IsLoopForReduce = false;
+                IsLoopingForReduce = false;
             }
             else
             {
-                IsLoopForReduce = true;
+                IsLoopingForReduce = true;
                 var reducestring = "";
                 for (int i = 1; i < action.Length; i++)
                 {
@@ -129,7 +163,58 @@ namespace ScriptReader
                 var reducerule = int.Parse(reducestring);
                 switch (reducerule)
                 {
-                    case 7://Redece Attribute
+                    case 3://Settings -> Setting
+                        _stateStack[_stateStack.Count - 1] = _goto[_stateStack[_stateStack.Count - 2]][0];
+                        break;
+                    case 4://Settings -> Settings Setting
+                        AttributeToken nextset = _tokenStack[_tokenStack.Count - 1] as AttributeToken;
+                        AttributeToken preset = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
+                        nextset.Next = preset;
+                        _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
+                        _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
+                        _tokenStack.Add(nextset);
+                        _stateStack.Add(_goto[_stateStack[_stateStack.Count - 1]][0]);
+                        break;
+                    case 5://Setting -> Sharp Att
+                        _tokenStack.RemoveAt(_tokenStack.Count - _popCount[reducerule - 1]);
+                        _stateStack.RemoveAt(_stateStack.Count - _popCount[reducerule - 1]);
+                        _stateStack[_stateStack.Count - 1] = _goto[_stateStack[_stateStack.Count - 2]][1];
+                        break;
+                    case 6://Elements -> Element
+                        _stateStack[_stateStack.Count - 1] = _goto[_stateStack[_stateStack.Count - 2]][2];
+                        break;
+                    case 7://Elements -> Elements Element
+                        ElementToken nextele = _tokenStack[_tokenStack.Count - 1] as ElementToken;
+                        ElementToken preele = _tokenStack[_tokenStack.Count - 2] as ElementToken;
+                        nextele.Next = preele;
+                        _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
+                        _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
+                        _tokenStack.Add(nextele);
+                        _stateStack.Add(_goto[_stateStack[_stateStack.Count - 1]][2]);
+                        break;
+                    case 8://Element -> EName Bracket Atts Bracket
+                        var elementName = _tokenStack[_tokenStack.Count - 4].Text;
+                        var elementType = (ElementTypes)System.Enum.Parse(typeof(ElementTypes), elementName);
+                        var atts = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
+                        ElementToken element = new ElementToken(atts.Line, elementType, atts);
+                        _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
+                        _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
+                        _tokenStack.Add(element);
+                        _stateStack.Add(_goto[_stateStack[_stateStack.Count - 1]][3]);
+                        break;
+                    case 9://Atts -> Att
+                        _stateStack[_stateStack.Count - 1] = _goto[_stateStack[_stateStack.Count - 2]][4];
+                        break;
+                    case 10://Atts -> Atts Att
+                        AttributeToken nextatt = _tokenStack[_tokenStack.Count - 1] as AttributeToken;
+                        AttributeToken preatt = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
+                        nextatt.Next = preatt;
+                        _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
+                        _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
+                        _tokenStack.Add(nextatt);
+                        _stateStack.Add(_goto[_stateStack[_stateStack.Count - 1]][4]);
+                        break;
+                    case 11://Att ->Name Equals Value Break
                         AttributeValueType valueType = AttributeValueType.String;
                         switch (_tokenStack[_tokenStack.Count - 2].Type)
                         {
@@ -148,44 +233,10 @@ namespace ScriptReader
                                 _tokenStack[_tokenStack.Count - 2].Text,
                                 valueType
                             );
-                        _tokenStack.RemoveRange(_tokenStack.Count - 4, 4);
-                        _stateStack.RemoveRange(_stateStack.Count - 4, 4);
+                        _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
+                        _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _tokenStack.Add(att);
-                        _stateStack.Add(_goto[_stateStack[_stateStack.Count - 1]][3]);
-                        break;
-                    case 6:
-                        AttributeToken nextatt = _tokenStack[_tokenStack.Count - 1] as AttributeToken;
-                        AttributeToken preatt = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
-                        nextatt.Next = preatt;
-                        _tokenStack.RemoveRange(_tokenStack.Count - 2, 2);
-                        _stateStack.RemoveRange(_stateStack.Count - 2, 2);
-                        _tokenStack.Add(nextatt);
-                        _stateStack.Add(_goto[_stateStack[_stateStack.Count - 1]][2]);
-                        break;
-                    case 5:
-                        _stateStack[_stateStack.Count - 1] = _goto[_stateStack[_stateStack.Count - 2]][2];
-                        break;
-                    case 4://Redece Element
-                        var elementName = _tokenStack[_tokenStack.Count - 4].Text;
-                        var elementType = (ElementTypes)System.Enum.Parse(typeof(ElementTypes), elementName);
-                        var atts = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
-                        ElementToken element = new ElementToken(atts.Line, elementType, atts);
-                        _tokenStack.RemoveRange(_tokenStack.Count - 4, 4);
-                        _stateStack.RemoveRange(_stateStack.Count - 4, 4);
-                        _tokenStack.Add(element);
-                        _stateStack.Add(_goto[_stateStack[_stateStack.Count - 1]][1]);
-                        break;
-                    case 3:
-                        ElementToken nextele = _tokenStack[_tokenStack.Count - 1] as ElementToken;
-                        ElementToken preele = _tokenStack[_tokenStack.Count - 2] as ElementToken;
-                        nextele.Next = preele;
-                        _tokenStack.RemoveRange(_tokenStack.Count - 2, 2);
-                        _stateStack.RemoveRange(_stateStack.Count - 2, 2);
-                        _tokenStack.Add(nextele);
-                        _stateStack.Add(_goto[_stateStack[_stateStack.Count - 1]][0]);
-                        break;
-                    case 2:
-                        _stateStack[_stateStack.Count - 1] = _goto[_stateStack.Count - 2][0];
+                        _stateStack.Add(_goto[_stateStack[_stateStack.Count - 1]][5]);
                         break;
                     default:
                         break;
