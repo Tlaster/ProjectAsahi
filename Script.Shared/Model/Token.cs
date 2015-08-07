@@ -5,7 +5,7 @@ namespace ScriptReader.Model
     internal class Token
     {
         internal int Line { get; set; }
-        internal string Text { get; set; }
+        internal string Value { get; set; }
         internal TokenType Type { get; set; }
 
         protected Token() { }
@@ -18,10 +18,18 @@ namespace ScriptReader.Model
 
         internal Token(int line, string value, TokenType type) : this(line, type)
         {
-            Text = value;
+            Value = value;
         }
     }
 
+    internal class ContentToken : Token
+    {
+        internal ContentToken(int line,string value) 
+        {
+            Line = line;
+            Value = value;
+        }
+    }
 
     internal sealed class TokenException : Exception
     {
@@ -30,10 +38,9 @@ namespace ScriptReader.Model
         internal TokenException(string message, Exception inner) : base(message, inner) { }
     }
 
-
     internal class AttributeToken : Token
     {
-        internal string Value { get; }
+        internal new string Value { get; }
         internal AttributeTypes AttributeType { get; }
         internal AttributeValueType ValueType { get; }
 
@@ -43,6 +50,7 @@ namespace ScriptReader.Model
             AttributeType = atttype;
             Value = value;
             ValueType = type;
+            AttributeValueCheck();
         }
 
         private void AttributeValueCheck()
@@ -88,18 +96,47 @@ namespace ScriptReader.Model
 
     }
 
-
-
     internal class ElementToken : Token
     {
         internal ElementTypes ElementType { get; }
-        internal AttributeToken AttributeList { get; }
+        internal AttributeToken AttributeList { get; private set; }
         internal ElementToken(int line, ElementTypes elementtype, AttributeToken list)
         {
             Line = line;
             ElementType = elementtype;
             AttributeList = list;
             AttributeCheck();
+        }
+
+        internal ElementToken(int line,ElementTypes types,string value)
+        {
+            Line = line;
+            ElementType = types;
+            ElementCheck(value);
+        }
+
+        private void ElementCheck(string value)
+        {
+            AttributeTypes type = AttributeTypes.Path;
+            switch (ElementType)
+            {
+                case ElementTypes.BGM:
+                    break;
+                case ElementTypes.Chara:
+                    break;
+                case ElementTypes.Background:
+                    break;
+                case ElementTypes.Face:
+                    break;
+                case ElementTypes.Content:
+                    type = AttributeTypes.Value;
+                    break;
+                case ElementTypes.Setting:
+                    break;
+                default:
+                    break;
+            }
+            AttributeList = new AttributeToken(Line, type, value, AttributeValueType.String);
         }
 
         private bool BGMElementCheck()
@@ -257,11 +294,29 @@ namespace ScriptReader.Model
     {
         internal ElementToken ElementList { get; }
         internal BlockTypes BlockType { get; }
+        internal AttributeToken SettingList { get; }
         internal BlockToken(BlockTypes type, ElementToken element)
         {
             BlockType = type;
             ElementList = element;
         }
+        internal BlockToken(ContentToken value)
+        {
+            BlockType = BlockTypes.CONTENT;
+            Value = value.Value;
+        }
+        internal BlockToken(string value)
+        {
+            BlockType = BlockTypes.CONTENT;
+            Value = value;
+        }
+        internal BlockToken(AttributeToken settingList)
+        {
+            BlockType = BlockTypes.SETTINGS;
+            SettingList = settingList;
+        }
+        internal BlockToken(ElementToken element) : this(BlockTypes.TAB, element) { }
+
     }
 
     public enum AttributeValueType
@@ -278,7 +333,7 @@ namespace ScriptReader.Model
         Background,
         Face,
         Content,
-        SETTING,
+        Setting,
     }
 
     public enum AttributeTypes
@@ -299,6 +354,7 @@ namespace ScriptReader.Model
     public enum TokenType
     {
         Sharp,
+        USD,
         Type,
         Bracket,
         ElementName,
@@ -315,6 +371,7 @@ namespace ScriptReader.Model
         TAB,
         SELECTION,
         SETTINGS,
+        CONTENT,
     }
 
 }

@@ -43,7 +43,7 @@
             ElementType = elementtype;
             AttributeList = list;
         }
-
+        
         internal Element(ElementToken item)
         {
             ElementType = item.ElementType;
@@ -64,13 +64,30 @@
     {
         public Element ElementList { get; }
         public BlockTypes BlockType { get; }
+        public string Value { get; set; }
+        public Attribute SettingList { get; set; }
         internal Block(BlockToken item)
         {
             BlockType = item.BlockType;
-            ElementList = new Element(item.ElementList);
+            switch (BlockType)
+            {
+                case BlockTypes.TAB:
+                    ElementList = new Element(item.ElementList);
+                    break;
+                case BlockTypes.SELECTION:
+                    break;
+                case BlockTypes.SETTINGS:
+                    SettingList = new Attribute(item.SettingList);
+                    break;
+                case BlockTypes.CONTENT:
+                    Value = item.Value;
+                    break;
+                default:
+                    break;
+            }
         }
 
-        public Block Next { get; internal set; }
+        //public Block Next { get; internal set; }
 
     }
 

@@ -26,10 +26,13 @@ void ProjectAsahi::Common::Interpreter::Push(ScriptReader::Model::Block ^ block)
 	case BlockTypes::SELECTION:
 		break;
 	case BlockTypes::SETTINGS:
-		for (auto element = block->ElementList->AttributeList; element != nullptr; element = element->Next)
+		for (auto element = block->SettingList; element != nullptr; element = element->Next)
 		{
 			PushSettingAttribute(element);
 		}
+		break;
+	case BlockTypes::CONTENT:
+		ContentHandler(block->Value);
 		break;
 	default:
 		break;
@@ -313,9 +316,10 @@ void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model
 	switch (attribute->AttributeType)
 	{
 	case AttributeTypes::NextFile:
+		_nextFile = attribute->AttributeValue;
 		break;
 	case AttributeTypes::MultipleLanguage:
-
+		_isMultipleLanguage = attribute->AttributeValue == L"true";
 		break;
 	default:
 		break;
@@ -477,7 +481,36 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Elem
 	m_textLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 	m_textLayout->SetWordWrapping(DWRITE_WORD_WRAPPING_WHOLE_WORD);
 
-	_loader->CreateD2DEffectFromFile(L"Data\\Image\\System\\TextLayoutBackground.png", &m_textLayoutBackground);
+	if (m_textLayoutBackground == nullptr)
+	{
+		_loader->CreateD2DEffectFromFile(L"Data\\Image\\System\\TextLayoutBackground.png", &m_textLayoutBackground);
+	}
+}
+
+void ProjectAsahi::Common::Interpreter::ContentHandler(Platform::String ^ value)
+{
+	_contentValue = value->Data();
+	_autoPlayTimeSpan = _contentValue.length() * _autoPlaySpeed;
+	_contentPosition = 1;
+	_contentShowed = _contentValue[0];
+	DX::ThrowIfFailed(
+		m_deviceResources->GetDWriteFactory()->CreateTextLayout(
+			_contentShowed.c_str(),
+			_contentShowed.length(),
+			m_pTextFormat.Get(),
+			_contentWidth,
+			_contentHeight,
+			&m_textLayout
+			)
+		);
+	m_textLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	m_textLayout->SetWordWrapping(DWRITE_WORD_WRAPPING_WHOLE_WORD);
+
+	if (m_textLayoutBackground == nullptr)
+	{
+		_loader->CreateD2DEffectFromFile(L"Data\\Image\\System\\TextLayoutBackground.png", &m_textLayoutBackground);
+	}
+
 }
 
 void ProjectAsahi::Common::Interpreter::FaceHandler(ScriptReader::Model::Element ^ element)

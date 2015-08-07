@@ -9,8 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptReader", "ScriptReade
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Script.Shared", "Script.Shared\Script.Shared.shproj", "{09768926-8675-41C7-B7C8-DF232471A458}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptTest", "ScriptTest\ScriptTest.csproj", "{199E934F-4E88-4D11-80DF-C3F4A1D754A3}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Script.Shared\Script.Shared.projitems*{199e934f-4e88-4d11-80df-c3f4a1d754a3}*SharedItemsImports = 4
 		Script.Shared\Script.Shared.projitems*{25611301-05fc-4582-8b05-92632ebadace}*SharedItemsImports = 4
 		Script.Shared\Script.Shared.projitems*{09768926-8675-41c7-b7c8-df232471a458}*SharedItemsImports = 13
 	EndGlobalSection
@@ -61,6 +64,22 @@ Global
 		{25611301-05FC-4582-8B05-92632EBADACE}.Release|x64.Build.0 = Release|x64
 		{25611301-05FC-4582-8B05-92632EBADACE}.Release|x86.ActiveCfg = Release|x86
 		{25611301-05FC-4582-8B05-92632EBADACE}.Release|x86.Build.0 = Release|x86
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Debug|ARM.Build.0 = Debug|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Debug|x64.Build.0 = Debug|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Debug|x86.Build.0 = Debug|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Release|ARM.ActiveCfg = Release|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Release|ARM.Build.0 = Release|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Release|x64.ActiveCfg = Release|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Release|x64.Build.0 = Release|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Release|x86.ActiveCfg = Release|Any CPU
+		{199E934F-4E88-4D11-80DF-C3F4A1D754A3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

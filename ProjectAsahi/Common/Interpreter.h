@@ -60,6 +60,7 @@ namespace ProjectAsahi
 			void BackgroundHandler(ScriptReader::Model::Element^ element);
 			void CharacterVectorHandler(ScriptReader::Model::Element^ element);
 			void ContentHandler(ScriptReader::Model::Element^ element);
+			void ContentHandler(Platform::String^ value);
 			void FaceHandler(ScriptReader::Model::Element^ element);
 
 			std::shared_ptr<DX::DeviceResources> m_deviceResources;
@@ -90,6 +91,8 @@ namespace ProjectAsahi
 			Microsoft::WRL::ComPtr<IDWriteTextLayout> m_textLayout;
 
 			std::vector<ProjectAsahi::Model::CharaModel^> m_charaVector;
+
+			Platform::String^ _nextFile;
 
 			float _imageScale;
 			float _contentFontSize;

@@ -42,14 +42,14 @@ namespace ScriptReader
                     do
                     {
                         parser.Push(item);
-                    } while (parser.IsLoopingForReduce);
-                    if (parser.IsAccepted)
+                    } while (parser.isLoopingForReduce);
+                    if (parser.isAccepted)
                     {
                         block.Add(parser.Block);
                         parser.Reset();
-                        if (block[block.Count - 1].BlockType == BlockTypes.SETTINGS)
+                        if (block[block.Count-1].BlockType == BlockTypes.SETTINGS)
                         /// ACC will not push current item,
-                        /// it will cause error when item is a TAB or SECEION block's header after ACC for Settings
+                        /// it will cause error 
                         {
                             parser.Push(item);
                         }
