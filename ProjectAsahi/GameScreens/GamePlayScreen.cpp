@@ -26,12 +26,12 @@ void ProjectAsahi::Screen::GamePlayScreen::Update(float timeTotal, float timeDel
 }
 
 
-void ProjectAsahi::Screen::GamePlayScreen::OnPointerPressed(Platform::Object ^ sender, Windows::UI::Core::PointerEventArgs ^ e)
+void ProjectAsahi::Screen::GamePlayScreen::OnPointerPressed(Platform::Object ^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
 	isPressed = true;
 }
 
-void ProjectAsahi::Screen::GamePlayScreen::OnPointerReleased(Platform::Object ^ sender, Windows::UI::Core::PointerEventArgs ^ e)
+void ProjectAsahi::Screen::GamePlayScreen::OnPointerReleased(Platform::Object ^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
 	if (isPressed)
 	{

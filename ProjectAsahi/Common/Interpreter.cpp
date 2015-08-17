@@ -11,8 +11,6 @@ using namespace Concurrency;
 using namespace ScriptReader::Model;
 using namespace ScriptReader;
 
-
-
 void ProjectAsahi::Common::Interpreter::Push(ScriptReader::Model::Block ^ block)
 {
 	switch (block->BlockType)
@@ -24,6 +22,7 @@ void ProjectAsahi::Common::Interpreter::Push(ScriptReader::Model::Block ^ block)
 		}
 		break;
 	case BlockTypes::SELECTION:
+		isSelection = true;
 		break;
 	case BlockTypes::SETTINGS:
 		for (auto element = block->SettingList; element != nullptr; element = element->Next)
@@ -75,7 +74,7 @@ void ProjectAsahi::Common::Interpreter::Update(float timeTotal, float timeDelta)
 		}
 		_prevTime = timeTotal;
 	}
-	if (_isAuto)
+	if (isAuto)
 	{
 		if (_hasVoice)
 		{
@@ -100,6 +99,8 @@ void ProjectAsahi::Common::Interpreter::Clear()
 	_contentShowed.clear();
 	m_face.Reset();
 	_charaVoice->Stop();
+	isSelection = false;
+	_hasVoice = false;
 }
 
 void ProjectAsahi::Common::Interpreter::ToNext()
@@ -121,13 +122,13 @@ void ProjectAsahi::Common::Interpreter::ToNext()
 	}
 	else
 	{
-		if (_blockPosition < _block->Length)
+		if (_blockPosition < _block->Size)
 		{
 			Clear();
-			Push(_block[_blockPosition++]);
+			Push(_block->GetAt(_blockPosition++));
 			OnWindowSizeChanged();
 		}
-		isEnded = _blockPosition == _block->Length;
+		isEnded = _blockPosition == _block->Size;
 	}
 }
 
@@ -176,6 +177,94 @@ void ProjectAsahi::Common::Interpreter::OnWindowSizeChanged()
 	}
 }
 
+FileManager::Model::SaveModel ^ ProjectAsahi::Common::Interpreter::GetSaveModel()
+{
+	FileManager::Model::SaveModel^ model = ref new FileManager::Model::SaveModel();
+	model->BackgroundPath = this->_backgroundPath;
+	model->BGMPath = this->_bgmPath;
+	model->BlockPosition = this->_blockPosition - 1;//Current BlockPosition piont to the next block
+	model->CurrentFilePath = this->_currentFilePath;
+	model->IsMultipleLanguage = this->_isMultipleLanguage;
+	model->NextFilePath = this->_nextFilePath;
+	auto charavec = ref new  Platform::Collections::Vector<FileManager::Model::CharaModel^>();
+	for (CharaModel^ item : m_charaVector)
+	{
+		auto additem = ref new FileManager::Model::CharaModel();
+		additem->Deep = item->Deep;
+		additem->FilePath = item->FilePath;
+		additem->Name = item->Name;
+		additem->Position_X = item->Position_X;
+		additem->Position_Y = item->Position_Y;
+		charavec->Append(additem);
+	}
+	model->CharaList = charavec;
+	return model;
+}
+
+void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::SaveModel ^ item)
+{
+	_isLoaded = false;
+	this->_isMultipleLanguage = item->IsMultipleLanguage;
+	this->_blockPosition = item->BlockPosition;
+	this->_backgroundPath = item->BackgroundPath;
+	this->_bgmPath = item->BGMPath;
+	this->_currentFilePath = item->CurrentFilePath;
+	this->_nextFilePath = item->NextFilePath;
+	if (item->CharaList != nullptr && item->CharaList->Size != 0)
+	{
+		for (auto charaitem : item->CharaList)
+		{
+			CharaModel^ chara = ref new CharaModel(charaitem->FilePath, charaitem->Name, charaitem->Position_X, charaitem->Position_Y, charaitem->Deep);
+			_loader->CreateD2DEffectFromFile(charaitem->FilePath->Data(), &chara->CharaItem);
+			m_charaVector.push_back(chara);
+		}
+		sort(m_charaVector.begin(), m_charaVector.end(), [](const CharaModel^ chara1, const CharaModel^ chara2) {return chara1->Deep < chara2->Deep; });
+	}
+	if (_backgroundPath != nullptr)
+	{
+		_loader->CreateD2DEffectFromFile(_backgroundPath->Data(), &m_background);
+	}
+	if (_bgmPath != nullptr)
+	{
+		_backGroundMusic->PlayMusic(_bgmPath, true);
+	}
+	else
+	{
+		_backGroundMusic->Stop();
+	}
+	_reader = ref new Reader(_currentFilePath);
+	create_task(_reader->ReadFile()).then([&]()
+	{
+		_block = _reader->Block;
+		//auto blockitem = _block->GetAt(_blockPosition);
+		//if (blockitem != nullptr)
+		//{
+		//	switch (blockitem->BlockType)
+		//	{
+		//	case BlockTypes::CONTENT:
+		//		ContentHandler(blockitem->Value);
+		//		break;
+		//	case BlockTypes::TAB:		
+		//		for (auto element = blockitem->ElementList; element != nullptr; element = element->Next)
+		//		{
+		//			if (element->ElementType == ElementTypes::Content)
+		//			{
+		//				ContentHandler(element);
+		//			}
+		//		}
+		//		break;
+		//	default:
+		//		break;
+		//	}
+		//}
+		//OnWindowSizeChanged();
+		//isEnded = _blockPosition == _block->Size;
+		//_blockPosition++;
+		_isLoaded = true;
+		ToNext();
+	});
+}
+
 void ProjectAsahi::Common::Interpreter::LoadResource()
 {
 	CreateWindowSizeDependentResources();
@@ -194,14 +283,14 @@ void ProjectAsahi::Common::Interpreter::LoadResource()
 		m_textForeground.Get()
 		);
 	_updateTimeSpan = 0.01f;
-	_isAuto = true;
+	isAuto = true;
 	_autoPlaySpeed = 0.1f;
 }
 
 void ProjectAsahi::Common::Interpreter::LoadBlock()
 {
-	_reader = ref new Reader(_path);
-	create_task(_reader->ReadFile()).then([=]()
+	_reader = ref new Reader(_currentFilePath);
+	create_task(_reader->ReadFile()).then([&]()
 	{
 		_block = _reader->Block;
 		_blockPosition = 0;
@@ -222,6 +311,7 @@ void ProjectAsahi::Common::Interpreter::BackGroundRenderHandler()
 void ProjectAsahi::Common::Interpreter::CharacterRenderHandler()
 {
 	auto d2dContext = m_deviceResources->GetD2DDeviceContext();
+
 	for (size_t i = 0; i < m_charaVector.size(); i++)
 	{
 		d2dContext->DrawImage
@@ -259,7 +349,6 @@ void ProjectAsahi::Common::Interpreter::FaceRenderHandler()
 		d2dContext->DrawImage(m_face.Get(), D2D1::Point2F(_positionX + _textLayoutPadding*_scale, _contentPosition_Y));
 	}
 }
-
 
 void ProjectAsahi::Common::Interpreter::CreateWindowSizeDependentResources()
 {
@@ -316,7 +405,7 @@ void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model
 	switch (attribute->AttributeType)
 	{
 	case AttributeTypes::NextFile:
-		_nextFile = attribute->AttributeValue;
+		_nextFilePath = attribute->AttributeValue;
 		break;
 	case AttributeTypes::MultipleLanguage:
 		_isMultipleLanguage = attribute->AttributeValue == L"true";
@@ -328,39 +417,37 @@ void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model
 
 void ProjectAsahi::Common::Interpreter::BackgroundMusicHandler(Element ^ element)
 {
-	String^ path;
 	for (auto att = element->AttributeList; att != nullptr; att = att->Next)
 	{
 		switch (att->AttributeType)
 		{
 		case AttributeTypes::Path:
-			path = att->AttributeValue;
+			_bgmPath = att->AttributeValue;
 			break;
 		}
 	}
-	if (path == L"null")
+	if (_bgmPath == L"null")
 	{
 		_backGroundMusic->Stop();
 	}
 	else
 	{
-		_backGroundMusic->PlayMusic(path, true);
+		_backGroundMusic->PlayMusic(_bgmPath, true);
 	}
 }
 
 void ProjectAsahi::Common::Interpreter::BackgroundHandler(Element ^ element)
 {
-	String^ path;
 	for (auto att = element->AttributeList; att != nullptr; att = att->Next)
 	{
 		switch (att->AttributeType)
 		{
 		case AttributeTypes::Path:
-			path = att->AttributeValue;
+			_backgroundPath = att->AttributeValue;
 			break;
 		}
 	}
-	_loader->CreateD2DEffectFromFile(path->Data(), &m_background);
+	_loader->CreateD2DEffectFromFile(_backgroundPath->Data(), &m_background);
 }
 
 void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element)
@@ -368,6 +455,7 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 	String^ path;
 	float pos_x = 0.0;
 	float pos_y = 0.0;
+	int deep = 0;
 	String^ name;
 	String^ method;
 	for (auto att = element->AttributeList; att != nullptr; att = att->Next)
@@ -389,6 +477,9 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 		case ScriptReader::Model::AttributeTypes::Method:
 			method = att->AttributeValue;
 			break;
+		case ScriptReader::Model::AttributeTypes::Deep:
+			deep = _wtoi(att->AttributeValue->Data());
+			break;
 		}
 	}
 	if (method == L"REMOVE")
@@ -404,9 +495,10 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 	}
 	else if (method == L"ADD")
 	{
-		CharaModel^ chara = ref new CharaModel(name, pos_x, pos_y);
+		CharaModel^ chara = ref new CharaModel(path,name, pos_x, pos_y, deep);
 		_loader->CreateD2DEffectFromFile(path->Data(), &chara->CharaItem);
 		m_charaVector.push_back(chara);
+		sort(m_charaVector.begin(), m_charaVector.end(), [](const CharaModel^ chara1, const CharaModel^ chara2) {return chara1->Deep < chara2->Deep; });
 	}
 	else
 	{
@@ -493,6 +585,7 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(Platform::String ^ value)
 	_autoPlayTimeSpan = _contentValue.length() * _autoPlaySpeed;
 	_contentPosition = 1;
 	_contentShowed = _contentValue[0];
+	_hasVoice = false;
 	DX::ThrowIfFailed(
 		m_deviceResources->GetDWriteFactory()->CreateTextLayout(
 			_contentShowed.c_str(),
@@ -510,7 +603,6 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(Platform::String ^ value)
 	{
 		_loader->CreateD2DEffectFromFile(L"Data\\Image\\System\\TextLayoutBackground.png", &m_textLayoutBackground);
 	}
-
 }
 
 void ProjectAsahi::Common::Interpreter::FaceHandler(ScriptReader::Model::Element ^ element)

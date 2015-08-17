@@ -5,6 +5,7 @@
 
 #include "pch.h"
 #include "DirectXPage.xaml.h"
+#include "Entities\GameState.h"
 
 using namespace ProjectAsahi;
 
@@ -35,12 +36,6 @@ DirectXPage::DirectXPage():
 	// 注册页面生命周期的事件处理程序。
 	CoreWindow^ window = Window::Current->CoreWindow;
 
-	//window->VisibilityChanged +=
-	//	ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(this, &DirectXPage::OnVisibilityChanged);
-
-	//Error
-	//if (Windows::Foundation::Metadata::ApiInformation::IsTypePresent(L"Windows::UI::ViewManagement::StatusBar"))
-	//Correct
 	if (Windows::Foundation::Metadata::ApiInformation::IsTypePresent(L"Windows.UI.ViewManagement.StatusBar"))
 	{
 		Windows::UI::ViewManagement::StatusBar::GetForCurrentView()->HideAsync();
@@ -69,32 +64,12 @@ DirectXPage::DirectXPage():
 	m_deviceResources = std::make_shared<DX::DeviceResources>();
 	m_deviceResources->SetSwapChainPanel(swapChainPanel);
 
-	// 注册我们的 SwapChainPanel 以获取独立的输入指针事件
-	auto workItemHandler = ref new WorkItemHandler([this] (IAsyncAction ^)
-	{
-		// 对于指定的设备类型，无论它是在哪个线程上创建的，CoreIndependentInputSource 都将引发指针事件。
-		m_coreInput = swapChainPanel->CreateCoreIndependentInputSource(
-			Windows::UI::Core::CoreInputDeviceTypes::Mouse |
-			Windows::UI::Core::CoreInputDeviceTypes::Touch |
-			Windows::UI::Core::CoreInputDeviceTypes::Pen
-			);
-
-		// 指针事件的寄存器，将在后台线程上引发。
-		m_coreInput->PointerPressed += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &DirectXPage::OnPointerPressed);
-		m_coreInput->PointerMoved += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &DirectXPage::OnPointerMoved);
-		m_coreInput->PointerReleased += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &DirectXPage::OnPointerReleased);
-
-		// 一旦发送输入消息，即开始处理它们。
-		m_coreInput->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessUntilQuit);
-	});
-
-	// 在高优先级的专用后台线程上运行任务。
-	m_inputLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
-
+	App::RootFrame = rootFrame;
+	App::CurrentGameState = GameState::GS_LOGO;
 	m_main = std::unique_ptr<ProjectAsahiMain>(new ProjectAsahiMain(m_deviceResources));
-	_prevGameState = GameState::GS_LOGO;
-	m_timer = ref new Timer();
+	m_timer = ref new Timer();	
 	CompositionTarget::Rendering += ref new Windows::Foundation::EventHandler<Platform::Object ^>(this, &ProjectAsahi::DirectXPage::OnRendering);
+
 }
 
 DirectXPage::~DirectXPage()
@@ -116,46 +91,15 @@ void DirectXPage::LoadInternalState(IPropertySet^ state)
 {
 
 }
-void ProjectAsahi::DirectXPage::HideEveryThing()
-{
-	OpenGrid->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-	MenuGrid->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-}
-
-void ProjectAsahi::DirectXPage::ShowGrid()
-{
-	switch (m_main->CurrentGameState)
-	{
-	case ProjectAsahi::Entities::GameState::GS_MAIN_MENU:
-		MenuGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
-		break;
-	case ProjectAsahi::Entities::GameState::GS_PLAYING:
-		break;
-	case ProjectAsahi::Entities::GameState::GS_PAUSED:
-		break;
-	case ProjectAsahi::Entities::GameState::GS_LOGO:
-		OpenGrid->Visibility = Windows::UI::Xaml::Visibility::Visible;
-		break;
-	}
-}
-void ProjectAsahi::DirectXPage::CheckScreen()
-{
-	if (_prevGameState != m_main->CurrentGameState)
-	{
-		HideEveryThing();
-		ShowGrid();
-		_prevGameState = m_main->CurrentGameState;
-	}
-}
 
 // 窗口事件处理程序。
 void ProjectAsahi::DirectXPage::OnRendering(Platform::Object ^ sender, Platform::Object ^ args)
 {
 	m_timer->Update();
-	if (isLogoMediaEnded)
+	if (App::CurrentGameState != GameState::GS_LOGO)
 	{
+		//CheckScreen();
 		m_main->Update(m_timer->Total, m_timer->Delta);
-		CheckScreen();
 		m_main->Render();
 		m_deviceResources->Present();
 	}
@@ -186,17 +130,17 @@ void DirectXPage::OnDisplayContentsInvalidated(DisplayInformation^ sender, Objec
 }
 
 
-void DirectXPage::OnPointerPressed(Object^ sender, PointerEventArgs^ e)
+void DirectXPage::OnPointerPressed(Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
 	m_main->OnPointerPressed(sender, e);
 }
 
-void DirectXPage::OnPointerMoved(Object^ sender, PointerEventArgs^ e)
+void DirectXPage::OnPointerMoved(Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
 	m_main->OnPointerMoved(sender, e);
 }
 
-void DirectXPage::OnPointerReleased(Object^ sender, PointerEventArgs^ e)
+void DirectXPage::OnPointerReleased(Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
 	m_main->OnPointerReleased(sender, e);
 }
@@ -215,37 +159,8 @@ void DirectXPage::OnSwapChainPanelSizeChanged(Object^ sender, SizeChangedEventAr
 	m_main->CreateWindowSizeDependentResources();
 }
 
-
-void ProjectAsahi::DirectXPage::StartButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
-{
-	m_main->CurrentGameState = GameState::GS_PLAYING;
-}
-
-
-void ProjectAsahi::DirectXPage::ExitButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
-{
-	App::Current->Exit();
-}
-
-
-void ProjectAsahi::DirectXPage::LogoElement_MediaEnded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
-{
-	isLogoMediaEnded = true;
-	LogoElement->IsFullWindow = false;
-	m_main->CurrentGameState = GameState::GS_MAIN_MENU;
-}
-
-
-void ProjectAsahi::DirectXPage::LogoElement_DoubleTapped(Platform::Object^ sender, Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs^ e)
-{
-	LogoElement->Stop();
-	isLogoMediaEnded = true;
-	LogoElement->IsFullWindow = false;
-	m_main->CurrentGameState = GameState::GS_MAIN_MENU;
-}
-
-
 void ProjectAsahi::DirectXPage::OnKeyDown(Platform::Object ^sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs ^e)
 {
 	m_main->OnKeyDown(sender, e);
 }
+

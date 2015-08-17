@@ -12,9 +12,7 @@ namespace Windows {
         namespace Xaml {
             namespace Controls {
                 ref class SwapChainPanel;
-                ref class Grid;
-                ref class Button;
-                ref class MediaElement;
+                ref class Frame;
             }
         }
     }
@@ -36,11 +34,7 @@ namespace ProjectAsahi
         bool _contentLoaded;
     
         private: ::Windows::UI::Xaml::Controls::SwapChainPanel^ swapChainPanel;
-        private: ::Windows::UI::Xaml::Controls::Grid^ OpenGrid;
-        private: ::Windows::UI::Xaml::Controls::Grid^ MenuGrid;
-        private: ::Windows::UI::Xaml::Controls::Button^ StartButton;
-        private: ::Windows::UI::Xaml::Controls::Button^ ExitButton;
-        private: ::Windows::UI::Xaml::Controls::MediaElement^ LogoElement;
+        private: ::Windows::UI::Xaml::Controls::Frame^ rootFrame;
     };
 }
 

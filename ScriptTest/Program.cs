@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using ScriptReader;
@@ -20,7 +22,6 @@ namespace ScriptTest
 
     class Reader
     {
-
         public Block[] Block { get; set; }
         public void ReadFile()
         {
@@ -36,8 +37,8 @@ namespace ScriptTest
                     do
                     {
                         parser.Push(item);
-                    } while (parser.isLoopingForReduce);
-                    if (parser.isAccepted)
+                    } while (parser.IsLoopingForReduce);
+                    if (parser.IsAccepted)
                     {
                         block.Add(parser.Block);
                         parser.Reset();

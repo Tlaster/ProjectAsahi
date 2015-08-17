@@ -6,7 +6,7 @@ namespace ScriptReader.Model
     {
         internal int Line { get; set; }
         internal string Value { get; set; }
-        internal TokenType Type { get; set; }
+        internal TokenType Type { get; }
 
         protected Token() { }
 
@@ -22,20 +22,10 @@ namespace ScriptReader.Model
         }
     }
 
-    internal class ContentToken : Token
-    {
-        internal ContentToken(int line,string value) 
-        {
-            Line = line;
-            Value = value;
-        }
-    }
 
     internal sealed class TokenException : Exception
     {
-        internal TokenException() { }
         internal TokenException(string message) : base(message) { }
-        internal TokenException(string message, Exception inner) : base(message, inner) { }
     }
 
     internal class AttributeToken : Token
@@ -117,7 +107,7 @@ namespace ScriptReader.Model
 
         private void ElementCheck(string value)
         {
-            AttributeTypes type = AttributeTypes.Path;
+            var type = AttributeTypes.Path;
             switch (ElementType)
             {
                 case ElementTypes.BGM:
@@ -133,15 +123,13 @@ namespace ScriptReader.Model
                     break;
                 case ElementTypes.Setting:
                     break;
-                default:
-                    break;
             }
             AttributeList = new AttributeToken(Line, type, value, AttributeValueType.String);
         }
 
-        private bool BGMElementCheck()
+        private bool BgmElementCheck()
         {
-            bool hasPath = false;
+            var hasPath = false;
             for (var item = AttributeList; item != null; item = item.Next)
             {
                 switch (item.AttributeType)
@@ -167,7 +155,7 @@ namespace ScriptReader.Model
         private bool CharaElementCheck()
         {
             bool hasName = false, hasMethod = false, hasPath = false;
-            string methodType = "";
+            var methodType = "";
             for (var item = AttributeList; item != null; item = item.Next)
             {
                 switch (item.AttributeType)
@@ -194,7 +182,7 @@ namespace ScriptReader.Model
 
         private bool BackgroundElementCheck()
         {
-            bool hasPath = false;
+            var hasPath = false;
             for (var item = AttributeList; item != null; item = item.Next)
             {
                 switch (item.AttributeType)
@@ -260,13 +248,13 @@ namespace ScriptReader.Model
             return false;
         }
 
-        internal void AttributeCheck()
+        private void AttributeCheck()
         {
             bool isError = false;
             switch (ElementType)
             {
                 case ElementTypes.BGM:
-                    isError = BGMElementCheck();
+                    isError = BgmElementCheck();
                     break;
                 case ElementTypes.Chara:
                     isError = CharaElementCheck();
@@ -300,11 +288,6 @@ namespace ScriptReader.Model
             BlockType = type;
             ElementList = element;
         }
-        internal BlockToken(ContentToken value)
-        {
-            BlockType = BlockTypes.CONTENT;
-            Value = value.Value;
-        }
         internal BlockToken(string value)
         {
             BlockType = BlockTypes.CONTENT;
@@ -315,7 +298,6 @@ namespace ScriptReader.Model
             BlockType = BlockTypes.SETTINGS;
             SettingList = settingList;
         }
-        internal BlockToken(ElementToken element) : this(BlockTypes.TAB, element) { }
 
     }
 
@@ -347,6 +329,7 @@ namespace ScriptReader.Model
         Voice,
         Time,
         Title,
+        Deep,
         NextFile,
         MultipleLanguage,
     }

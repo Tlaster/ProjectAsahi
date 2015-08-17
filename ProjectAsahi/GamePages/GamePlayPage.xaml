@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="ProjectAsahi.DirectXPage"
+    x:Class="ProjectAsahi.GamePlayPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:ProjectAsahi"
@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <SwapChainPanel x:ConnectionId='1'                                                                                                     x:Name="swapChainPanel">
-        <Frame x:ConnectionId='2' x:Name="rootFrame"/>
+    <SwapChainPanel>
+        <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind Save}" x:Name="ExitButton" Content="Save" Padding="8" Margin="8"/>
+
     </SwapChainPanel>
 </Page>
-

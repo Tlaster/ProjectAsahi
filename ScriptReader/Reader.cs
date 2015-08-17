@@ -11,7 +11,7 @@ namespace ScriptReader
     public sealed class Reader
     {
         public string FilePath { get; set; }
-        public Block[] Block { get; set; }
+        public IList<Block> Block { get; set; }
 
         public Reader(string filePath)
         {
@@ -42,8 +42,8 @@ namespace ScriptReader
                     do
                     {
                         parser.Push(item);
-                    } while (parser.isLoopingForReduce);
-                    if (parser.isAccepted)
+                    } while (parser.IsLoopingForReduce);
+                    if (parser.IsAccepted)
                     {
                         block.Add(parser.Block);
                         parser.Reset();

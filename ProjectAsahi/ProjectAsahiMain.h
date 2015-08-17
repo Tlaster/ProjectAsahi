@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "Common\DeviceResources.h"
-#include "Entities\GameState.h"
 #include "GameScreens\GameScreenBase.h"
 #include "Common\Interpreter.h"
 
@@ -19,18 +18,17 @@ namespace ProjectAsahi
 		virtual void OnDeviceLost();
 		virtual void OnDeviceRestored();
 
-		void OnPointerPressed(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e);
-		void OnPointerMoved(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e);
-		void OnPointerReleased(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e);
+		void OnPointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
+		void OnPointerMoved(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
+		void OnPointerReleased(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		void OnKeyDown(Platform::Object ^sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs ^e);
 
 		void Update(float timeTotal, float timeDelta);
 		void Render();
 
-		ProjectAsahi::Entities::GameState CurrentGameState;
 	private:
 		void CheckScreenType();
-		ProjectAsahi::Screen::GameScreenBase* CurrentGameScreen;
+		ProjectAsahi::Screen::GameScreenBase^ CurrentGameScreen;
 
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
@@ -39,5 +37,6 @@ namespace ProjectAsahi
 		Concurrency::critical_section m_criticalSection;
 		ProjectAsahi::Common::Interpreter^ _interpreter;
 
+		bool _canHandlePointer;
 	};
 }

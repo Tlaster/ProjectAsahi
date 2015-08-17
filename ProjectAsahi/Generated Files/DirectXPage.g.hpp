@@ -30,39 +30,17 @@ void ::ProjectAsahi::DirectXPage::Connect(int __connectionId, ::Platform::Object
         case 1:
             {
                 this->swapChainPanel = safe_cast<::Windows::UI::Xaml::Controls::SwapChainPanel^>(__target);
+                (safe_cast<::Windows::UI::Xaml::Controls::SwapChainPanel^>(this->swapChainPanel))->PointerMoved += ref new ::Windows::UI::Xaml::Input::PointerEventHandler(this, (void (::ProjectAsahi::DirectXPage::*)
+                    (::Platform::Object^, ::Windows::UI::Xaml::Input::PointerRoutedEventArgs^))&DirectXPage::OnPointerMoved);
+                (safe_cast<::Windows::UI::Xaml::Controls::SwapChainPanel^>(this->swapChainPanel))->PointerPressed += ref new ::Windows::UI::Xaml::Input::PointerEventHandler(this, (void (::ProjectAsahi::DirectXPage::*)
+                    (::Platform::Object^, ::Windows::UI::Xaml::Input::PointerRoutedEventArgs^))&DirectXPage::OnPointerPressed);
+                (safe_cast<::Windows::UI::Xaml::Controls::SwapChainPanel^>(this->swapChainPanel))->PointerReleased += ref new ::Windows::UI::Xaml::Input::PointerEventHandler(this, (void (::ProjectAsahi::DirectXPage::*)
+                    (::Platform::Object^, ::Windows::UI::Xaml::Input::PointerRoutedEventArgs^))&DirectXPage::OnPointerReleased);
             }
             break;
         case 2:
             {
-                this->OpenGrid = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-            }
-            break;
-        case 3:
-            {
-                this->MenuGrid = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-            }
-            break;
-        case 4:
-            {
-                this->StartButton = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
-                (safe_cast<::Windows::UI::Xaml::Controls::Button^>(this->StartButton))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::ProjectAsahi::DirectXPage::*)
-                    (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&DirectXPage::StartButton_Click);
-            }
-            break;
-        case 5:
-            {
-                this->ExitButton = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
-                (safe_cast<::Windows::UI::Xaml::Controls::Button^>(this->ExitButton))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::ProjectAsahi::DirectXPage::*)
-                    (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&DirectXPage::ExitButton_Click);
-            }
-            break;
-        case 6:
-            {
-                this->LogoElement = safe_cast<::Windows::UI::Xaml::Controls::MediaElement^>(__target);
-                (safe_cast<::Windows::UI::Xaml::Controls::MediaElement^>(this->LogoElement))->MediaEnded += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::ProjectAsahi::DirectXPage::*)
-                    (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&DirectXPage::LogoElement_MediaEnded);
-                (safe_cast<::Windows::UI::Xaml::Controls::MediaElement^>(this->LogoElement))->DoubleTapped += ref new ::Windows::UI::Xaml::Input::DoubleTappedEventHandler(this, (void (::ProjectAsahi::DirectXPage::*)
-                    (::Platform::Object^, ::Windows::UI::Xaml::Input::DoubleTappedRoutedEventArgs^))&DirectXPage::LogoElement_DoubleTapped);
+                this->rootFrame = safe_cast<::Windows::UI::Xaml::Controls::Frame^>(__target);
             }
             break;
     }

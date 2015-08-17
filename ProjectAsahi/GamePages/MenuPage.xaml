@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="ProjectAsahi.MenuPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProjectAsahi"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <SwapChainPanel>
+        <SwapChainPanel.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </SwapChainPanel.RowDefinitions>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind Start}" x:Name="StartButton" Content="Start" Padding="8" Margin="8" Style="{StaticResource MenuButtonStyle}"/>
+            <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind SaveList}" x:Name="SaveListButton" Content="Load" Padding="8" Margin="8" Style="{StaticResource MenuButtonStyle}"/>
+            <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind Exit}" x:Name="ExitButton" Content="Exit" Padding="8" Margin="8" Style="{StaticResource MenuButtonStyle}"/>
+        </StackPanel>
+    </SwapChainPanel>
+</Page>

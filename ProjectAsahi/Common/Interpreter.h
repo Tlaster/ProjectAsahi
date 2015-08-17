@@ -14,14 +14,14 @@ namespace ProjectAsahi
 			Interpreter(const std::shared_ptr<DX::DeviceResources>& deviceResources, Platform::String^ path)
 			{
 				m_deviceResources = deviceResources;
-				_path = path;
+				_currentFilePath = path;
 				LoadResource();
 				LoadBlock();
 			}
 			Interpreter(const std::shared_ptr<DX::DeviceResources>& deviceResources)
 			{
 				m_deviceResources = deviceResources;
-				_path = nullptr;
+				_currentFilePath = nullptr;
 				LoadResource();
 			}
 			void Push(ScriptReader::Model::Block^ block);
@@ -36,11 +36,15 @@ namespace ProjectAsahi
 				_isLoaded = false;
 				_backGroundMusic->Stop();
 				_charaVoice->Stop();
-				_path = path;
+				_currentFilePath = path;
 				LoadBlock();
 			}
+			FileManager::Model::SaveModel^ GetSaveModel();
+			void LoadFromSaveModel(FileManager::Model::SaveModel^ item);
 
+			bool isSelection;
 			bool isEnded;
+			bool isAuto;
 
 		private:
 			void LoadResource();
@@ -68,9 +72,9 @@ namespace ProjectAsahi
 			Loader^ _loader;
 			ScriptReader::Reader^ _reader;
 
-			Platform::String^ _path;
 
-			Platform::Array<ScriptReader::Model::Block^>^ _block;
+			Windows::Foundation::Collections::IVector<ScriptReader::Model::Block^>^ _block;
+
 			int _blockPosition;
 
 			std::wstring _contentValue;
@@ -92,7 +96,11 @@ namespace ProjectAsahi
 
 			std::vector<ProjectAsahi::Model::CharaModel^> m_charaVector;
 
-			Platform::String^ _nextFile;
+			Platform::String^ _nextFilePath;
+
+			Platform::String^ _backgroundPath;
+			Platform::String^ _bgmPath;
+			Platform::String^ _currentFilePath;
 
 			float _imageScale;
 			float _contentFontSize;
@@ -112,7 +120,6 @@ namespace ProjectAsahi
 
 			bool _hasVoice;
 			bool _isLoaded;
-			bool _isAuto;
 			bool _isMultipleLanguage;
 		};
 	}

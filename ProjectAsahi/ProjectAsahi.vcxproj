@@ -253,6 +253,19 @@
     <ClInclude Include="Common\TextRenderer.h" />
     <ClInclude Include="Common\Timer.h" />
     <ClInclude Include="Entities\GameState.h" />
+    <ClInclude Include="Entities\SavePageType.h" />
+    <ClInclude Include="GamePages\GamePlayPage.xaml.h">
+      <DependentUpon>GamePages\GamePlayPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="GamePages\LogoPage.xaml.h">
+      <DependentUpon>GamePages\LogoPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="GamePages\MenuPage.xaml.h">
+      <DependentUpon>GamePages\MenuPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="GamePages\SavePage.xaml.h">
+      <DependentUpon>GamePages\SavePage.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="GameScreens\GamePlayScreen.h" />
     <ClInclude Include="GameScreens\GameScreenBase.h" />
     <ClInclude Include="GameScreens\MenuScreen.h" />
@@ -274,6 +287,18 @@
     <ClCompile Include="Common\MediaEngine.cpp" />
     <ClCompile Include="Common\TextRenderer.cpp" />
     <ClCompile Include="Common\Timer.cpp" />
+    <ClCompile Include="GamePages\GamePlayPage.xaml.cpp">
+      <DependentUpon>GamePages\GamePlayPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="GamePages\LogoPage.xaml.cpp">
+      <DependentUpon>GamePages\LogoPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="GamePages\MenuPage.xaml.cpp">
+      <DependentUpon>GamePages\MenuPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="GamePages\SavePage.xaml.cpp">
+      <DependentUpon>GamePages\SavePage.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="GameScreens\GamePlayScreen.cpp" />
     <ClCompile Include="GameScreens\GameScreenBase.cpp" />
     <ClCompile Include="GameScreens\MenuScreen.cpp" />
@@ -457,8 +482,23 @@
     <Page Include="DirectXPage.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="GamePages\GamePlayPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GamePages\LogoPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GamePages\MenuPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GamePages\SavePage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FileManager\FileManager.csproj">
+      <Project>{637244b5-8b9f-4e8d-812d-1779340043e1}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\ScriptReader\ScriptReader.csproj">
       <Project>{25611301-05fc-4582-8b05-92632ebadace}</Project>
     </ProjectReference>

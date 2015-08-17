@@ -6,20 +6,21 @@ namespace ProjectAsahi
 {
 	namespace Screen
 	{
-		class GamePlayScreen final :
+		ref class GamePlayScreen :
 			public GameScreenBase
 		{
-		public:
+		internal:
 			GamePlayScreen(const std::shared_ptr<DX::DeviceResources>& deviceResources, ProjectAsahi::Common::Interpreter^ interpreter);
 			void Update(float timeTotal, float timeDelta) override;
-			void OnPointerPressed(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e) override;
-			void OnPointerReleased(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e) override;
-			~GamePlayScreen()
-			{
-				GameScreenBase::Release();
-			}
+			void OnPointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
+			void OnPointerReleased(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) override;
 
 		private:
+			//~GamePlayScreen()
+			//{
+			//	GameScreenBase::Release();
+			//}
+
 			bool isNext;
 			bool isPressed;
 		};

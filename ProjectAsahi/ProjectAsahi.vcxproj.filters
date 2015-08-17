@@ -59,6 +59,9 @@
     <Filter Include="Data\Sound\Voice">
       <UniqueIdentifier>{79a098fe-e505-46e3-ae60-c798031f5f13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GamePages">
+      <UniqueIdentifier>{ea4be10f-3ca1-4c8c-97aa-c35af0d75a1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -92,6 +95,10 @@
     <ClCompile Include="Common\TextRenderer.cpp">
       <Filter>通用</Filter>
     </ClCompile>
+    <ClCompile Include="GamePages\GamePlayPage.xaml.cpp" />
+    <ClCompile Include="GamePages\LogoPage.xaml.cpp" />
+    <ClCompile Include="GamePages\MenuPage.xaml.cpp" />
+    <ClCompile Include="GamePages\SavePage.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -128,6 +135,13 @@
     <ClInclude Include="Model\CharaModel.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="GamePages\GamePlayPage.xaml.h" />
+    <ClInclude Include="GamePages\LogoPage.xaml.h" />
+    <ClInclude Include="GamePages\MenuPage.xaml.h" />
+    <ClInclude Include="Entities\SavePageType.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePages\SavePage.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Data\Image\BackGround\bg01k.bmp">
@@ -236,7 +250,21 @@
     <None Include="ProjectAsahi_StoreKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="DirectXPage.xaml" />
+    <Page Include="GamePages\MenuPage.xaml">
+      <Filter>GamePages</Filter>
+    </Page>
+    <Page Include="GamePages\LogoPage.xaml">
+      <Filter>GamePages</Filter>
+    </Page>
+    <Page Include="GamePages\GamePlayPage.xaml">
+      <Filter>GamePages</Filter>
+    </Page>
+    <Page Include="GamePages\SavePage.xaml">
+      <Filter>GamePages</Filter>
+    </Page>
+    <Page Include="DirectXPage.xaml">
+      <Filter>GamePages</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Data\logo.mp4">

@@ -3,6 +3,7 @@
 #include "Common\DirectXHelper.h"
 #include "GameScreens\GamePlayScreen.h"
 #include "GameScreens\MenuScreen.h"
+#include "Entities\GameState.h"
 
 using namespace ProjectAsahi;
 using namespace Windows::Foundation;
@@ -18,8 +19,8 @@ ProjectAsahiMain::ProjectAsahiMain(const std::shared_ptr<DX::DeviceResources>& d
 	m_deviceResources(deviceResources)
 {
 	m_deviceResources->RegisterDeviceNotify(this);
-	CurrentGameState = GameState::GS_LOGO;
 	_interpreter = ref new Interpreter(deviceResources);
+	_canHandlePointer = true;
 }
 
 ProjectAsahiMain::~ProjectAsahiMain()
@@ -59,7 +60,7 @@ void ProjectAsahiMain::Render()
 	ID3D11RenderTargetView *const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
 	context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
 
-	context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
+	context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::Black);
 	context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 
@@ -73,23 +74,46 @@ void ProjectAsahiMain::Render()
 
 void ProjectAsahiMain::CheckScreenType()
 {
-	switch (CurrentGameState)
+	switch (App::CurrentGameState)
 	{
-	case ProjectAsahi::Entities::GameState::GS_MAIN_MENU:
+	case GameState::GS_MAIN_MENU:
+		_canHandlePointer = true;
 		if (CurrentGameScreen == nullptr || CurrentGameScreen->ScreenType != GameState::GS_MAIN_MENU)
 		{
 			_interpreter->SetPathNLoad(L"Data/Script/MenuScript.jtt");
-			CurrentGameScreen = new MenuScreen(m_deviceResources, _interpreter);
+			CurrentGameScreen = ref new MenuScreen(m_deviceResources, _interpreter);
 		}
 		break;
-	case ProjectAsahi::Entities::GameState::GS_PLAYING:
-		if (CurrentGameScreen == nullptr || CurrentGameScreen->ScreenType != GameState::GS_PLAYING)
+	case GameState::GS_PLAYING:
+	{
+		_canHandlePointer = true;
+		auto loaditem = FileManager::Manager::LoadItemCache;
+		if (loaditem != nullptr)
+		{
+			_interpreter->LoadFromSaveModel(loaditem);
+			CurrentGameScreen = ref new GamePlayScreen(m_deviceResources, _interpreter);
+		}
+		else if (CurrentGameScreen == nullptr || CurrentGameScreen->ScreenType != GameState::GS_PLAYING)
 		{
 			_interpreter->SetPathNLoad(L"Data/Script/GameScript.jtt");
-			CurrentGameScreen = new GamePlayScreen(m_deviceResources, _interpreter);
+			CurrentGameScreen = ref new GamePlayScreen(m_deviceResources, _interpreter);
 		}
+	}
 		break;
-	case ProjectAsahi::Entities::GameState::GS_PAUSED:
+	case GameState::GS_SAVE:
+		FileManager::Manager::SaveItemCache = _interpreter->GetSaveModel();
+		_interpreter->isAuto = false;
+		_canHandlePointer = false;
+		break;
+	case GameState::GS_LOAD:
+		_interpreter->isAuto = false;
+		_canHandlePointer = false;
+		break;
+	case GameState::GS_BACKLOG:
+		_interpreter->isAuto = false;
+		_canHandlePointer = false;
+		break;
+	case GameState::GS_PAUSED:
 		break;
 	default:
 		break;
@@ -109,30 +133,30 @@ void ProjectAsahiMain::OnDeviceRestored()
 	CreateWindowSizeDependentResources();
 }
 
-void ProjectAsahiMain::OnPointerMoved(Object^ sender, Windows::UI::Core::PointerEventArgs^ e)
+void ProjectAsahiMain::OnPointerMoved(Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	if (CurrentGameScreen != nullptr)
+	if (CurrentGameScreen != nullptr && _canHandlePointer)
 	{
 		CurrentGameScreen->OnPointerMoved(sender, e);
 	}
 }
 
-void ProjectAsahiMain::OnPointerPressed(Object^ sender, Windows::UI::Core::PointerEventArgs^ e)
+void ProjectAsahiMain::OnPointerPressed(Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	if (CurrentGameScreen != nullptr)
+	if (CurrentGameScreen != nullptr && _canHandlePointer)
 	{
 		CurrentGameScreen->OnPointerPressed(sender, e);
 	}
 }
 
-void ProjectAsahiMain::OnPointerReleased(Object^ sender, Windows::UI::Core::PointerEventArgs^ e)
+void ProjectAsahiMain::OnPointerReleased(Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	if (CurrentGameScreen != nullptr)
+	if (CurrentGameScreen != nullptr && _canHandlePointer)
 	{
 		if (CurrentGameScreen->ScreenType == GameState::GS_PLAYING && _interpreter->isEnded)
 		{
 			_interpreter->ClearAll();
-			CurrentGameState = GameState::GS_MAIN_MENU;
+			App::CurrentGameState = GameState::GS_MAIN_MENU;
 		}
 		else
 		{

@@ -8,9 +8,9 @@ namespace ProjectAsahi
 {
 	namespace Screen
 	{
-		class GameScreenBase abstract
+		ref class GameScreenBase abstract
 		{
-		public:
+		internal:
 			virtual void Release()
 			{
 				_interpreter = nullptr;
@@ -22,9 +22,9 @@ namespace ProjectAsahi
 			}
 			virtual void Update(float timeTotal, float timeDelta) {}
 
-			virtual void OnPointerPressed(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e) {}
-			virtual void OnPointerMoved(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e) {}
-			virtual void OnPointerReleased(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e) {}
+			virtual void OnPointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) {}
+			virtual void OnPointerMoved(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) {}
+			virtual void OnPointerReleased(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e) {}
 			virtual void OnKeyDown(Platform::Object ^sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs ^e) {}
 
 			GameScreenBase() {}
@@ -33,12 +33,8 @@ namespace ProjectAsahi
 				m_deviceResources = deviceResources;
 				_interpreter = interpreter;
 			}
-			~GameScreenBase()
-			{
-				Release();
-			};
 			ProjectAsahi::Entities::GameState ScreenType;
-		protected:
+		private protected:
 			std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
 			float m_positionY;
@@ -46,6 +42,11 @@ namespace ProjectAsahi
 			float m_scale;
 			ProjectAsahi::Common::Interpreter^ _interpreter;
 
+
+			~GameScreenBase()
+			{
+				Release();
+			};
 
 		};
 	}

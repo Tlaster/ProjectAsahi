@@ -8,15 +8,16 @@ namespace ProjectAsahi
 {
 	namespace Screen
 	{
-		class MenuScreen final :
+		ref class MenuScreen :
 			public GameScreenBase
 		{
-		public:
+		internal:
 			MenuScreen(const std::shared_ptr<DX::DeviceResources>& deviceResources, ProjectAsahi::Common::Interpreter^ interpreter);
-			~MenuScreen()
-			{
-				GameScreenBase::Release();
-			}
+		private:
+			//~MenuScreen()
+			//{
+			//	GameScreenBase::Release();
+			//}
 
 		};
 	}
