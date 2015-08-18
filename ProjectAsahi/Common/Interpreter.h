@@ -34,8 +34,7 @@ namespace ProjectAsahi
 			void SetPathNLoad(Platform::String^ path)
 			{
 				_isLoaded = false;
-				_backGroundMusic->Stop();
-				_charaVoice->Stop();
+				ClearAll();
 				_currentFilePath = path;
 				LoadBlock();
 			}

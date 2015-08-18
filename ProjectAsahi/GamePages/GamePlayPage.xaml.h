@@ -19,6 +19,6 @@ namespace ProjectAsahi
 	public:
 		GamePlayPage();
 		void Save();
-
+		void Load();
 	};
 }

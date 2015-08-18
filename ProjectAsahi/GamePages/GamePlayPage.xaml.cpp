@@ -30,3 +30,8 @@ void ProjectAsahi::GamePlayPage::Save()
 {
 	App::CurrentGameState = Entities::GameState::GS_SAVE;
 }
+
+void ProjectAsahi::GamePlayPage::Load()
+{
+	App::CurrentGameState = Entities::GameState::GS_LOAD;
+}

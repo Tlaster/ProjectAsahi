@@ -105,46 +105,53 @@ void ProjectAsahi::Common::Interpreter::Clear()
 
 void ProjectAsahi::Common::Interpreter::ToNext()
 {
-	if (_contentPosition < _contentValue.length())
+	if (_isLoaded)
 	{
-		_contentPosition = _contentValue.length();
-		_contentShowed = _contentTitle + _contentValue;
-		DX::ThrowIfFailed(
-			m_deviceResources->GetDWriteFactory()->CreateTextLayout(
-				_contentShowed.c_str(),
-				_contentShowed.length(),
-				m_pTextFormat.Get(),
-				_contentWidth,
-				_contentHeight,
-				&m_textLayout
-				)
-			);
-	}
-	else
-	{
-		if (_blockPosition < _block->Size)
+		if (_contentPosition < _contentValue.length())
 		{
-			Clear();
-			Push(_block->GetAt(_blockPosition++));
-			OnWindowSizeChanged();
+			_contentPosition = _contentValue.length();
+			_contentShowed = _contentTitle + _contentValue;
+			DX::ThrowIfFailed(
+				m_deviceResources->GetDWriteFactory()->CreateTextLayout(
+					_contentShowed.c_str(),
+					_contentShowed.length(),
+					m_pTextFormat.Get(),
+					_contentWidth,
+					_contentHeight,
+					&m_textLayout
+					)
+				);
 		}
-		isEnded = _blockPosition == _block->Size;
+		else
+		{
+			if (_blockPosition < _block->Size)
+			{
+				Clear();
+				Push(_block->GetAt(_blockPosition++));
+				OnWindowSizeChanged();
+			}
+			isEnded = _blockPosition == _block->Size;
+		}
 	}
 }
 
 void ProjectAsahi::Common::Interpreter::ClearAll()
 {
 	Clear();
+	_bgmPath = nullptr;
 	m_background = nullptr;
 	m_face = nullptr;
+	_currentFilePath = nullptr;
+	_nextFilePath = nullptr;
+	_isMultipleLanguage = false;
+	_backGroundMusic->Stop();
+	_blockPosition = 0;
 	for (size_t i = 0; i < m_charaVector.size(); i++)
 	{
 		m_charaVector[i] = nullptr;
 	}
 	m_charaVector.clear();
-	_contentShowed.clear();
-	_contentTitle.clear();
-	_contentValue.clear();
+	_block = nullptr;
 }
 
 void ProjectAsahi::Common::Interpreter::OnWindowSizeChanged()
@@ -204,6 +211,7 @@ FileManager::Model::SaveModel ^ ProjectAsahi::Common::Interpreter::GetSaveModel(
 void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::SaveModel ^ item)
 {
 	_isLoaded = false;
+	ClearAll();
 	this->_isMultipleLanguage = item->IsMultipleLanguage;
 	this->_blockPosition = item->BlockPosition;
 	this->_backgroundPath = item->BackgroundPath;
@@ -236,32 +244,36 @@ void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::Sa
 	create_task(_reader->ReadFile()).then([&]()
 	{
 		_block = _reader->Block;
-		//auto blockitem = _block->GetAt(_blockPosition);
-		//if (blockitem != nullptr)
-		//{
-		//	switch (blockitem->BlockType)
-		//	{
-		//	case BlockTypes::CONTENT:
-		//		ContentHandler(blockitem->Value);
-		//		break;
-		//	case BlockTypes::TAB:		
-		//		for (auto element = blockitem->ElementList; element != nullptr; element = element->Next)
-		//		{
-		//			if (element->ElementType == ElementTypes::Content)
-		//			{
-		//				ContentHandler(element);
-		//			}
-		//		}
-		//		break;
-		//	default:
-		//		break;
-		//	}
-		//}
-		//OnWindowSizeChanged();
-		//isEnded = _blockPosition == _block->Size;
-		//_blockPosition++;
+		auto blockitem = _block->GetAt(_blockPosition);
+		if (blockitem != nullptr)
+		{
+			switch (blockitem->BlockType)
+			{
+			case BlockTypes::CONTENT:
+				ContentHandler(blockitem->Value);
+				break;
+			case BlockTypes::TAB:		
+				for (auto element = blockitem->ElementList; element != nullptr; element = element->Next)
+				{
+					if (element->ElementType == ElementTypes::Content)
+					{
+						ContentHandler(element);
+					}
+					if (element->ElementType == ElementTypes::Face)
+					{
+						FaceHandler(element);
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		isEnded = _blockPosition == _block->Size;
+		_blockPosition++;
 		_isLoaded = true;
-		ToNext();
+		OnWindowSizeChanged();
+		//ToNext();
 	});
 }
 
@@ -293,7 +305,6 @@ void ProjectAsahi::Common::Interpreter::LoadBlock()
 	create_task(_reader->ReadFile()).then([&]()
 	{
 		_block = _reader->Block;
-		_blockPosition = 0;
 		_isLoaded = true;
 		ToNext();
 	});
@@ -426,7 +437,7 @@ void ProjectAsahi::Common::Interpreter::BackgroundMusicHandler(Element ^ element
 			break;
 		}
 	}
-	if (_bgmPath == L"null")
+	if (_bgmPath == nullptr || _bgmPath == L"null")
 	{
 		_backGroundMusic->Stop();
 	}
