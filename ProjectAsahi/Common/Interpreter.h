@@ -3,6 +3,7 @@
 #include "Common\Loader.h"
 #include "Model\CharaModel.h"
 #include "Common\TextRenderer.h"
+#include "Model\BackLogModel.h"
 
 namespace ProjectAsahi
 {
@@ -39,6 +40,7 @@ namespace ProjectAsahi
 				LoadBlock();
 			}
 			FileManager::Model::SaveModel^ GetSaveModel();
+			Platform::Collections::Vector<Model::BackLogModel^>^ GetBackLogList();
 			void LoadFromSaveModel(FileManager::Model::SaveModel^ item);
 
 			bool isSelection;
@@ -73,7 +75,7 @@ namespace ProjectAsahi
 
 
 			Windows::Foundation::Collections::IVector<ScriptReader::Model::Block^>^ _block;
-
+			Platform::Collections::Vector<Model::BackLogModel^>^ _backLogList;
 			int _blockPosition;
 
 			std::wstring _contentValue;

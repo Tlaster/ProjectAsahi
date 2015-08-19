@@ -99,6 +99,9 @@
     <ClCompile Include="GamePages\LogoPage.xaml.cpp" />
     <ClCompile Include="GamePages\MenuPage.xaml.cpp" />
     <ClCompile Include="GamePages\SavePage.xaml.cpp" />
+    <ClCompile Include="Common\CacheManager.cpp">
+      <Filter>通用</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -142,6 +145,12 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="GamePages\SavePage.xaml.h" />
+    <ClInclude Include="Model\BackLogModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\CacheManager.h">
+      <Filter>通用</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Data\Image\BackGround\bg01k.bmp">
@@ -263,6 +272,9 @@
       <Filter>GamePages</Filter>
     </Page>
     <Page Include="DirectXPage.xaml">
+      <Filter>GamePages</Filter>
+    </Page>
+    <Page Include="GamePages\BackLogPage.xaml">
       <Filter>GamePages</Filter>
     </Page>
   </ItemGroup>

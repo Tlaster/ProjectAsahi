@@ -99,6 +99,7 @@ void ProjectAsahi::Common::Interpreter::Clear()
 	_contentShowed.clear();
 	m_face.Reset();
 	_charaVoice->Stop();
+	
 	isSelection = false;
 	_hasVoice = false;
 }
@@ -146,6 +147,7 @@ void ProjectAsahi::Common::Interpreter::ClearAll()
 	_isMultipleLanguage = false;
 	_backGroundMusic->Stop();
 	_blockPosition = 0;
+	_backLogList->Clear();
 	for (size_t i = 0; i < m_charaVector.size(); i++)
 	{
 		m_charaVector[i] = nullptr;
@@ -189,7 +191,7 @@ FileManager::Model::SaveModel ^ ProjectAsahi::Common::Interpreter::GetSaveModel(
 	FileManager::Model::SaveModel^ model = ref new FileManager::Model::SaveModel();
 	model->BackgroundPath = this->_backgroundPath;
 	model->BGMPath = this->_bgmPath;
-	model->BlockPosition = this->_blockPosition - 1;//Current BlockPosition piont to the next block
+	model->BlockPosition = this->_blockPosition - 1;//Current BlockPosition point to the next block
 	model->CurrentFilePath = this->_currentFilePath;
 	model->IsMultipleLanguage = this->_isMultipleLanguage;
 	model->NextFilePath = this->_nextFilePath;
@@ -206,6 +208,11 @@ FileManager::Model::SaveModel ^ ProjectAsahi::Common::Interpreter::GetSaveModel(
 	}
 	model->CharaList = charavec;
 	return model;
+}
+
+Platform::Collections::Vector<ProjectAsahi::Model::BackLogModel^>^ ProjectAsahi::Common::Interpreter::GetBackLogList()
+{
+	return _backLogList;
 }
 
 void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::SaveModel ^ item)
@@ -273,7 +280,6 @@ void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::Sa
 		_blockPosition++;
 		_isLoaded = true;
 		OnWindowSizeChanged();
-		//ToNext();
 	});
 }
 
@@ -283,6 +289,7 @@ void ProjectAsahi::Common::Interpreter::LoadResource()
 	_loader = ref new Loader(m_deviceResources->GetD2DDeviceContext(), m_deviceResources->GetDWriteFactory(), m_deviceResources->GetWicImagingFactory());
 	_backGroundMusic = ref new MediaEngine();
 	_charaVoice = ref new MediaEngine();
+	_backLogList = ref new Platform::Collections::Vector<Model::BackLogModel^>();
 	_backGroundMusic->SetVolume(0.2);
 	DX::ThrowIfFailed(m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
 	DX::ThrowIfFailed(m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR));
@@ -370,15 +377,15 @@ void ProjectAsahi::Common::Interpreter::CreateWindowSizeDependentResources()
 	_imageScale = min((outputSize.Width / 1280.f), (outputSize.Height / 720.f));
 	_positionY = (logicalSize.Height - 720.f*_scale) / 2.f;
 	_positionX = (logicalSize.Width - 1280.f*_scale) / 2.f;
-	_contentHeight = 720.f*_scale / 3 * 1;
+	_contentHeight = 720.f*_scale / 3.f * 1.f;
 	_contentPosition_X = _positionX + _textLayoutPadding*_scale + _contentHeight;
-	_contentPosition_Y = 720.f*_scale / 3 * 2 + _positionY + _textLayoutPadding*_scale / 2;
-	_contentWidth = logicalSize.Width - _positionX * 2 - _textLayoutPadding*_scale * 2 - _contentHeight;
+	_contentPosition_Y = 720.f*_scale / 3.f * 2.f + _positionY + _textLayoutPadding*_scale / 2.f;
+	_contentWidth = logicalSize.Width - _positionX * 2.f - _textLayoutPadding*_scale * 2.f - _contentHeight;
 	_contentFontSize = _scale == 0.f ? 30.f : 30.f*_scale;
 	DX::ThrowIfFailed(m_deviceResources->GetDWriteFactory()->CreateTextFormat(
 		L"Segoe UI",
 		nullptr,
-		DWRITE_FONT_WEIGHT_BOLD,
+		DWRITE_FONT_WEIGHT_NORMAL,
 		DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
 		_contentFontSize,
@@ -527,6 +534,8 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Element ^ element)
 {
 	String^ voicePath;
+	String^ contentValue;
+	String^ contentTitle;
 	float time = 0.f;
 	bool hasVoice = false;
 	for (auto att = element->AttributeList; att != nullptr; att = att->Next)
@@ -534,7 +543,8 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Elem
 		switch (att->AttributeType)
 		{
 		case AttributeTypes::Value:
-			_contentValue = att->AttributeValue->Data();
+			contentValue = att->AttributeValue;
+			_contentValue = contentValue->Data();
 			break;
 		case AttributeTypes::Voice:
 			voicePath = att->AttributeValue;
@@ -544,11 +554,14 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Elem
 			time = _wtof(att->AttributeValue->Data());
 			break;
 		case AttributeTypes::Title:
-			_contentTitle = (att->AttributeValue + L"\n")->Data();
+			contentTitle = att->AttributeValue;
+			_contentTitle = (contentTitle + L"\n")->Data();
 			break;
 		}
 	}
 	_hasVoice = hasVoice;
+	auto backlogitem = ref new Model::BackLogModel(contentTitle, contentValue, voicePath);
+	_backLogList->Append(backlogitem);
 	if (hasVoice)
 	{
 		_charaVoice->PlayMusic(voicePath);
@@ -607,6 +620,9 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(Platform::String ^ value)
 			&m_textLayout
 			)
 		);
+
+	auto backlogitem = ref new Model::BackLogModel(nullptr, value, nullptr);
+	_backLogList->Append(backlogitem);
 	m_textLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 	m_textLayout->SetWordWrapping(DWRITE_WORD_WRAPPING_WHOLE_WORD);
 

@@ -11,7 +11,7 @@
     >
 
     <SwapChainPanel>
-        <Grid Background="#7F000000">
+        <Grid Background="#BF000000">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>

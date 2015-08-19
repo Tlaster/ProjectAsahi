@@ -192,10 +192,6 @@ namespace XamlBindingInfo
             }
             obj->ItemsSource = value;
         }
-        static void Set_Windows_UI_Xaml_UIElement_Visibility(::Windows::UI::Xaml::UIElement^ obj, ::Windows::UI::Xaml::Visibility value)
-        {
-            obj->Visibility = value;
-        }
         static void Set_Windows_UI_Xaml_Documents_Run_Text(::Windows::UI::Xaml::Documents::Run^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
         {
             if (value == nullptr && targetNullValue != nullptr)
@@ -203,6 +199,10 @@ namespace XamlBindingInfo
                 value = targetNullValue;
             }
             obj->Text = value;
+        }
+        static void Set_Windows_UI_Xaml_UIElement_Visibility(::Windows::UI::Xaml::UIElement^ obj, ::Windows::UI::Xaml::Visibility value)
+        {
+            obj->Visibility = value;
         }
     };
 

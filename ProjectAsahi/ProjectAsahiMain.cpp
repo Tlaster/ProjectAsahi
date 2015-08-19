@@ -4,6 +4,12 @@
 #include "GameScreens\GamePlayScreen.h"
 #include "GameScreens\MenuScreen.h"
 #include "Entities\GameState.h"
+#include "Common\CacheManager.h"
+#include "GamePages\MenuPage.xaml.h"
+#include "GamePages\LogoPage.xaml.h"
+#include "GamePages\GamePlayPage.xaml.h"
+#include "GamePages\SavePage.xaml.h"
+#include "GamePages\BackLogPage.xaml.h"
 
 using namespace ProjectAsahi;
 using namespace Windows::Foundation;
@@ -14,11 +20,12 @@ using namespace Platform;
 using namespace ProjectAsahi::Entities;
 using namespace ProjectAsahi::Screen;
 
-
 ProjectAsahiMain::ProjectAsahiMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
 	m_deviceResources(deviceResources)
 {
 	m_deviceResources->RegisterDeviceNotify(this);
+	_gameStateStack = ref new Platform::Collections::Vector<ProjectAsahi::Entities::GameState>();
+	_gameStateStack->Append(Entities::GameState::GS_PAUSED);
 	_interpreter = ref new Interpreter(deviceResources);
 	_canHandlePointer = true;
 }
@@ -71,52 +78,118 @@ void ProjectAsahiMain::Render()
 
 }
 
+void ProjectAsahi::ProjectAsahiMain::GoBack()
+{
+	_canHandlePointer = true;
+	RootFrame->GoBack();
+	_gameStateStack->RemoveAtEnd();
+}
+
+
+Entities::GameState ProjectAsahi::ProjectAsahiMain::GetCurrentGameState()
+{
+	return _gameStateStack->GetAt(_gameStateStack->Size - 1);
+}
+
 
 void ProjectAsahiMain::CheckScreenType()
 {
-	switch (App::CurrentGameState)
+	auto prevGameState = _gameStateStack->GetAt(_gameStateStack->Size - 1);
+	if (prevGameState == App::CurrentGameState)
 	{
-	case GameState::GS_MAIN_MENU:
-		_canHandlePointer = true;
-		if (CurrentGameScreen == nullptr || CurrentGameScreen->ScreenType != GameState::GS_MAIN_MENU)
+		return;
+	}
+	if (prevGameState != Entities::GameState::GS_SAVE && prevGameState != Entities::GameState::GS_LOAD && prevGameState != Entities::GameState::GS_BACKLOG)
+	{
+		switch (App::CurrentGameState)
 		{
+		case ProjectAsahi::Entities::GameState::GS_LOGO:
+			RootFrame->BackStack->Clear();
+			_gameStateStack->Clear();
+			RootFrame->Navigate(LogoPage::typeid);
+			break;
+		case ProjectAsahi::Entities::GameState::GS_MAIN_MENU:
+			RootFrame->BackStack->Clear();
+			_gameStateStack->Clear();
 			_interpreter->SetPathNLoad(L"Data/Script/MenuScript.jtt");
-			CurrentGameScreen = ref new MenuScreen(m_deviceResources, _interpreter);
+			_canHandlePointer = true;
+			if (CurrentGameScreen == nullptr || CurrentGameScreen->ScreenType != GameState::GS_MAIN_MENU)
+			{
+				CurrentGameScreen = ref new MenuScreen(m_deviceResources, _interpreter);
+			}
+			RootFrame->Navigate(MenuPage::typeid);
+			break;
+		case ProjectAsahi::Entities::GameState::GS_PLAYING:
+			_interpreter->SetPathNLoad(L"Data/Script/GameScript.jtt");
+			_canHandlePointer = true;
+			if (CurrentGameScreen == nullptr || CurrentGameScreen->ScreenType != GameState::GS_PLAYING)
+			{
+				CurrentGameScreen = ref new GamePlayScreen(m_deviceResources, _interpreter);
+			}
+			RootFrame->Navigate(GamePlayPage::typeid);
+			break;
+		case ProjectAsahi::Entities::GameState::GS_PAUSED:
+			break;
+		case ProjectAsahi::Entities::GameState::GS_SAVE:
+			_interpreter->isAuto = false;
+			_canHandlePointer = false;
+			if (Common::CacheManager::SaveItemCache == nullptr)
+			{
+				Common::CacheManager::SaveItemCache = _interpreter->GetSaveModel();
+			}
+			RootFrame->Navigate(SavePage::typeid, ProjectAsahi::Entities::SavePageType::SPT_SAVE);
+			break;
+		case ProjectAsahi::Entities::GameState::GS_LOAD:
+			_interpreter->isAuto = false;
+			_canHandlePointer = false;
+			RootFrame->Navigate(SavePage::typeid, ProjectAsahi::Entities::SavePageType::SPT_LOAD);
+			break;
+		case ProjectAsahi::Entities::GameState::GS_BACKLOG:
+			_interpreter->isAuto = false;
+			_canHandlePointer = false;
+			Common::CacheManager::BackLogList = _interpreter->GetBackLogList();
+			RootFrame->Navigate(BackLogPage::typeid);
+			break;
+		}
+		_gameStateStack->Append(App::CurrentGameState);
+	}
+	else if (prevGameState == Entities::GameState::GS_LOAD)
+	{
+		switch (App::CurrentGameState)
+		{
+		case ProjectAsahi::Entities::GameState::GS_PLAYING:
+		{
+			auto item = CacheManager::LoadItemCache;
+			if (item != nullptr)
+			{
+
+				if (_gameStateStack->Size > 1)
+				{
+					for (size_t i = 0; i < _gameStateStack->Size - 2; i++)
+					{
+						_gameStateStack->RemoveAtEnd();
+						RootFrame->BackStack->RemoveAtEnd();
+					}
+				}
+				_interpreter->LoadFromSaveModel(item);
+				CurrentGameScreen = ref new GamePlayScreen(m_deviceResources, _interpreter);
+				RootFrame->Navigate(GamePlayPage::typeid);
+				_gameStateStack->Append(App::CurrentGameState);
+				_canHandlePointer = true;
+			}
+			else
+			{
+				GoBack();
+			}
 		}
 		break;
-	case GameState::GS_PLAYING:
-	{
-		_canHandlePointer = true;
-		auto loaditem = FileManager::Manager::LoadItemCache;
-		if (loaditem != nullptr)
-		{
-			_interpreter->LoadFromSaveModel(loaditem);
-			CurrentGameScreen = ref new GamePlayScreen(m_deviceResources, _interpreter);
-		}
-		else if (CurrentGameScreen == nullptr || CurrentGameScreen->ScreenType != GameState::GS_PLAYING)
-		{
-			_interpreter->SetPathNLoad(L"Data/Script/GameScript.jtt");
-			CurrentGameScreen = ref new GamePlayScreen(m_deviceResources, _interpreter);
+		default:
+			break;
 		}
 	}
-		break;
-	case GameState::GS_SAVE:
-		FileManager::Manager::SaveItemCache = _interpreter->GetSaveModel();
-		_interpreter->isAuto = false;
-		_canHandlePointer = false;
-		break;
-	case GameState::GS_LOAD:
-		_interpreter->isAuto = false;
-		_canHandlePointer = false;
-		break;
-	case GameState::GS_BACKLOG:
-		_interpreter->isAuto = false;
-		_canHandlePointer = false;
-		break;
-	case GameState::GS_PAUSED:
-		break;
-	default:
-		break;
+	else
+	{
+		GoBack();
 	}
 }
 

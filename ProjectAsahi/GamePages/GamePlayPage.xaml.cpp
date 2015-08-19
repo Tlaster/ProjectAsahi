@@ -28,10 +28,20 @@ GamePlayPage::GamePlayPage()
 
 void ProjectAsahi::GamePlayPage::Save()
 {
-	App::CurrentGameState = Entities::GameState::GS_SAVE;
+	App::CurrentGameState = (Entities::GameState::GS_SAVE);
 }
 
 void ProjectAsahi::GamePlayPage::Load()
 {
-	App::CurrentGameState = Entities::GameState::GS_LOAD;
+	App::CurrentGameState = (Entities::GameState::GS_LOAD);
+}
+
+void ProjectAsahi::GamePlayPage::Back()
+{
+	App::CurrentGameState = (Entities::GameState::GS_MAIN_MENU);
+}
+
+void ProjectAsahi::GamePlayPage::BackLog()
+{
+	App::CurrentGameState = (Entities::GameState::GS_BACKLOG);
 }

@@ -20,5 +20,7 @@ namespace ProjectAsahi
 		GamePlayPage();
 		void Save();
 		void Load();
+		void Back();
+		void BackLog();
 	};
 }

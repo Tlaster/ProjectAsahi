@@ -29,6 +29,7 @@ LogoPage::LogoPage()
 void ProjectAsahi::LogoPage::MediaEnded()
 {
 	LogoElement->IsFullWindow = false;
+
 	App::CurrentGameState = ProjectAsahi::Entities::GameState::GS_MAIN_MENU;
 }
 

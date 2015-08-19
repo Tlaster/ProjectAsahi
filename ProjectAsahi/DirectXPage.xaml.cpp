@@ -64,9 +64,9 @@ DirectXPage::DirectXPage():
 	m_deviceResources = std::make_shared<DX::DeviceResources>();
 	m_deviceResources->SetSwapChainPanel(swapChainPanel);
 
-	App::RootFrame = rootFrame;
-	App::CurrentGameState = GameState::GS_LOGO;
 	m_main = std::unique_ptr<ProjectAsahiMain>(new ProjectAsahiMain(m_deviceResources));
+	m_main->RootFrame = rootFrame;
+	App::CurrentGameState = GameState::GS_LOGO;
 	m_timer = ref new Timer();	
 	CompositionTarget::Rendering += ref new Windows::Foundation::EventHandler<Platform::Object ^>(this, &ProjectAsahi::DirectXPage::OnRendering);
 
@@ -96,13 +96,9 @@ void DirectXPage::LoadInternalState(IPropertySet^ state)
 void ProjectAsahi::DirectXPage::OnRendering(Platform::Object ^ sender, Platform::Object ^ args)
 {
 	m_timer->Update();
-	if (App::CurrentGameState != GameState::GS_LOGO)
-	{
-		//CheckScreen();
-		m_main->Update(m_timer->Total, m_timer->Delta);
-		m_main->Render();
-		m_deviceResources->Present();
-	}
+	m_main->Update(m_timer->Total, m_timer->Delta);
+	m_main->Render();
+	m_deviceResources->Present();
 }
 
 

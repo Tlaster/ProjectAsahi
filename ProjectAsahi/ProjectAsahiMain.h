@@ -26,16 +26,20 @@ namespace ProjectAsahi
 		void Update(float timeTotal, float timeDelta);
 		void Render();
 
+		Windows::UI::Xaml::Controls::Frame^ RootFrame;
+		Entities::GameState GetCurrentGameState();
+
+
 	private:
 		void CheckScreenType();
+		void GoBack();
 		ProjectAsahi::Screen::GameScreenBase^ CurrentGameScreen;
 
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
-
-		Windows::Foundation::IAsyncAction^ m_renderLoopWorker;
 		Concurrency::critical_section m_criticalSection;
 		ProjectAsahi::Common::Interpreter^ _interpreter;
+		Platform::Collections::Vector<ProjectAsahi::Entities::GameState>^ _gameStateStack;
 
 		bool _canHandlePointer;
 	};

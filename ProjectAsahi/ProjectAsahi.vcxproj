@@ -246,6 +246,7 @@
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="Common\CacheManager.h" />
     <ClInclude Include="Common\DeviceResources.h" />
     <ClInclude Include="Common\Interpreter.h" />
     <ClInclude Include="Common\Loader.h" />
@@ -254,6 +255,9 @@
     <ClInclude Include="Common\Timer.h" />
     <ClInclude Include="Entities\GameState.h" />
     <ClInclude Include="Entities\SavePageType.h" />
+    <ClInclude Include="GamePages\BackLogPage.xaml.h">
+      <DependentUpon>GamePages\BackLogPage.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="GamePages\GamePlayPage.xaml.h">
       <DependentUpon>GamePages\GamePlayPage.xaml</DependentUpon>
     </ClInclude>
@@ -269,6 +273,7 @@
     <ClInclude Include="GameScreens\GamePlayScreen.h" />
     <ClInclude Include="GameScreens\GameScreenBase.h" />
     <ClInclude Include="GameScreens\MenuScreen.h" />
+    <ClInclude Include="Model\BackLogModel.h" />
     <ClInclude Include="Model\CharaModel.h" />
     <ClInclude Include="ProjectAsahiMain.h" />
     <ClInclude Include="DirectXPage.xaml.h">
@@ -281,12 +286,16 @@
     <ClCompile Include="App.xaml.cpp">
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="Common\CacheManager.cpp" />
     <ClCompile Include="Common\DeviceResources.cpp" />
     <ClCompile Include="Common\Interpreter.cpp" />
     <ClCompile Include="Common\Loader.cpp" />
     <ClCompile Include="Common\MediaEngine.cpp" />
     <ClCompile Include="Common\TextRenderer.cpp" />
     <ClCompile Include="Common\Timer.cpp" />
+    <ClCompile Include="GamePages\BackLogPage.xaml.cpp">
+      <DependentUpon>GamePages\BackLogPage.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="GamePages\GamePlayPage.xaml.cpp">
       <DependentUpon>GamePages\GamePlayPage.xaml</DependentUpon>
     </ClCompile>
@@ -480,6 +489,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="DirectXPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GamePages\BackLogPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="GamePages\GamePlayPage.xaml">

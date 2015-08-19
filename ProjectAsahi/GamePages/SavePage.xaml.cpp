@@ -7,6 +7,7 @@
 #include "SavePage.xaml.h"
 #include <ppltasks.h>
 #include "Entities\GameState.h"
+#include "Common\CacheManager.h"
 
 using namespace ProjectAsahi;
 using namespace Platform;
@@ -34,31 +35,12 @@ SavePage::SavePage()
 
 void SavePage::BackClick()
 {
-	App::GoBack();
+	App::CurrentGameState = Entities::GameState::GS_PLAYING;
 }
-
-//void ProjectAsahi::SavePage::ItemClick(Platform::Object ^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs ^ e)
-//{
-//	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(e->ClickedItem);
-//	switch (_type)
-//	{
-//	case ProjectAsahi::Entities::SavePageType::SPT_LOAD:
-//	{
-//
-//	}
-//		break;
-//	case ProjectAsahi::Entities::SavePageType::SPT_SAVE:
-//		Save();
-//		break;
-//	default:
-//		break;
-//	}
-//	
-//}
 
 void ProjectAsahi::SavePage::NewSave()
 {
-	auto item = FileManager::Manager::SaveItemCache;
+	auto item = Common::CacheManager::SaveItemCache;
 	create_task(FileManager::Manager::Save(item)).then([&]()
 	{
 		MessageDialog^ dialog = ref new MessageDialog(L"save successfully");
@@ -70,7 +52,7 @@ void ProjectAsahi::SavePage::NewSave()
 void ProjectAsahi::SavePage::Load()
 {
 	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(SaveListView->SelectedItem);
-	FileManager::Manager::LoadItemCache = clickitem;
+	Common::CacheManager::LoadItemCache = clickitem;
 	App::CurrentGameState = Entities::GameState::GS_PLAYING;
 }
 
@@ -94,7 +76,7 @@ void ProjectAsahi::SavePage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Naviga
 void SavePage::SaveCommand(IUICommand^ command) 
 {
 	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(SaveListView->SelectedItem);
-	auto item = FileManager::Manager::SaveItemCache;
+	auto item = Common::CacheManager::SaveItemCache;
 	item->SaveIndex = clickitem->SaveIndex;
 	create_task(FileManager::Manager::Save(item)).then([&]()
 	{
@@ -109,14 +91,6 @@ void ProjectAsahi::SavePage::Save()
 	MessageDialog^ dialog = ref new MessageDialog(L"Replace this save data?");
 	auto command = ref new UICommand("Yes", ref new UICommandInvokedHandler(this, &SavePage::SaveCommand));
 	auto command2 = ref new UICommand("No");
-	//auto command = ref new UICommand("Yes", ref new UICommandInvokedHandler([&]()
-	//{
-	//	create_task(FileManager::Manager::Save(item)).then([]()
-	//	{
-	//		MessageDialog^ dialog2 = ref new MessageDialog(L"save successfully");
-	//		create_task(dialog2->ShowAsync());
-	//	});
-	//}));
 	dialog->Commands->Append(command);
 	dialog->Commands->Append(command2);
 	create_task(dialog->ShowAsync());
