@@ -102,6 +102,7 @@
     <ClCompile Include="Common\CacheManager.cpp">
       <Filter>通用</Filter>
     </ClCompile>
+    <ClCompile Include="GamePages\BackLogPage.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Common\CacheManager.h">
       <Filter>通用</Filter>
     </ClInclude>
+    <ClInclude Include="GamePages\BackLogPage.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Data\Image\BackGround\bg01k.bmp">

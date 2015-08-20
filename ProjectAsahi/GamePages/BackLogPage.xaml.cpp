@@ -48,3 +48,4 @@ void ProjectAsahi::BackLogPage::ListItemClick(Platform::Object^ sender, Windows:
 		_voice->Stop();
 	}
 }
+

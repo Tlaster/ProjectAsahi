@@ -192,6 +192,10 @@ namespace XamlBindingInfo
             }
             obj->ItemsSource = value;
         }
+        static void Set_Windows_UI_Xaml_Controls_TextBlock_FontSize(::Windows::UI::Xaml::Controls::TextBlock^ obj, ::default::float64 value)
+        {
+            obj->FontSize = value;
+        }
         static void Set_Windows_UI_Xaml_Documents_Run_Text(::Windows::UI::Xaml::Documents::Run^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
         {
             if (value == nullptr && targetNullValue != nullptr)

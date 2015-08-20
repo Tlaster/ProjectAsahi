@@ -42,6 +42,17 @@ void ProjectAsahiMain::CreateWindowSizeDependentResources()
 	{
 		CurrentGameScreen->CreateWindowSizeDependentResources();
 	}
+	if (RootFrame != nullptr)
+	{
+		auto size = Windows::UI::Xaml::Window::Current->Bounds;
+		auto scale = min((size.Width / 1280.f), (size.Height / 720.f));
+		auto positionY = (size.Height - 720.f* scale) / 2.f;
+		auto positionX = (size.Width - 1280.f* scale) / 2.f;
+		RootFrame->Width = 1280.f*scale;
+		RootFrame->Height = 720.f*scale;
+		RootFrame->Margin = Windows::UI::Xaml::Thickness(positionX, positionY, positionX, positionY);
+		//TODO: add scale for RootFrame
+	}
 }
 
 

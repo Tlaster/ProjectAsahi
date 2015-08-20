@@ -23,13 +23,7 @@ namespace ProjectAsahi
 
 		void SaveInternalState(Windows::Foundation::Collections::IPropertySet^ state);
 		void LoadInternalState(Windows::Foundation::Collections::IPropertySet^ state);
-		
-		
 	private:
-
-
-		//void CheckScreen();
-		//void NavigateFrame();
 		// XAML 低级渲染事件处理程序。
 		void OnRendering(Platform::Object^ sender, Platform::Object^ args);
 		
@@ -57,8 +51,8 @@ namespace ProjectAsahi
 		bool m_windowVisible;
 		
 		ProjectAsahi::Common::Timer^ m_timer;
-		//ProjectAsahi::Entities::GameState _prevGameState;
-		void OnKeyDown(Platform::Object ^sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs ^e);
+		void OnKeyDown(Platform::Object ^sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs ^e);	
+
 	};
 }
 

@@ -13,50 +13,6 @@ namespace FileManager
 {
     public static class Manager
     {
-        //private static SaveModel _saveItemCache;
-
-        //public static SaveModel SaveItemCache
-        //{
-        //    get
-        //    {
-        //        if (_saveItemCache != null)
-        //        {
-        //            var cache = _saveItemCache;
-        //            _saveItemCache = null;
-        //            return cache;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    set
-        //    {
-        //        _saveItemCache = value;
-        //    }
-        //}
-
-        //private static SaveModel _loadItemCache;
-
-        //public static SaveModel LoadItemCache
-        //{
-        //    get
-        //    {
-        //        if (_loadItemCache != null)
-        //        {
-        //            var cache = _loadItemCache;
-        //            _loadItemCache = null;
-        //            return cache;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    set { _loadItemCache = value; }
-        //}
-
-
 
         public static IAsyncOperation<IList<SaveModel>> LoadSaveList()
         {

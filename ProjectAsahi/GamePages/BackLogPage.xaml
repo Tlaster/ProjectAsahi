@@ -18,7 +18,7 @@
             <ListView IsItemClickEnabled="True" SelectionMode="None" x:Name="BackLogListView" Padding="16" ItemsSource="{x:Bind BackLogList}" ItemClick="{x:Bind ListItemClick}" VerticalAlignment="Bottom">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:BackLogModel">
-                        <TextBlock TextWrapping="WrapWholeWords" >
+                        <TextBlock FontSize="{x:Bind FontSize,Mode=OneWay}" TextWrapping="WrapWholeWords" >
                         <Run Language="ja-JP" Text="{x:Bind Title}"/>
                         <LineBreak/>
                         <Run Language="ja-JP" Text="{x:Bind Content}"/>
