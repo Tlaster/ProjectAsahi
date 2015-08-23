@@ -105,6 +105,7 @@ Entities::GameState ProjectAsahi::ProjectAsahiMain::GetCurrentGameState()
 
 void ProjectAsahiMain::CheckScreenType()
 {
+	auto a = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
 	auto prevGameState = _gameStateStack->GetAt(_gameStateStack->Size - 1);
 	if (prevGameState == App::CurrentGameState)
 	{
@@ -195,6 +196,7 @@ void ProjectAsahiMain::CheckScreenType()
 		}
 		break;
 		default:
+			GoBack();
 			break;
 		}
 	}

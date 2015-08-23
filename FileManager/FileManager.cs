@@ -13,7 +13,6 @@ namespace FileManager
 {
     public static class Manager
     {
-
         public static IAsyncOperation<IList<SaveModel>> LoadSaveList()
         {
             return LoadTask().AsAsyncOperation();

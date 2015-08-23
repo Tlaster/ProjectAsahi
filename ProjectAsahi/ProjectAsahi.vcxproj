@@ -110,7 +110,7 @@
   <PropertyGroup>
     <PackageCertificateKeyFile>ProjectAsahi_StoreKey.pfx</PackageCertificateKeyFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxBundle>Auto</AppxBundle>
+    <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>234BCD1D9A8442E0B24034F5056AA2570430A1D9</PackageCertificateThumbprint>
   </PropertyGroup>
@@ -218,12 +218,11 @@
     <Image Include="Data\Image\BackGround\bg03a.bmp" />
     <Image Include="Data\Image\BackGround\bg32a.bmp" />
     <Image Include="Data\Image\BackGround\Title.png" />
-    <Image Include="Data\Image\Character\asa_s_5_0_00.png" />
-    <Image Include="Data\Image\Character\lun_m_0_0_00.png" />
-    <Image Include="Data\Image\Character\lun_m_1_0_02.png" />
     <Image Include="Data\Image\Character\res_s_0_0_01.png" />
     <Image Include="Data\Image\Character\res_s_0_0_09.png" />
     <Image Include="Data\Image\Character\yat_s_0_0_01.png" />
+    <Image Include="Data\Image\Character\yat_s_0_0_02.png" />
+    <Image Include="Data\Image\Character\yat_s_0_0_03.png" />
     <Image Include="Data\Image\Character\yat_s_0_0_04.png" />
     <Image Include="Data\Image\Character\yat_s_0_0_07.png" />
     <Image Include="Data\Image\Event\lun01a.bmp" />
@@ -232,10 +231,14 @@
     <Image Include="Data\Image\Face\asa_f_2_0_00.png" />
     <Image Include="Data\Image\Face\asa_f_2_0_01.png" />
     <Image Include="Data\Image\Face\asa_f_2_0_06.png" />
-    <Image Include="Data\Image\Face\asa_f_5_0_07.png" />
+    <Image Include="Data\Image\Face\asa_f_2_0_10.png" />
+    <Image Include="Data\Image\Face\asa_f_2_0_12.png" />
+    <Image Include="Data\Image\Face\asa_f_2_0_15.png" />
     <Image Include="Data\Image\Face\res_f_0_0_01.png" />
     <Image Include="Data\Image\Face\res_f_0_0_09.png" />
     <Image Include="Data\Image\Face\yat_f_0_0_01.png" />
+    <Image Include="Data\Image\Face\yat_f_0_0_02.png" />
+    <Image Include="Data\Image\Face\yat_f_0_0_03.png" />
     <Image Include="Data\Image\Face\yat_f_0_0_04.png" />
     <Image Include="Data\Image\Face\yat_f_0_0_07.png" />
     <Image Include="Data\Image\System\button_click.png" />
@@ -400,24 +403,6 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Media>
-    <Media Include="Data\Sound\Voice\v_asa1329.m4a">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <FileType>Document</FileType>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </Media>
-    <Media Include="Data\Sound\Voice\v_lun0658.m4a">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <FileType>Document</FileType>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </Media>
     <Media Include="Data\Sound\Voice\v_res0104.m4a">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
@@ -479,6 +464,60 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa0004.m4a">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa0005.m4a">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa0006.m4a">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0006.m4a">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0007.m4a">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0008.m4a">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0009.m4a">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0010.m4a">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0011.m4a">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Media>
     <None Include="ProjectAsahi_StoreKey.pfx" />

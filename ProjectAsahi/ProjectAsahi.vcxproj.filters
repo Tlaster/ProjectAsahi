@@ -170,15 +170,6 @@
     <Image Include="Data\Image\Character\yat_s_0_0_07.png">
       <Filter>Data\Image\Character</Filter>
     </Image>
-    <Image Include="Data\Image\Character\asa_s_5_0_00.png">
-      <Filter>Data\Image\Character</Filter>
-    </Image>
-    <Image Include="Data\Image\Character\lun_m_0_0_00.png">
-      <Filter>Data\Image\Character</Filter>
-    </Image>
-    <Image Include="Data\Image\Character\lun_m_1_0_02.png">
-      <Filter>Data\Image\Character</Filter>
-    </Image>
     <Image Include="Data\Image\Character\res_s_0_0_01.png">
       <Filter>Data\Image\Character</Filter>
     </Image>
@@ -210,9 +201,6 @@
       <Filter>Data\Image\Face</Filter>
     </Image>
     <Image Include="Data\Image\Face\asa_f_2_0_06.png">
-      <Filter>Data\Image\Face</Filter>
-    </Image>
-    <Image Include="Data\Image\Face\asa_f_5_0_07.png">
       <Filter>Data\Image\Face</Filter>
     </Image>
     <Image Include="Data\Image\Face\res_f_0_0_01.png">
@@ -250,6 +238,27 @@
     </Image>
     <Image Include="Assets\StoreLogo.scale-400.png">
       <Filter>资产</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\asa_f_2_0_15.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\yat_f_0_0_03.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\asa_f_2_0_10.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\yat_f_0_0_02.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Face\asa_f_2_0_12.png">
+      <Filter>Data\Image\Face</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\yat_s_0_0_03.png">
+      <Filter>Data\Image\Character</Filter>
+    </Image>
+    <Image Include="Data\Image\Character\yat_s_0_0_02.png">
+      <Filter>Data\Image\Character</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -302,12 +311,6 @@
     <Media Include="Data\Sound\Voice\v_asa0003.m4a">
       <Filter>Data\Sound\Voice</Filter>
     </Media>
-    <Media Include="Data\Sound\Voice\v_asa1329.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </Media>
-    <Media Include="Data\Sound\Voice\v_lun0658.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </Media>
     <Media Include="Data\Sound\Voice\v_res0104.m4a">
       <Filter>Data\Sound\Voice</Filter>
     </Media>
@@ -327,6 +330,33 @@
       <Filter>Data\Sound\Voice</Filter>
     </Media>
     <Media Include="Data\Sound\Voice\v_yat0005.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa0004.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa0005.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_asa0006.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0006.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0007.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0008.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0009.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0010.m4a">
+      <Filter>Data\Sound\Voice</Filter>
+    </Media>
+    <Media Include="Data\Sound\Voice\v_yat0011.m4a">
       <Filter>Data\Sound\Voice</Filter>
     </Media>
   </ItemGroup>

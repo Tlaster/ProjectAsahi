@@ -35,7 +35,7 @@ SavePage::SavePage()
 
 void SavePage::BackClick()
 {
-	App::CurrentGameState = Entities::GameState::GS_PLAYING;
+	App::CurrentGameState = Entities::GameState::GS_MAIN_MENU;
 }
 
 void ProjectAsahi::SavePage::NewSave()
@@ -51,14 +51,14 @@ void ProjectAsahi::SavePage::NewSave()
 
 void ProjectAsahi::SavePage::Load()
 {
-	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(SaveListView->SelectedItem);
+	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(SaveGridView->SelectedItem);
 	Common::CacheManager::LoadItemCache = clickitem;
 	App::CurrentGameState = Entities::GameState::GS_PLAYING;
 }
 
 void ProjectAsahi::SavePage::DeleteClick()
 {
-	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(SaveListView->SelectedItem);
+	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(SaveGridView->SelectedItem);
 	create_task(FileManager::Manager::Delete(clickitem)).then([&]()
 	{
 		MessageDialog^ dialog2 = ref new MessageDialog(L"delete successfully");
@@ -75,7 +75,7 @@ void ProjectAsahi::SavePage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Naviga
 
 void SavePage::SaveCommand(IUICommand^ command) 
 {
-	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(SaveListView->SelectedItem);
+	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(SaveGridView->SelectedItem);
 	auto item = Common::CacheManager::SaveItemCache;
 	item->SaveIndex = clickitem->SaveIndex;
 	create_task(FileManager::Manager::Save(item)).then([&]()

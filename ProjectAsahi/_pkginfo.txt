@@ -1,1 +1,1 @@
-c:\users\jades\documents\visual studio 2015\Projects\ProjectAsahi\AppPackages\ProjectAsahi\ProjectAsahi_0.0.1.0\ProjectAsahi_0.0.1.0_x86_x64_arm.appxbundle
+C:\Users\Jades\Documents\Visual Studio 2015\Projects\ProjectAsahi\AppPackages\ProjectAsahi\ProjectAsahi_0.0.2.0\ProjectAsahi_0.0.2.0_x86_x64_arm.appxbundle

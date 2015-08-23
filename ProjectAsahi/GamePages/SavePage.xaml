@@ -16,22 +16,18 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <ListView SelectionMode="Single" ItemsSource="{x:Bind SaveList}" IsItemClickEnabled="True" x:Name="SaveListView" HorizontalAlignment="Center">
-                <ListView.ItemTemplate>
+            <GridView Padding="16" SelectionMode="Single" ItemsSource="{x:Bind SaveList}" IsItemClickEnabled="True" x:Name="SaveGridView" >
+                <GridView.ItemTemplate>
                     <DataTemplate x:DataType="model:SaveModel">
-                        <TextBlock Style="{ThemeResource TitleTextBlockStyle}">
-                            SaveIndex:
+                        <Grid Padding="4" BorderThickness="2" BorderBrush="#3FFFFFFF">
+                            <TextBlock Style="{ThemeResource TitleTextBlockStyle}">
+                            SaveData 
                             <Run Text="{x:Bind SaveIndex}"/>
-                            <LineBreak/>
-                            SaveTime:
-                            <Run Text="{x:Bind SaveTime}"/>
-                            <LineBreak/>
-                            BlockPosition:
-                            <Run Text="{x:Bind BlockPosition}"/>
-                        </TextBlock>
+                            </TextBlock>
+                        </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </GridView.ItemTemplate>
+            </GridView>
             <Grid Grid.Row="1" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
