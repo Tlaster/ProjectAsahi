@@ -4,6 +4,7 @@
 #include "Model\CharaModel.h"
 #include "Common\TextRenderer.h"
 #include "Model\BackLogModel.h"
+#include "Model\SettingModel.h"
 
 namespace ProjectAsahi
 {
@@ -16,6 +17,7 @@ namespace ProjectAsahi
 			{
 				m_deviceResources = deviceResources;
 				_currentFilePath = path;
+				SetDefault();
 				LoadResource();
 				LoadBlock();
 			}
@@ -23,6 +25,7 @@ namespace ProjectAsahi
 			{
 				m_deviceResources = deviceResources;
 				_currentFilePath = nullptr;
+				SetDefault();
 				LoadResource();
 			}
 			void Push(ScriptReader::Model::Block^ block);
@@ -41,13 +44,17 @@ namespace ProjectAsahi
 			}
 			FileManager::Model::SaveModel^ GetSaveModel();
 			Platform::Collections::Vector<Model::BackLogModel^>^ GetBackLogList();
+			property float ImageWidth {float get() { return _imageWidth->Value; }};
+			property float ImageHeight {float get() { return _imageHeight->Value; }};
 			void LoadFromSaveModel(FileManager::Model::SaveModel^ item);
+			void UpdateRootFrameMargin();
 
 			bool isSelection;
 			bool isEnded;
 			bool isAuto;
 
 		private:
+			void SetDefault();
 			void LoadResource();
 			void LoadBlock();
 			void BackGroundRenderHandler();
@@ -67,6 +74,7 @@ namespace ProjectAsahi
 			void ContentHandler(ScriptReader::Model::Element^ element);
 			void ContentHandler(Platform::String^ value);
 			void FaceHandler(ScriptReader::Model::Element^ element);
+			void ToNextScript();
 
 			std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
@@ -102,6 +110,14 @@ namespace ProjectAsahi
 			Platform::String^ _backgroundPath;
 			Platform::String^ _bgmPath;
 			Platform::String^ _currentFilePath;
+			//Platform::String^ _textLayoutBackground;
+
+			Model::SettingModel<Platform::String^>^ _textLayoutBackground;
+			Model::SettingModel<bool>^ _isMultipleLanguage;
+			Model::SettingModel<float>^ _imageHeight;
+			Model::SettingModel<float>^ _imageWidth;
+			Model::SettingModel<float>^ _fontSize;
+			
 
 			float _imageScale;
 			float _contentFontSize;
@@ -121,7 +137,7 @@ namespace ProjectAsahi
 
 			bool _hasVoice;
 			bool _isLoaded;
-			bool _isMultipleLanguage;
+			bool _isResourceChanged;
 		};
 	}
 }

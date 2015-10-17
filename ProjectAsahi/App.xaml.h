@@ -20,6 +20,7 @@ namespace ProjectAsahi
 		App();
 		virtual void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e) override;
 		property static Entities::GameState CurrentGameState;
+		property static Windows::UI::Xaml::Controls::Frame^ RootFrame;
 	private:
 		void OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ e);
 		void OnResuming(Platform::Object ^sender, Platform::Object ^args);

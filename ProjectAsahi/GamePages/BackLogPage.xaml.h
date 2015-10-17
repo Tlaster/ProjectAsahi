@@ -22,6 +22,8 @@ namespace ProjectAsahi
 		property Windows::Foundation::Collections::IObservableVector<Model::BackLogModel^>^ BackLogList;
 		void Back();
 		void ListItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e);
+	protected:
+		virtual void OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs^ e) override;
 	private:
 		Common::MediaEngine^ _voice;
 	};

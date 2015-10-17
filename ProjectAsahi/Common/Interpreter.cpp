@@ -29,6 +29,12 @@ void ProjectAsahi::Common::Interpreter::Push(ScriptReader::Model::Block ^ block)
 		{
 			PushSettingAttribute(element);
 		}
+		if (_isResourceChanged)
+		{
+			UpdateRootFrameMargin();
+			LoadResource();
+		}
+		ToNext();
 		break;
 	case BlockTypes::CONTENT:
 		ContentHandler(block->Value);
@@ -144,7 +150,6 @@ void ProjectAsahi::Common::Interpreter::ClearAll()
 	m_face = nullptr;
 	_currentFilePath = nullptr;
 	_nextFilePath = nullptr;
-	_isMultipleLanguage = false;
 	_backGroundMusic->Stop();
 	_blockPosition = 0;
 	_backLogList->Clear();
@@ -193,7 +198,11 @@ FileManager::Model::SaveModel ^ ProjectAsahi::Common::Interpreter::GetSaveModel(
 	model->BGMPath = this->_bgmPath;
 	model->BlockPosition = this->_blockPosition - 1;//Current BlockPosition point to the next block
 	model->CurrentFilePath = this->_currentFilePath;
-	model->IsMultipleLanguage = this->_isMultipleLanguage;
+	model->IsMultipleLanguage = ref new FileManager::Model::BoolSetting(this->_isMultipleLanguage->Value, this->_isMultipleLanguage->IsGlobal, this->_isMultipleLanguage->IsSetted);
+	model->TextLayoutBackground = ref new FileManager::Model::StringSetting(this->_textLayoutBackground->Value, this->_textLayoutBackground->IsGlobal, this->_textLayoutBackground->IsSetted);
+	model->ImageHeight = ref new FileManager::Model::FloatSetting(this->_imageHeight->Value, this->_imageHeight->IsGlobal, this->_imageHeight->IsSetted);
+	model->ImageWidth = ref new FileManager::Model::FloatSetting(this->_imageWidth->Value, this->_imageWidth->IsGlobal, this->_imageWidth->IsSetted);
+	model->FontSize = ref new FileManager::Model::FloatSetting(this->_fontSize->Value, this->_fontSize->IsGlobal, this->_fontSize->IsSetted);
 	model->NextFilePath = this->_nextFilePath;
 	auto charavec = ref new  Platform::Collections::Vector<FileManager::Model::CharaModel^>();
 	for (CharaModel^ item : m_charaVector)
@@ -219,7 +228,31 @@ void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::Sa
 {
 	_isLoaded = false;
 	ClearAll();
-	this->_isMultipleLanguage = item->IsMultipleLanguage;
+	if (item->IsMultipleLanguage->IsSetted)
+	{
+		this->_isMultipleLanguage->Value = item->IsMultipleLanguage->Value;
+		this->_isMultipleLanguage->IsGlobal = item->IsMultipleLanguage->IsGlobal;
+	}
+	if (item->TextLayoutBackground->IsSetted)
+	{
+		this->_textLayoutBackground->Value = item->TextLayoutBackground->Value;
+		this->_textLayoutBackground->IsGlobal = item->TextLayoutBackground->IsGlobal;
+	}
+	if (item->ImageHeight->IsSetted)
+	{
+		this->_imageHeight->Value = item->ImageHeight->Value;
+		this->_imageHeight->IsGlobal = item->ImageHeight->IsGlobal;
+	}
+	if (item->ImageWidth->IsSetted)
+	{
+		this->_imageWidth->Value = item->ImageWidth->Value;
+		this->_imageWidth->IsGlobal = item->ImageWidth->IsGlobal;
+	}
+	if (item->FontSize->IsSetted)
+	{
+		this->_fontSize->Value = item->FontSize->Value;
+		this->_fontSize->IsGlobal = item->FontSize->IsGlobal;
+	}
 	this->_blockPosition = item->BlockPosition;
 	this->_backgroundPath = item->BackgroundPath;
 	this->_bgmPath = item->BGMPath;
@@ -283,6 +316,30 @@ void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::Sa
 	});
 }
 
+void ProjectAsahi::Common::Interpreter::UpdateRootFrameMargin()
+{
+	auto size = Windows::UI::Xaml::Window::Current->Bounds;
+	auto scale = min((size.Width / _imageWidth->Value), (size.Height / _imageHeight->Value));
+	auto positionY = (size.Height - _imageHeight->Value* scale) / 2.f;
+	auto positionX = (size.Width - _imageWidth->Value* scale) / 2.f;
+	App::RootFrame->Width = _imageWidth->Value*scale;
+	App::RootFrame->Height = _imageHeight->Value*scale;
+	App::RootFrame->Margin = Windows::UI::Xaml::Thickness(positionX, positionY, positionX, positionY);
+}
+
+
+void ProjectAsahi::Common::Interpreter::SetDefault()
+{
+	_imageHeight = ref new Model::SettingModel<float>();
+	_imageWidth = ref new Model::SettingModel<float>();
+	_fontSize = ref new Model::SettingModel<float>();
+	_textLayoutBackground = ref new Model::SettingModel<String^>();
+	_isMultipleLanguage = ref new Model::SettingModel<bool>();
+	_imageHeight->SetDefault(576.f);
+	_imageWidth->SetDefault(1024.f);
+	_fontSize->SetDefault(15.f);
+}
+
 void ProjectAsahi::Common::Interpreter::LoadResource()
 {
 	CreateWindowSizeDependentResources();
@@ -302,7 +359,7 @@ void ProjectAsahi::Common::Interpreter::LoadResource()
 		m_textForeground.Get()
 		);
 	_updateTimeSpan = 0.01f;
-	isAuto = true;
+	isAuto = false;
 	_autoPlaySpeed = 0.1f;
 }
 
@@ -373,15 +430,15 @@ void ProjectAsahi::Common::Interpreter::CreateWindowSizeDependentResources()
 	auto logicalSize = m_deviceResources->GetLogicalSize();
 	auto outputSize = m_deviceResources->GetOutputSize();
 	_textLayoutPadding = 50.f;
-	_scale = min((logicalSize.Width / 1280.f), (logicalSize.Height / 720.f));
-	_imageScale = min((outputSize.Width / 1280.f), (outputSize.Height / 720.f));
-	_positionY = (logicalSize.Height - 720.f*_scale) / 2.f;
-	_positionX = (logicalSize.Width - 1280.f*_scale) / 2.f;
-	_contentHeight = 720.f*_scale / 3.f * 1.f;
+	_scale = min((logicalSize.Width / _imageWidth->Value), (logicalSize.Height / _imageHeight->Value));
+	_imageScale = min((outputSize.Width / _imageWidth->Value), (outputSize.Height / _imageHeight->Value));
+	_positionY = (logicalSize.Height - _imageHeight->Value*_scale) / 2.f;
+	_positionX = (logicalSize.Width - _imageWidth->Value*_scale) / 2.f;
+	_contentHeight = _imageHeight->Value*_scale / 3.f * 1.f;
 	_contentPosition_X = _positionX + _textLayoutPadding*_scale + _contentHeight;
-	_contentPosition_Y = 720.f*_scale / 3.f * 2.f + _positionY + _textLayoutPadding*_scale / 2.f;
+	_contentPosition_Y = _imageHeight->Value*_scale / 3.f * 2.f + _positionY + _textLayoutPadding*_scale / 2.f;
 	_contentWidth = logicalSize.Width - _positionX * 2.f - _textLayoutPadding*_scale * 2.f - _contentHeight;
-	_contentFontSize = _scale == 0.f ? 30.f : 30.f*_scale;
+	_contentFontSize = _scale == 0.f ? _fontSize->Value : _fontSize->Value*_scale;
 	DX::ThrowIfFailed(m_deviceResources->GetDWriteFactory()->CreateTextFormat(
 		L"Segoe UI",
 		nullptr,
@@ -426,7 +483,42 @@ void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model
 		_nextFilePath = attribute->AttributeValue;
 		break;
 	case AttributeTypes::MultipleLanguage:
-		_isMultipleLanguage = attribute->AttributeValue == L"true";
+		if (!_isMultipleLanguage->IsSetted || !_isMultipleLanguage->IsGlobal)
+		{
+			_isMultipleLanguage->Value = attribute->AttributeValue == L"true";
+			_isMultipleLanguage->IsGlobal = attribute->IsGlobal;
+		}
+		break;
+	case AttributeTypes::TextLayoutBackground:
+		if (!_textLayoutBackground->IsSetted || !_textLayoutBackground->IsGlobal)
+		{
+			_textLayoutBackground->Value = attribute->AttributeValue;
+			_textLayoutBackground->IsGlobal = attribute->IsGlobal;
+		}
+		break;
+	case ScriptReader::Model::AttributeTypes::ImageWidth:
+		if (!_imageWidth->IsSetted || !_imageWidth->IsGlobal)
+		{
+			_imageWidth->Value = _wtof(attribute->AttributeValue->Data());
+			_imageWidth->IsGlobal = attribute->IsGlobal;
+			_isResourceChanged = true;
+		}
+		break;
+	case ScriptReader::Model::AttributeTypes::ImageHeight:
+		if (!_imageHeight->IsSetted || !_imageHeight->IsGlobal)
+		{
+			_imageHeight->Value = _wtof(attribute->AttributeValue->Data());
+			_imageHeight->IsGlobal = attribute->IsGlobal;
+			_isResourceChanged = true;
+		}
+		break;
+	case ScriptReader::Model::AttributeTypes::FontSize:
+		if (!_fontSize->IsSetted || !_fontSize->IsGlobal)
+		{
+			_fontSize->Value = _wtof(attribute->AttributeValue->Data());
+			_fontSize->IsGlobal = attribute->IsGlobal;
+			_isResourceChanged = true;
+		}
 		break;
 	default:
 		break;
@@ -599,12 +691,14 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Elem
 
 	if (m_textLayoutBackground == nullptr)
 	{
-		_loader->CreateD2DEffectFromFile(L"Data\\Image\\System\\TextLayoutBackground.png", &m_textLayoutBackground);
+		_loader->CreateD2DEffectFromFile(_textLayoutBackground->Value->Data(), &m_textLayoutBackground);
+		//_loader->CreateD2DEffectFromFile(L"Data\\Image\\System\\TextLayoutBackground.png", &m_textLayoutBackground);
 	}
 }
 
 void ProjectAsahi::Common::Interpreter::ContentHandler(Platform::String ^ value)
 {
+	
 	_contentValue = value->Data();
 	_autoPlayTimeSpan = _contentValue.length() * _autoPlaySpeed;
 	_contentPosition = 1;
@@ -628,7 +722,7 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(Platform::String ^ value)
 
 	if (m_textLayoutBackground == nullptr)
 	{
-		_loader->CreateD2DEffectFromFile(L"Data\\Image\\System\\TextLayoutBackground.png", &m_textLayoutBackground);
+		_loader->CreateD2DEffectFromFile(_textLayoutBackground->Value->Data(), &m_textLayoutBackground);
 	}
 }
 
@@ -645,6 +739,12 @@ void ProjectAsahi::Common::Interpreter::FaceHandler(ScriptReader::Model::Element
 		}
 	}
 	_loader->CreateD2DEffectFromFile(path->Data(), &m_face);
+}
+
+void ProjectAsahi::Common::Interpreter::ToNextScript()
+{
+	this->SetPathNLoad(this->_nextFilePath);
+	_nextFilePath = nullptr;
 }
 
 ProjectAsahi::Common::Interpreter::~Interpreter()

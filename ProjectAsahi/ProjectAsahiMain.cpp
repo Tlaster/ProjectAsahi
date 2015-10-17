@@ -42,15 +42,9 @@ void ProjectAsahiMain::CreateWindowSizeDependentResources()
 	{
 		CurrentGameScreen->CreateWindowSizeDependentResources();
 	}
-	if (RootFrame != nullptr)
+	if (App::RootFrame != nullptr)
 	{
-		auto size = Windows::UI::Xaml::Window::Current->Bounds;
-		auto scale = min((size.Width / 1280.f), (size.Height / 720.f));
-		auto positionY = (size.Height - 720.f* scale) / 2.f;
-		auto positionX = (size.Width - 1280.f* scale) / 2.f;
-		RootFrame->Width = 1280.f*scale;
-		RootFrame->Height = 720.f*scale;
-		RootFrame->Margin = Windows::UI::Xaml::Thickness(positionX, positionY, positionX, positionY);
+		_interpreter->UpdateRootFrameMargin();
 		//TODO: add scale for RootFrame
 	}
 }
@@ -92,7 +86,7 @@ void ProjectAsahiMain::Render()
 void ProjectAsahi::ProjectAsahiMain::GoBack()
 {
 	_canHandlePointer = true;
-	RootFrame->GoBack();
+	App::RootFrame->GoBack();
 	_gameStateStack->RemoveAtEnd();
 }
 
@@ -105,7 +99,6 @@ Entities::GameState ProjectAsahi::ProjectAsahiMain::GetCurrentGameState()
 
 void ProjectAsahiMain::CheckScreenType()
 {
-	auto a = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
 	auto prevGameState = _gameStateStack->GetAt(_gameStateStack->Size - 1);
 	if (prevGameState == App::CurrentGameState)
 	{
@@ -116,12 +109,12 @@ void ProjectAsahiMain::CheckScreenType()
 		switch (App::CurrentGameState)
 		{
 		case ProjectAsahi::Entities::GameState::GS_LOGO:
-			RootFrame->BackStack->Clear();
+			App::RootFrame->BackStack->Clear();
 			_gameStateStack->Clear();
-			RootFrame->Navigate(LogoPage::typeid);
+			App::RootFrame->Navigate(LogoPage::typeid);
 			break;
 		case ProjectAsahi::Entities::GameState::GS_MAIN_MENU:
-			RootFrame->BackStack->Clear();
+			App::RootFrame->BackStack->Clear();
 			_gameStateStack->Clear();
 			_interpreter->SetPathNLoad(L"Data/Script/MenuScript.jtt");
 			_canHandlePointer = true;
@@ -129,7 +122,7 @@ void ProjectAsahiMain::CheckScreenType()
 			{
 				CurrentGameScreen = ref new MenuScreen(m_deviceResources, _interpreter);
 			}
-			RootFrame->Navigate(MenuPage::typeid);
+			App::RootFrame->Navigate(MenuPage::typeid);
 			break;
 		case ProjectAsahi::Entities::GameState::GS_PLAYING:
 			_interpreter->SetPathNLoad(L"Data/Script/GameScript.jtt");
@@ -138,7 +131,7 @@ void ProjectAsahiMain::CheckScreenType()
 			{
 				CurrentGameScreen = ref new GamePlayScreen(m_deviceResources, _interpreter);
 			}
-			RootFrame->Navigate(GamePlayPage::typeid);
+			App::RootFrame->Navigate(GamePlayPage::typeid);
 			break;
 		case ProjectAsahi::Entities::GameState::GS_PAUSED:
 			break;
@@ -149,18 +142,18 @@ void ProjectAsahiMain::CheckScreenType()
 			{
 				Common::CacheManager::SaveItemCache = _interpreter->GetSaveModel();
 			}
-			RootFrame->Navigate(SavePage::typeid, ProjectAsahi::Entities::SavePageType::SPT_SAVE);
+			App::RootFrame->Navigate(SavePage::typeid, ProjectAsahi::Entities::SavePageType::SPT_SAVE);
 			break;
 		case ProjectAsahi::Entities::GameState::GS_LOAD:
 			_interpreter->isAuto = false;
 			_canHandlePointer = false;
-			RootFrame->Navigate(SavePage::typeid, ProjectAsahi::Entities::SavePageType::SPT_LOAD);
+			App::RootFrame->Navigate(SavePage::typeid, ProjectAsahi::Entities::SavePageType::SPT_LOAD);
 			break;
 		case ProjectAsahi::Entities::GameState::GS_BACKLOG:
 			_interpreter->isAuto = false;
 			_canHandlePointer = false;
 			Common::CacheManager::BackLogList = _interpreter->GetBackLogList();
-			RootFrame->Navigate(BackLogPage::typeid);
+			App::RootFrame->Navigate(BackLogPage::typeid);
 			break;
 		}
 		_gameStateStack->Append(App::CurrentGameState);
@@ -180,12 +173,12 @@ void ProjectAsahiMain::CheckScreenType()
 					for (size_t i = 0; i < _gameStateStack->Size - 2; i++)
 					{
 						_gameStateStack->RemoveAtEnd();
-						RootFrame->BackStack->RemoveAtEnd();
+						App::RootFrame->BackStack->RemoveAtEnd();
 					}
 				}
 				_interpreter->LoadFromSaveModel(item);
 				CurrentGameScreen = ref new GamePlayScreen(m_deviceResources, _interpreter);
-				RootFrame->Navigate(GamePlayPage::typeid);
+				App::RootFrame->Navigate(GamePlayPage::typeid);
 				_gameStateStack->Append(App::CurrentGameState);
 				_canHandlePointer = true;
 			}

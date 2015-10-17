@@ -6,9 +6,10 @@
 #include "pch.h"
 #include "BackLogPage.xaml.h"
 #include "Common\CacheManager.h"
+#include <ppltasks.h>
 
 using namespace ProjectAsahi;
-
+using namespace concurrency;
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
@@ -34,7 +35,13 @@ void ProjectAsahi::BackLogPage::Back()
 	App::CurrentGameState = Entities::GameState::GS_PLAYING;
 }
 
-
+void ProjectAsahi::BackLogPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs^ e)
+{
+	create_task(this->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([=]()
+	{
+		BackLogListView->ScrollIntoView(BackLogListView->Items->GetAt(BackLogListView->Items->Size - 1));
+	})));
+}
 
 void ProjectAsahi::BackLogPage::ListItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e)
 {
@@ -43,9 +50,4 @@ void ProjectAsahi::BackLogPage::ListItemClick(Platform::Object^ sender, Windows:
 	{
 		_voice->PlayMusic(clickitem->VoicePath);
 	}
-	else
-	{
-		_voice->Stop();
-	}
 }
-

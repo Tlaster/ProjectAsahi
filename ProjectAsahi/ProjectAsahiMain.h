@@ -26,7 +26,6 @@ namespace ProjectAsahi
 		void Update(float timeTotal, float timeDelta);
 		void Render();
 
-		Windows::UI::Xaml::Controls::Frame^ RootFrame;
 		Entities::GameState GetCurrentGameState();
 
 

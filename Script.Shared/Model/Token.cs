@@ -30,16 +30,18 @@ namespace ScriptReader.Model
 
     internal class AttributeToken : Token
     {
+        internal bool IsGlobal { get; set; }
         internal new string Value { get; }
         internal AttributeTypes AttributeType { get; }
         internal AttributeValueType ValueType { get; }
 
-        internal AttributeToken(int line, AttributeTypes atttype, string value, AttributeValueType type)
+        internal AttributeToken(int line, AttributeTypes atttype, string value, AttributeValueType type,bool isGlobal = false)
         {
             Line = line;
             AttributeType = atttype;
             Value = value;
             ValueType = type;
+            IsGlobal = isGlobal;
             AttributeValueCheck();
         }
 
@@ -48,32 +50,30 @@ namespace ScriptReader.Model
             bool isError = false;
             switch (AttributeType)
             {
+                case AttributeTypes.TextLayoutBackground:
+                case AttributeTypes.NextFile:
+                case AttributeTypes.Title:
                 case AttributeTypes.Path:
-                    isError = ValueType != AttributeValueType.String;
-                    break;
-                case AttributeTypes.Position_X:
-                    isError = ValueType != AttributeValueType.Number;
-                    break;
-                case AttributeTypes.Position_Y:
-                    isError = ValueType != AttributeValueType.Number;
-                    break;
+                case AttributeTypes.Voice:
                 case AttributeTypes.Name:
-                    isError = ValueType != AttributeValueType.String;
-                    break;
                 case AttributeTypes.Value:
                     isError = ValueType != AttributeValueType.String;
+                    break;
+                case AttributeTypes.ImageHeight:
+                case AttributeTypes.ImageWidth:
+                case AttributeTypes.Deep:
+                case AttributeTypes.Time:
+                case AttributeTypes.Position_X:
+                case AttributeTypes.Position_Y:
+                    isError = ValueType != AttributeValueType.Number;
                     break;
                 case AttributeTypes.Method:
                     isError = ValueType != AttributeValueType.String && (Value != "ADD" || Value != "REMOVE" || Value != "CHANGE");
                     break;
-                case AttributeTypes.Voice:
-                    isError = ValueType != AttributeValueType.String;
+                case AttributeTypes.MultipleLanguage:
+                    isError = ValueType != AttributeValueType.Boolean;
                     break;
-                case AttributeTypes.Time:
-                    isError = ValueType != AttributeValueType.Number;
-                    break;
-                case AttributeTypes.Title:
-                    isError = ValueType != AttributeValueType.String;
+                default:
                     break;
             }
             if (isError)
@@ -83,7 +83,6 @@ namespace ScriptReader.Model
         }
 
         internal AttributeToken Next { get; set; }
-
     }
 
     internal class ElementToken : Token
@@ -110,18 +109,10 @@ namespace ScriptReader.Model
             var type = AttributeTypes.Path;
             switch (ElementType)
             {
-                case ElementTypes.BGM:
-                    break;
-                case ElementTypes.Chara:
-                    break;
-                case ElementTypes.Background:
-                    break;
-                case ElementTypes.Face:
-                    break;
                 case ElementTypes.Content:
                     type = AttributeTypes.Value;
                     break;
-                case ElementTypes.Setting:
+                default:
                     break;
             }
             AttributeList = new AttributeToken(Line, type, value, AttributeValueType.String);
@@ -134,18 +125,11 @@ namespace ScriptReader.Model
             {
                 switch (item.AttributeType)
                 {
-                    case AttributeTypes.Position_X:
-                    case AttributeTypes.Position_Y:
-                    case AttributeTypes.Name:
-                    case AttributeTypes.Value:
-                    case AttributeTypes.Method:
-                    case AttributeTypes.Time:
-                    case AttributeTypes.Voice:
-                    case AttributeTypes.Title:
-                        return true;
                     case AttributeTypes.Path:
                         item.Value.Replace("\\", "/");
                         hasPath = true;
+                        break;
+                    default:
                         break;
                 }
             }
@@ -160,11 +144,6 @@ namespace ScriptReader.Model
             {
                 switch (item.AttributeType)
                 {
-                    case AttributeTypes.Value:
-                    case AttributeTypes.Voice:
-                    case AttributeTypes.Time:
-                    case AttributeTypes.Title:
-                        return true;
                     case AttributeTypes.Name:
                         hasName = true;
                         break;
@@ -174,6 +153,8 @@ namespace ScriptReader.Model
                         break;
                     case AttributeTypes.Path:
                         hasPath = true;
+                        break;
+                    default:
                         break;
                 }
             }
@@ -187,17 +168,10 @@ namespace ScriptReader.Model
             {
                 switch (item.AttributeType)
                 {
-                    case AttributeTypes.Position_X:
-                    case AttributeTypes.Position_Y:
-                    case AttributeTypes.Name:
-                    case AttributeTypes.Value:
-                    case AttributeTypes.Method:
-                    case AttributeTypes.Voice:
-                    case AttributeTypes.Time:
-                    case AttributeTypes.Title:
-                        return true;
                     case AttributeTypes.Path:
                         hasPath = true;
+                        break;
+                    default:
                         break;
                 }
             }
@@ -211,17 +185,10 @@ namespace ScriptReader.Model
             {
                 switch (item.AttributeType)
                 {
-                    case AttributeTypes.Position_X:
-                    case AttributeTypes.Position_Y:
-                    case AttributeTypes.Name:
-                    case AttributeTypes.Value:
-                    case AttributeTypes.Method:
-                    case AttributeTypes.Voice:
-                    case AttributeTypes.Time:
-                    case AttributeTypes.Title:
-                        return true;
                     case AttributeTypes.Path:
                         hasPath = true;
+                        break;
+                    default:
                         break;
                 }
             }
@@ -234,14 +201,10 @@ namespace ScriptReader.Model
             {
                 switch (item.AttributeType)
                 {
-                    case AttributeTypes.Path:
-                    case AttributeTypes.Position_X:
-                    case AttributeTypes.Position_Y:
-                    case AttributeTypes.Name:
-                    case AttributeTypes.Method:
-                        return true;
                     case AttributeTypes.Voice:
                         item.Value.Replace("\\", "/");
+                        break;
+                    default:
                         break;
                 }
             }
@@ -332,6 +295,10 @@ namespace ScriptReader.Model
         Deep,
         NextFile,
         MultipleLanguage,
+        TextLayoutBackground,
+        ImageWidth,
+        ImageHeight,
+        FontSize,
     }
 
     public enum TokenType

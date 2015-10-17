@@ -3,17 +3,19 @@
 
     public sealed class Attribute
     {
+        public bool IsGlobal { get; }
         public int Line { get; }
         public string AttributeValue { get; }
         public AttributeTypes AttributeType { get; }
         public AttributeValueType ValueType { get; }
 
-        public Attribute(int line, AttributeTypes atttype, string attributeValue, AttributeValueType type)
+        public Attribute(int line, AttributeTypes atttype, string attributeValue, AttributeValueType type,bool isGlobal)
         {
             Line = line;
             AttributeType = atttype;
             AttributeValue = attributeValue;
             ValueType = type;
+            IsGlobal = IsGlobal;
         }
 
         internal Attribute(AttributeToken item)
@@ -22,6 +24,7 @@
             AttributeValue = item.Value;
             ValueType = item.ValueType;
             AttributeType = item.AttributeType;
+            IsGlobal = item.IsGlobal;
             if (item.Next != null)
             {
                 Next = new Attribute(item.Next);

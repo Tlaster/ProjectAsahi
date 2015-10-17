@@ -203,7 +203,6 @@ namespace ScriptReader
                     case 5:// Elements -> Elements Element
                         var nextele = _tokenStack[_tokenStack.Count - 1] as ElementToken;
                         var preele = _tokenStack[_tokenStack.Count - 2] as ElementToken;
-                        Debug.Assert(nextele != null, "nextele != null");
                         nextele.Next = preele;
                         _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
@@ -225,7 +224,6 @@ namespace ScriptReader
                         var elementName = _tokenStack[_tokenStack.Count - 4].Value;
                         var elementType = (ElementTypes)System.Enum.Parse(typeof(ElementTypes), elementName);
                         var atts = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
-                        Debug.Assert(atts != null, "atts != null");
                         var element = new ElementToken(atts.Line, elementType, atts);
                         _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
@@ -240,7 +238,6 @@ namespace ScriptReader
                     case 9:// Settings -> Settings Setting
                         var nextset = _tokenStack[_tokenStack.Count - 1] as AttributeToken;
                         var preset = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
-                        Debug.Assert(nextset != null, "nextset != null");
                         nextset.Next = preset;
                         _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
@@ -250,6 +247,10 @@ namespace ScriptReader
                     //case 10:// Content -> USD Value Break
                     //    break;
                     case 11:// Setting -> Sharp Att
+                        if (_tokenStack[_tokenStack.Count - _popCount[reducerule - 1]].Value.Contains("define"))
+                        {
+                            (_tokenStack[_tokenStack.Count - 1] as AttributeToken).IsGlobal = true;
+                        }
                         _tokenStack.RemoveAt(_tokenStack.Count - _popCount[reducerule - 1]);
                         _stateStack.RemoveAt(_stateStack.Count - _popCount[reducerule - 1]);
                         _stateStack[_stateStack.Count - 1] = _goto[_stateStack[_stateStack.Count - 2]][1];
@@ -262,7 +263,6 @@ namespace ScriptReader
                     case 13:// Atts -> Atts Att
                         var nextatt = _tokenStack[_tokenStack.Count - 1] as AttributeToken;
                         var preatt = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
-                        Debug.Assert(nextatt != null, "nextatt != null");
                         nextatt.Next = preatt;
                         _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);

@@ -63,9 +63,8 @@ DirectXPage::DirectXPage():
 	// 我们可创建与设备相关的资源。
 	m_deviceResources = std::make_shared<DX::DeviceResources>();
 	m_deviceResources->SetSwapChainPanel(swapChainPanel);
-
+	App::RootFrame = rootFrame;
 	m_main = std::unique_ptr<ProjectAsahiMain>(new ProjectAsahiMain(m_deviceResources));
-	m_main->RootFrame = rootFrame;
 	App::CurrentGameState = GameState::GS_LOGO;
 	m_timer = ref new Timer();	
 	CompositionTarget::Rendering += ref new Windows::Foundation::EventHandler<Platform::Object ^>(this, &ProjectAsahi::DirectXPage::OnRendering);
