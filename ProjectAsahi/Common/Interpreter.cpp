@@ -22,7 +22,8 @@ void ProjectAsahi::Common::Interpreter::Push(ScriptReader::Model::Block ^ block)
 		}
 		break;
 	case BlockTypes::SELECTION:
-		isSelection = true;
+		PushSelectionBlock(block);
+		App::CurrentGameState = Entities::GameState::GS_SELECTION;
 		break;
 	case BlockTypes::SETTINGS:
 		for (auto element = block->SettingList; element != nullptr; element = element->Next)
@@ -131,6 +132,7 @@ void ProjectAsahi::Common::Interpreter::ToNext()
 		}
 		else
 		{
+			auto size = _block->Size;
 			if (_blockPosition < _block->Size)
 			{
 				Clear();
@@ -328,13 +330,22 @@ void ProjectAsahi::Common::Interpreter::UpdateRootFrameMargin()
 }
 
 
-void ProjectAsahi::Common::Interpreter::SetDefault()
+void ProjectAsahi::Common::Interpreter::Init()
 {
 	_imageHeight = ref new Model::SettingModel<float>();
 	_imageWidth = ref new Model::SettingModel<float>();
 	_fontSize = ref new Model::SettingModel<float>();
 	_textLayoutBackground = ref new Model::SettingModel<String^>();
 	_isMultipleLanguage = ref new Model::SettingModel<bool>();
+	_loader = ref new Loader(m_deviceResources->GetD2DDeviceContext(), m_deviceResources->GetDWriteFactory(), m_deviceResources->GetWicImagingFactory());
+	_backGroundMusic = ref new MediaEngine();
+	_charaVoice = ref new MediaEngine();
+	_backLogList = ref new Platform::Collections::Vector<Model::BackLogModel^>();
+	_selectionList = ref new Platform::Collections::Vector<Model::SelectionModel^>();
+}
+
+void ProjectAsahi::Common::Interpreter::SetDefault()
+{
 	_imageHeight->SetDefault(576.f);
 	_imageWidth->SetDefault(1024.f);
 	_fontSize->SetDefault(15.f);
@@ -343,10 +354,6 @@ void ProjectAsahi::Common::Interpreter::SetDefault()
 void ProjectAsahi::Common::Interpreter::LoadResource()
 {
 	CreateWindowSizeDependentResources();
-	_loader = ref new Loader(m_deviceResources->GetD2DDeviceContext(), m_deviceResources->GetDWriteFactory(), m_deviceResources->GetWicImagingFactory());
-	_backGroundMusic = ref new MediaEngine();
-	_charaVoice = ref new MediaEngine();
-	_backLogList = ref new Platform::Collections::Vector<Model::BackLogModel^>();
 	_backGroundMusic->SetVolume(0.2);
 	DX::ThrowIfFailed(m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
 	DX::ThrowIfFailed(m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR));
@@ -525,6 +532,33 @@ void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model
 	}
 }
 
+void ProjectAsahi::Common::Interpreter::PushSelectionBlock(ScriptReader::Model::Block ^ block)
+{
+	for (auto element = block->ElementList; element != nullptr; element = element->Next)
+	{
+		String^ content;
+		String^ filePath;
+		for (auto att = element->AttributeList; att != nullptr; att = att->Next)
+		{
+			switch (att->AttributeType)
+			{
+			case ScriptReader::Model::AttributeTypes::Value:
+				content = att->AttributeValue;
+				break;
+			case ScriptReader::Model::AttributeTypes::NextFile:
+				filePath = att->AttributeValue;
+				break;
+			default:
+				break;
+			}
+		}
+		if (content != nullptr && filePath != nullptr)
+		{
+			_selectionList->InsertAt(0, ref new Model::SelectionModel(content, filePath));
+		}
+	}
+}
+
 void ProjectAsahi::Common::Interpreter::BackgroundMusicHandler(Element ^ element)
 {
 	for (auto att = element->AttributeList; att != nullptr; att = att->Next)
@@ -692,7 +726,6 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Elem
 	if (m_textLayoutBackground == nullptr)
 	{
 		_loader->CreateD2DEffectFromFile(_textLayoutBackground->Value->Data(), &m_textLayoutBackground);
-		//_loader->CreateD2DEffectFromFile(L"Data\\Image\\System\\TextLayoutBackground.png", &m_textLayoutBackground);
 	}
 }
 

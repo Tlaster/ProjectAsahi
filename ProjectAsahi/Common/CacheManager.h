@@ -8,6 +8,26 @@ namespace ProjectAsahi
 		ref class CacheManager sealed
 		{
 		internal:
+			property static Model::SelectionModel^ SelectedItem
+			{
+				Model::SelectionModel^ get()
+				{
+					if (_selectedItem != nullptr)
+					{
+						auto item = _selectedItem;
+						_selectedItem = nullptr;
+						return item;
+					}
+					else
+					{
+						return nullptr;
+					}
+				}
+				void set(Model::SelectionModel^ item)
+				{
+					_selectedItem = item;
+				}
+			}
 			property static FileManager::Model::SaveModel^ SaveItemCache
 			{
 				FileManager::Model::SaveModel^ get()
@@ -72,6 +92,7 @@ namespace ProjectAsahi
 			}
 
 		private:
+			static Model::SelectionModel^ _selectedItem;
 			static FileManager::Model::SaveModel^ _saveItemCache;
 			static FileManager::Model::SaveModel^ _loadItemCache;
 			static Platform::Collections::Vector<Model::BackLogModel^>^ _backLogList;

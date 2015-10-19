@@ -12,6 +12,7 @@ namespace ProjectAsahi
 			GS_SAVE,
 			GS_LOAD,
 			GS_BACKLOG,
+			GS_SELECTION,
 			GS_LOGO,
 		};
 	}

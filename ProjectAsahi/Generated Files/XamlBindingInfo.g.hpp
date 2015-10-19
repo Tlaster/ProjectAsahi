@@ -208,6 +208,14 @@ namespace XamlBindingInfo
         {
             obj->Visibility = value;
         }
+        static void Set_Windows_UI_Xaml_Controls_TextBlock_Text(::Windows::UI::Xaml::Controls::TextBlock^ obj, ::Platform::String^ value, ::Platform::String^ targetNullValue)
+        {
+            if (value == nullptr && targetNullValue != nullptr)
+            {
+                value = targetNullValue;
+            }
+            obj->Text = value;
+        }
     };
 
     template <typename T>

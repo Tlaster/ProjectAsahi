@@ -10,6 +10,7 @@
 #include "GamePages\GamePlayPage.xaml.h"
 #include "GamePages\SavePage.xaml.h"
 #include "GamePages\BackLogPage.xaml.h"
+#include "GamePages\SelectionPage.xaml.h"
 
 using namespace ProjectAsahi;
 using namespace Windows::Foundation;
@@ -88,6 +89,7 @@ void ProjectAsahi::ProjectAsahiMain::GoBack()
 	_canHandlePointer = true;
 	App::RootFrame->GoBack();
 	_gameStateStack->RemoveAtEnd();
+	App::CurrentGameState = _gameStateStack->GetAt(_gameStateStack->Size - 1);
 }
 
 
@@ -104,7 +106,7 @@ void ProjectAsahiMain::CheckScreenType()
 	{
 		return;
 	}
-	if (prevGameState != Entities::GameState::GS_SAVE && prevGameState != Entities::GameState::GS_LOAD && prevGameState != Entities::GameState::GS_BACKLOG)
+	if (prevGameState != Entities::GameState::GS_SAVE && prevGameState != Entities::GameState::GS_LOAD && prevGameState != Entities::GameState::GS_BACKLOG && prevGameState != GameState::GS_SELECTION)
 	{
 		switch (App::CurrentGameState)
 		{
@@ -155,6 +157,11 @@ void ProjectAsahiMain::CheckScreenType()
 			Common::CacheManager::BackLogList = _interpreter->GetBackLogList();
 			App::RootFrame->Navigate(BackLogPage::typeid);
 			break;
+		case ProjectAsahi::Entities::GameState::GS_SELECTION:
+			_interpreter->isAuto = false;
+			_canHandlePointer = false;
+			App::RootFrame->Navigate(SelectionPage::typeid, _interpreter->SelectionList);
+			break;
 		}
 		_gameStateStack->Append(App::CurrentGameState);
 	}
@@ -172,7 +179,7 @@ void ProjectAsahiMain::CheckScreenType()
 				{
 					for (size_t i = 0; i < _gameStateStack->Size - 2; i++)
 					{
-						_gameStateStack->RemoveAtEnd();
+						_gameStateStack->RemoveAtEnd();	
 						App::RootFrame->BackStack->RemoveAtEnd();
 					}
 				}
@@ -192,6 +199,13 @@ void ProjectAsahiMain::CheckScreenType()
 			GoBack();
 			break;
 		}
+	}
+	else if (prevGameState == GameState::GS_SELECTION)
+	{
+		auto item = Common::CacheManager::SelectedItem;
+		_interpreter->LoadSelection(item->NextFilePath);
+		_canHandlePointer = true;
+		GoBack();
 	}
 	else
 	{

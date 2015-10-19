@@ -75,9 +75,8 @@
             switch (BlockType)
             {
                 case BlockTypes.TAB:
-                    ElementList = new Element(item.ElementList);
-                    break;
                 case BlockTypes.SELECTION:
+                    ElementList = new Element(item.ElementList);
                     break;
                 case BlockTypes.SETTINGS:
                     SettingList = new Attribute(item.SettingList);

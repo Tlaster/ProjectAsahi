@@ -5,6 +5,7 @@
 #include "Common\TextRenderer.h"
 #include "Model\BackLogModel.h"
 #include "Model\SettingModel.h"
+#include "Model\SelectionModel.h"
 
 namespace ProjectAsahi
 {
@@ -17,6 +18,7 @@ namespace ProjectAsahi
 			{
 				m_deviceResources = deviceResources;
 				_currentFilePath = path;
+				Init();
 				SetDefault();
 				LoadResource();
 				LoadBlock();
@@ -24,7 +26,9 @@ namespace ProjectAsahi
 			Interpreter(const std::shared_ptr<DX::DeviceResources>& deviceResources)
 			{
 				m_deviceResources = deviceResources;
+				//auto a = Windows::System::UserProfile::GlobalizationPreferences::Languages->GetAt(0);
 				_currentFilePath = nullptr;
+				Init();
 				SetDefault();
 				LoadResource();
 			}
@@ -42,10 +46,27 @@ namespace ProjectAsahi
 				_currentFilePath = path;
 				LoadBlock();
 			}
+			void LoadSelection(Platform::String^ path)
+			{
+				_isLoaded = false;
+				Clear();
+				_nextFilePath = nullptr;
+				_blockPosition = 0;
+				_block = nullptr;
+				_currentFilePath = path;
+				LoadBlock();
+			}
 			FileManager::Model::SaveModel^ GetSaveModel();
 			Platform::Collections::Vector<Model::BackLogModel^>^ GetBackLogList();
-			property float ImageWidth {float get() { return _imageWidth->Value; }};
-			property float ImageHeight {float get() { return _imageHeight->Value; }};
+			property Platform::Collections::Vector<Model::SelectionModel^>^ SelectionList
+			{ 
+				Platform::Collections::Vector<Model::SelectionModel^>^ get()
+				{ 
+					auto list = _selectionList;
+					_selectionList = ref new Platform::Collections::Vector<Model::SelectionModel^>();
+					return list;
+				} 
+			};
 			void LoadFromSaveModel(FileManager::Model::SaveModel^ item);
 			void UpdateRootFrameMargin();
 
@@ -54,6 +75,7 @@ namespace ProjectAsahi
 			bool isAuto;
 
 		private:
+			void Init();
 			void SetDefault();
 			void LoadResource();
 			void LoadBlock();
@@ -65,6 +87,7 @@ namespace ProjectAsahi
 
 			void PushTABElement(ScriptReader::Model::Element^ element);
 			void PushSettingAttribute(ScriptReader::Model::Attribute^ attribute);
+			void PushSelectionBlock(ScriptReader::Model::Block ^ block);
 
 			~Interpreter();
 
@@ -84,6 +107,7 @@ namespace ProjectAsahi
 
 			Windows::Foundation::Collections::IVector<ScriptReader::Model::Block^>^ _block;
 			Platform::Collections::Vector<Model::BackLogModel^>^ _backLogList;
+			Platform::Collections::Vector<Model::SelectionModel^>^ _selectionList;
 			int _blockPosition;
 
 			std::wstring _contentValue;

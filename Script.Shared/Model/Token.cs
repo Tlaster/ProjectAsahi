@@ -202,10 +202,14 @@ namespace ScriptReader.Model
                 switch (item.AttributeType)
                 {
                     case AttributeTypes.Voice:
+                    case AttributeTypes.NextFile:
                         item.Value.Replace("\\", "/");
                         break;
-                    default:
+                    case AttributeTypes.Title:
+                    case AttributeTypes.Value:
                         break;
+                    default:
+                        return true;
                 }
             }
             return false;

@@ -345,11 +345,15 @@
     <ClInclude Include="GamePages\SavePage.xaml.h">
       <DependentUpon>GamePages\SavePage.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="GamePages\SelectionPage.xaml.h">
+      <DependentUpon>GamePages\SelectionPage.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="GameScreens\GamePlayScreen.h" />
     <ClInclude Include="GameScreens\GameScreenBase.h" />
     <ClInclude Include="GameScreens\MenuScreen.h" />
     <ClInclude Include="Model\BackLogModel.h" />
     <ClInclude Include="Model\CharaModel.h" />
+    <ClInclude Include="Model\SelectionModel.h" />
     <ClInclude Include="Model\SettingModel.h" />
     <ClInclude Include="ProjectAsahiMain.h" />
     <ClInclude Include="DirectXPage.xaml.h">
@@ -384,6 +388,9 @@
     <ClCompile Include="GamePages\SavePage.xaml.cpp">
       <DependentUpon>GamePages\SavePage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="GamePages\SelectionPage.xaml.cpp">
+      <DependentUpon>GamePages\SelectionPage.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="GameScreens\GamePlayScreen.cpp" />
     <ClCompile Include="GameScreens\GameScreenBase.cpp" />
     <ClCompile Include="GameScreens\MenuScreen.cpp" />
@@ -412,6 +419,12 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Data\Script\GameScript2.jtt">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Data\Script\GameScript3.jtt">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </None>
     <None Include="Data\Script\MenuScript.jtt">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
@@ -625,6 +638,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="GamePages\SavePage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GamePages\SelectionPage.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
