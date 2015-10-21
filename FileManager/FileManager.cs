@@ -8,23 +8,19 @@ using System.Runtime.Serialization.Json;
 using System.IO;
 using System.Text;
 using System.Linq;
+using System.IO.Compression;
+using System.Runtime.InteropServices.ComTypes;
+using System.Text.RegularExpressions;
+using Windows.Storage.Streams;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace FileManager
 {
     public static class Manager
     {
-        public static IAsyncOperation<IList<SaveModel>> LoadSaveList()
-        {
-            return LoadTask().AsAsyncOperation();
-        }
-        public static IAsyncAction Save(SaveModel item)
-        {
-            return SaveTask(item).AsAsyncAction();
-        }
-        public static IAsyncAction Delete(SaveModel item)
-        {
-            return DeleteTask(item).AsAsyncAction();
-        }
+        public static IAsyncOperation<IList<SaveModel>> LoadSaveList() => LoadTask().AsAsyncOperation();
+        public static IAsyncAction Save(SaveModel item) => SaveTask(item).AsAsyncAction();
+        public static IAsyncAction Delete(SaveModel item) => DeleteTask(item).AsAsyncAction();
         private static async Task DeleteTask(SaveModel item)
         {
             var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("SaveDate.save", CreationCollisionOption.OpenIfExists);
@@ -94,5 +90,70 @@ namespace FileManager
                 }
             }
         }
+        /// <summary>
+        /// Get file with file name
+        /// </summary>
+        /// <param name="file">File name</param>
+        /// <param name="type">File type</param>
+        /// <returns></returns>
+        //public static IAsyncOperation<InMemoryRandomAccessStream> GetFileStreamAsync(string file, FileType type) => GetFileStreamTask(file,false,type).AsAsyncOperation();
+
+        /// <summary>
+        /// Get file InMenoryRandomAccessStream with file path
+        /// </summary>
+        /// <param name="filepath">File path</param>
+        /// <returns>File InMenoryRandomAccessStream</returns>
+        public static IAsyncOperation<IBuffer> GetFileStreamAsync(string filepath) => GetFileStreamTask(filepath).AsAsyncOperation();
+
+        /// <summary>
+        /// Get file string with file path
+        /// </summary>
+        /// <param name="filePath">File path</param>
+        /// <returns>string</returns>
+        public static IAsyncOperation<string> GetFileStringAsync(string filePath) => GetFileStringTask(filePath).AsAsyncOperation();
+
+        private static async Task<string> GetFileStringTask(string file,bool containPath = false)
+        {
+            var pattern = @"[A-Z_a-z][A-Z_a-z0-9\.]*";
+            Regex regex = new Regex(pattern);
+            var matches = regex.Matches(file);
+            var path = $"ms-appx:///{matches[0].Value}.zip";
+            var zipfile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(path));
+            var str = "";
+            using (var ziparchive = ZipFile.OpenRead(zipfile.Path))
+            {
+                var filePathInZip = file.Remove(0, matches[0].Value.Count() + 1);
+                using (var stream = ziparchive.GetEntry(filePathInZip).Open())
+                {
+                    using (StreamReader reader = new StreamReader(stream, Encoding.Unicode))
+                    {
+                        str = await reader.ReadToEndAsync();
+                    }
+                }
+            }
+            return str;
+        }
+
+        private static async Task<IBuffer> GetFileStreamTask(string filePath)
+        {
+            var pattern = @"[A-Z_a-z][A-Z_a-z0-9\.]*";
+            Regex regex = new Regex(pattern);
+            var matches = regex.Matches(filePath);
+            var path = $"ms-appx:///{matches[0].Value}.zip";
+            var zipfile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(path));
+            using (var ziparchive = new ZipArchive(await zipfile.OpenStreamForReadAsync(), ZipArchiveMode.Read))
+            {
+                var filePathInZip = filePath.Remove(0, matches[0].Value.Count() + 1);
+                using (var stream = ziparchive.GetEntry(filePathInZip).Open())
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        await stream.CopyToAsync(ms);
+                        return ms.ToArray().AsBuffer();
+                    }
+                }
+            }
+        }
     }
 }
+

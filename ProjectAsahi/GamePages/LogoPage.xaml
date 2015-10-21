@@ -8,6 +8,6 @@
     mc:Ignorable="d">
 
     <SwapChainPanel>
-        <MediaElement MediaEnded="{x:Bind MediaEnded}" DoubleTapped="{x:Bind MediaDoubleTapped}" x:Name="LogoElement" AutoPlay="True" IsFullWindow="True" Source="ms-appx:///Data/logo.mp4"/>
+        <MediaElement MediaEnded="{x:Bind MediaEnded}" DoubleTapped="{x:Bind MediaDoubleTapped}" x:Name="LogoElement" AutoPlay="True" IsFullWindow="True" Source="ms-appx:///Movie/logo.mp4"/>
     </SwapChainPanel>
 </Page>

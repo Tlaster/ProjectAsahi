@@ -29,7 +29,7 @@ namespace ProjectAsahi
 			property double FontSize;
 			void OnSizeChanged(Platform::Object ^sender, Windows::UI::Core::WindowSizeChangedEventArgs ^e) 
 			{
-				auto _scale = min((e->Size.Width / 1280.f), (e->Size.Height / 720.f));
+				auto _scale = min((e->Size.Width / 1280.f), (e->Size.Height / 720.f));//TODO:change the value
 				FontSize = 30.f*_scale;
 				BackLogModel::OnPropertyChanged(L"FontSize");
 				//it will raise Platform::DisconnectedException when navigate to BackLogPage the second time

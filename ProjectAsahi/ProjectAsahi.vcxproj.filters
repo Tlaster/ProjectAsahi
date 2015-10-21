@@ -26,41 +26,11 @@
     <Filter Include="Model">
       <UniqueIdentifier>{27415a64-078c-47b4-92ea-99de69234f33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data">
-      <UniqueIdentifier>{0bb907a6-ea30-41ac-a12a-95b907d9301c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Image">
-      <UniqueIdentifier>{849965da-b62f-45fc-bc1d-c3731bc4717e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Sound">
-      <UniqueIdentifier>{1110970e-c9ea-4bc5-bb68-71c633202ba1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Image\BackGround">
-      <UniqueIdentifier>{659e5a1f-8a15-4306-84da-2128eaf31d46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Image\Character">
-      <UniqueIdentifier>{5c560c9c-9076-4ae1-b927-f19c26f819b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Image\Face">
-      <UniqueIdentifier>{2d1ec256-3fd4-4c8e-b6ef-9ca377732157}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Image\System">
-      <UniqueIdentifier>{ca153d08-b5a5-43b7-b6d3-068eb8220cca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Image\Event">
-      <UniqueIdentifier>{cbeba093-4254-4d85-b94f-2fa8d5f115b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Sound\BGM">
-      <UniqueIdentifier>{4813ee38-6150-4669-8567-81e00a63241a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Sound\Voice">
-      <UniqueIdentifier>{79a098fe-e505-46e3-ae60-c798031f5f13}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GamePages">
       <UniqueIdentifier>{ea4be10f-3ca1-4c8c-97aa-c35af0d75a1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Script">
-      <UniqueIdentifier>{359932a3-026a-4053-aca1-5a74f5b980bb}</UniqueIdentifier>
+    <Filter Include="Movie">
+      <UniqueIdentifier>{4237556c-3172-4bba-b386-b3ad641ad9cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -198,177 +168,7 @@
     <None Include="ProjectAsahi_TemporaryKey.pfx" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="ProjectAsahi_StoreKey.pfx" />
-    <None Include="Data\Script\GameScript.jtt">
-      <Filter>Data\Script</Filter>
-    </None>
-    <None Include="Data\Script\MenuScript.jtt">
-      <Filter>Data\Script</Filter>
-    </None>
-    <None Include="Data\Image\BackGround\bg01k.bmp">
-      <Filter>Data\Image\BackGround</Filter>
-    </None>
-    <None Include="Data\Image\BackGround\bg03a.bmp">
-      <Filter>Data\Image\BackGround</Filter>
-    </None>
-    <None Include="Data\Image\BackGround\bg32a.bmp">
-      <Filter>Data\Image\BackGround</Filter>
-    </None>
-    <None Include="Data\Image\BackGround\Title.png">
-      <Filter>Data\Image\BackGround</Filter>
-    </None>
-    <None Include="Data\Image\Character\res_s_0_0_01.png">
-      <Filter>Data\Image\Character</Filter>
-    </None>
-    <None Include="Data\Image\Character\res_s_0_0_09.png">
-      <Filter>Data\Image\Character</Filter>
-    </None>
-    <None Include="Data\Image\Character\yat_s_0_0_01.png">
-      <Filter>Data\Image\Character</Filter>
-    </None>
-    <None Include="Data\Image\Character\yat_s_0_0_02.png">
-      <Filter>Data\Image\Character</Filter>
-    </None>
-    <None Include="Data\Image\Character\yat_s_0_0_03.png">
-      <Filter>Data\Image\Character</Filter>
-    </None>
-    <None Include="Data\Image\Character\yat_s_0_0_04.png">
-      <Filter>Data\Image\Character</Filter>
-    </None>
-    <None Include="Data\Image\Character\yat_s_0_0_07.png">
-      <Filter>Data\Image\Character</Filter>
-    </None>
-    <None Include="Data\Image\Event\lun01a.bmp">
-      <Filter>Data\Image\Event</Filter>
-    </None>
-    <None Include="Data\Image\Event\lun02a.bmp">
-      <Filter>Data\Image\Event</Filter>
-    </None>
-    <None Include="Data\Image\Event\lun04a.bmp">
-      <Filter>Data\Image\Event</Filter>
-    </None>
-    <None Include="Data\Image\Face\asa_f_2_0_00.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\asa_f_2_0_01.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\asa_f_2_0_06.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\asa_f_2_0_10.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\asa_f_2_0_12.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\asa_f_2_0_15.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\res_f_0_0_01.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\res_f_0_0_09.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\yat_f_0_0_01.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\yat_f_0_0_02.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\yat_f_0_0_03.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\yat_f_0_0_04.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\Face\yat_f_0_0_07.png">
-      <Filter>Data\Image\Face</Filter>
-    </None>
-    <None Include="Data\Image\System\button_click.png">
-      <Filter>Data\Image\System</Filter>
-    </None>
-    <None Include="Data\Image\System\button_normal.png">
-      <Filter>Data\Image\System</Filter>
-    </None>
-    <None Include="Data\Image\System\TextLayoutBackground.png">
-      <Filter>Data\Image\System</Filter>
-    </None>
-    <None Include="Data\Sound\BGM\bgm00.m4a">
-      <Filter>Data\Sound\BGM</Filter>
-    </None>
-    <None Include="Data\Sound\BGM\bgm13.m4a">
-      <Filter>Data\Sound\BGM</Filter>
-    </None>
-    <None Include="Data\Sound\BGM\bgm50.m4a">
-      <Filter>Data\Sound\BGM</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_asa0001.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_asa0002.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_asa0003.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_asa0004.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_asa0005.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_asa0006.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_res0104.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_res0105.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0001.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0002.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0003.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0004.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0005.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0006.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0007.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0008.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0009.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0010.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\Sound\Voice\v_yat0011.m4a">
-      <Filter>Data\Sound\Voice</Filter>
-    </None>
-    <None Include="Data\logo.mp4">
-      <Filter>Data</Filter>
-    </None>
-    <None Include="Data\Script\GameScript2.jtt">
-      <Filter>Data\Script</Filter>
-    </None>
-    <None Include="Data\Script\GameScript3.jtt">
-      <Filter>Data\Script</Filter>
-    </None>
+    <None Include="Data.zip" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="GamePages\MenuPage.xaml">
@@ -392,5 +192,10 @@
     <Page Include="GamePages\SelectionPage.xaml">
       <Filter>GamePages</Filter>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Movie\logo.mp4">
+      <Filter>Movie</Filter>
+    </Media>
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ScriptReader;
 using ScriptReader.Model;
+using System.Text.RegularExpressions;
 
 namespace ScriptTest
 {
@@ -53,7 +54,6 @@ namespace ScriptTest
             }
             Block = block.ToArray();
         }
-
         private IEnumerable<string> GetFileTextLinesAsync()
         {
             var path = $"{AppDomain.CurrentDomain.BaseDirectory}1.txt";

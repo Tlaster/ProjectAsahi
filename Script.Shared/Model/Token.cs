@@ -125,11 +125,8 @@ namespace ScriptReader.Model
             {
                 switch (item.AttributeType)
                 {
-                    case AttributeTypes.Path:
-                        item.Value.Replace("\\", "/");
-                        hasPath = true;
-                        break;
                     default:
+                        item.Value.Replace("\\", "/");
                         break;
                 }
             }

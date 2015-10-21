@@ -132,12 +132,11 @@ void ProjectAsahi::Common::Interpreter::ToNext()
 		}
 		else
 		{
-			auto size = _block->Size;
 			if (_blockPosition < _block->Size)
 			{
 				Clear();
 				Push(_block->GetAt(_blockPosition++));
-				OnWindowSizeChanged();
+				//OnWindowSizeChanged();
 			}
 			isEnded = _blockPosition == _block->Size;
 		}
@@ -178,9 +177,12 @@ void ProjectAsahi::Common::Interpreter::OnWindowSizeChanged()
 		}
 		for (size_t i = 0; i < m_charaVector.size(); i++)
 		{
-			DX::ThrowIfFailed(m_charaVector[i]->CharaItem->SetValue(D2D1_BITMAPSOURCE_PROP_SCALE, D2D1::Vector2F(_imageScale, _imageScale)));
+			if (m_charaVector[i]->CharaItem != nullptr)
+			{
+				DX::ThrowIfFailed(m_charaVector[i]->CharaItem->SetValue(D2D1_BITMAPSOURCE_PROP_SCALE, D2D1::Vector2F(_imageScale, _imageScale)));
+			}
 		}
-		if (!_contentShowed.empty())
+		if (!_contentShowed.empty()&&_contentShowed.size()>1&& m_textLayoutBackground!=nullptr)
 		{
 			DX::ThrowIfFailed(m_textLayout->SetMaxHeight(_contentHeight));
 			DX::ThrowIfFailed(m_textLayout->SetMaxWidth(_contentWidth));
@@ -265,14 +267,14 @@ void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::Sa
 		for (auto charaitem : item->CharaList)
 		{
 			CharaModel^ chara = ref new CharaModel(charaitem->FilePath, charaitem->Name, charaitem->Position_X, charaitem->Position_Y, charaitem->Deep);
-			_loader->CreateD2DEffectFromFile(charaitem->FilePath->Data(), &chara->CharaItem);
+			_loader->CreateD2DEffectFromFile(charaitem->FilePath, &chara->CharaItem, D2D1::Vector2F(_imageScale, _imageScale));
 			m_charaVector.push_back(chara);
 		}
 		sort(m_charaVector.begin(), m_charaVector.end(), [](const CharaModel^ chara1, const CharaModel^ chara2) {return chara1->Deep < chara2->Deep; });
 	}
 	if (_backgroundPath != nullptr)
 	{
-		_loader->CreateD2DEffectFromFile(_backgroundPath->Data(), &m_background);
+		_loader->CreateD2DEffectFromFile(_backgroundPath, &m_background, D2D1::Vector2F(_imageScale, _imageScale));
 	}
 	if (_bgmPath != nullptr)
 	{
@@ -282,10 +284,10 @@ void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::Sa
 	{
 		_backGroundMusic->Stop();
 	}
-	_reader = ref new Reader(_currentFilePath);
-	create_task(_reader->ReadFile()).then([&]()
+	create_task(FileManager::Manager::GetFileStringAsync(_currentFilePath)).then([&](Platform::String^ fileString)
 	{
-		_block = _reader->Block;
+		_reader = ref new Reader(fileString);
+		_block = _reader->GetBlock();
 		auto blockitem = _block->GetAt(_blockPosition);
 		if (blockitem != nullptr)
 		{
@@ -294,7 +296,7 @@ void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::Sa
 			case BlockTypes::CONTENT:
 				ContentHandler(blockitem->Value);
 				break;
-			case BlockTypes::TAB:		
+			case BlockTypes::TAB:
 				for (auto element = blockitem->ElementList; element != nullptr; element = element->Next)
 				{
 					if (element->ElementType == ElementTypes::Content)
@@ -372,10 +374,10 @@ void ProjectAsahi::Common::Interpreter::LoadResource()
 
 void ProjectAsahi::Common::Interpreter::LoadBlock()
 {
-	_reader = ref new Reader(_currentFilePath);
-	create_task(_reader->ReadFile()).then([&]()
+	create_task(FileManager::Manager::GetFileStringAsync(_currentFilePath)).then([&](Platform::String^ fileString)
 	{
-		_block = _reader->Block;
+		_reader = ref new Reader(fileString);
+		_block = _reader->GetBlock();
 		_isLoaded = true;
 		ToNext();
 	});
@@ -396,21 +398,24 @@ void ProjectAsahi::Common::Interpreter::CharacterRenderHandler()
 
 	for (size_t i = 0; i < m_charaVector.size(); i++)
 	{
-		d2dContext->DrawImage
-			(
-				m_charaVector[i]->CharaItem,
-				D2D1::Point2F
+		if (m_charaVector[i]->CharaItem!=nullptr)
+		{
+			d2dContext->DrawImage
 				(
-					_positionX + m_charaVector[i]->Position_X*1280.f*_scale,
-					_positionY + m_charaVector[i]->Position_Y*720.f*_scale
-					)
-				);
+					m_charaVector[i]->CharaItem,
+					D2D1::Point2F
+					(
+						_positionX + m_charaVector[i]->Position_X*_imageWidth->Value*_scale,
+						_positionY + m_charaVector[i]->Position_Y*_imageHeight->Value*_scale
+						)
+					);
+		}
 	}
 }
 
 void ProjectAsahi::Common::Interpreter::ContentRenderHandler()
 {
-	if (!_contentShowed.empty())
+	if (!_contentShowed.empty()&&_contentShowed.size()>1&& m_textLayoutBackground != nullptr)
 	{
 		auto d2dContext = m_deviceResources->GetD2DDeviceContext();
 		d2dContext->DrawImage(m_textLayoutBackground.Get(), D2D1::Point2F(_positionX, _positionY));
@@ -591,7 +596,7 @@ void ProjectAsahi::Common::Interpreter::BackgroundHandler(Element ^ element)
 			break;
 		}
 	}
-	_loader->CreateD2DEffectFromFile(_backgroundPath->Data(), &m_background);
+	_loader->CreateD2DEffectFromFile(_backgroundPath, &m_background, D2D1::Vector2F(_imageScale, _imageScale));
 }
 
 void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element)
@@ -610,7 +615,7 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 			path = att->AttributeValue;
 			break;
 		case ScriptReader::Model::AttributeTypes::Position_X:
-			pos_x = _wtof(att->AttributeValue->Data()) / 200.f;
+			pos_x = _wtof(att->AttributeValue->Data()) / 200.f;//TODO:check the position value
 			break;
 		case ScriptReader::Model::AttributeTypes::Position_Y:
 			pos_y = _wtof(att->AttributeValue->Data()) / 200.f;
@@ -640,7 +645,7 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 	else if (method == L"ADD")
 	{
 		CharaModel^ chara = ref new CharaModel(path,name, pos_x, pos_y, deep);
-		_loader->CreateD2DEffectFromFile(path->Data(), &chara->CharaItem);
+		_loader->CreateD2DEffectFromFile(path, &chara->CharaItem, D2D1::Vector2F(_imageScale, _imageScale));
 		m_charaVector.push_back(chara);
 		sort(m_charaVector.begin(), m_charaVector.end(), [](const CharaModel^ chara1, const CharaModel^ chara2) {return chara1->Deep < chara2->Deep; });
 	}
@@ -650,7 +655,7 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 		{
 			if (m_charaVector[i]->Name == name)
 			{
-				_loader->CreateD2DEffectFromFile(path->Data(), &m_charaVector[i]->CharaItem);
+				_loader->CreateD2DEffectFromFile(path, &m_charaVector[i]->CharaItem, D2D1::Vector2F(_imageScale, _imageScale));
 				break;
 			}
 		}
@@ -725,7 +730,7 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Elem
 
 	if (m_textLayoutBackground == nullptr)
 	{
-		_loader->CreateD2DEffectFromFile(_textLayoutBackground->Value->Data(), &m_textLayoutBackground);
+		_loader->CreateD2DEffectFromFile(_textLayoutBackground->Value, &m_textLayoutBackground, D2D1::Vector2F(_imageScale, _imageScale));
 	}
 }
 
@@ -755,7 +760,7 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(Platform::String ^ value)
 
 	if (m_textLayoutBackground == nullptr)
 	{
-		_loader->CreateD2DEffectFromFile(_textLayoutBackground->Value->Data(), &m_textLayoutBackground);
+		_loader->CreateD2DEffectFromFile(_textLayoutBackground->Value, &m_textLayoutBackground, D2D1::Vector2F(_imageScale, _imageScale));
 	}
 }
 
@@ -771,7 +776,7 @@ void ProjectAsahi::Common::Interpreter::FaceHandler(ScriptReader::Model::Element
 			break;
 		}
 	}
-	_loader->CreateD2DEffectFromFile(path->Data(), &m_face);
+	_loader->CreateD2DEffectFromFile(path, &m_face, D2D1::Vector2F(_imageScale, _imageScale));
 }
 
 void ProjectAsahi::Common::Interpreter::ToNextScript()
