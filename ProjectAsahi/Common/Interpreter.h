@@ -27,6 +27,8 @@ namespace ProjectAsahi
 			{
 				m_deviceResources = deviceResources;
 				//auto a = Windows::System::UserProfile::GlobalizationPreferences::Languages->GetAt(0);
+				//auto b = Windows::System::UserProfile::GlobalizationPreferences::Languages->GetAt(1);
+				//auto c = Windows::System::UserProfile::GlobalizationPreferences::Languages->GetAt(2);
 				_currentFilePath = nullptr;
 				Init();
 				SetDefault();
@@ -160,8 +162,33 @@ namespace ProjectAsahi
 			float _autoPlaySpeed;
 
 			bool _hasVoice;
+			bool _hasChara;
+			bool _hasBackground;
+			bool _hasFace;
+
 			bool _isLoaded;
 			bool _isResourceChanged;
+			bool _isReadyToDraw;
+			bool _isFadeAnimeComplete;
+
+			property bool _isCharaReady
+			{
+				bool get()
+				{
+					if (m_charaVector.size() != 0)
+					{
+						for (auto item : m_charaVector)
+						{
+							if (item->CharaItem == nullptr)
+							{
+								return false;
+							}
+						}
+						return true;
+					}
+					return false;
+				}
+			}
 		};
 	}
 }

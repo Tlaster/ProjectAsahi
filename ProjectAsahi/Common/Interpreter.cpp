@@ -51,7 +51,7 @@ void ProjectAsahi::Common::Interpreter::Render()
 	d2dContext->BeginDraw();
 	m_deviceResources->GetD2DDeviceContext()->SetTransform(m_deviceResources->GetOrientationTransform2D());
 	d2dContext->Clear(D2D1::ColorF(D2D1::ColorF::Black));
-	if (_isLoaded)
+	if (_isLoaded && _isReadyToDraw)
 	{
 		BackGroundRenderHandler();
 		CharacterRenderHandler();
@@ -63,39 +63,49 @@ void ProjectAsahi::Common::Interpreter::Render()
 
 void ProjectAsahi::Common::Interpreter::Update(float timeTotal, float timeDelta)
 {
-	if (_prevTime + _updateTimeSpan <= timeTotal)
+	if (!_isReadyToDraw)
 	{
-		if (_contentPosition < _contentValue.length())
-		{
-			_contentShowed += _contentValue[_contentPosition++];
-			DX::ThrowIfFailed(
-				m_deviceResources->GetDWriteFactory()->CreateTextLayout(
-					_contentShowed.c_str(),
-					_contentShowed.length(),
-					m_pTextFormat.Get(),
-					_contentWidth,
-					_contentHeight,
-					&m_textLayout
-					)
-				);
-		}
-		_prevTime = timeTotal;
+		_isReadyToDraw = _hasBackground ? m_background != nullptr : true &&
+			_hasFace ? m_face != nullptr : true && _isCharaReady;
+			
 	}
-	if (isAuto)
+	else
 	{
-		if (_hasVoice)
+		if (_prevTime + _updateTimeSpan <= timeTotal)
 		{
-			if (_charaVoice->IsEnded())
+			if (_contentPosition < _contentValue.length())
+			{
+				_contentShowed += _contentValue[_contentPosition++];
+				DX::ThrowIfFailed(
+					m_deviceResources->GetDWriteFactory()->CreateTextLayout(
+						_contentShowed.c_str(),
+						_contentShowed.length(),
+						m_pTextFormat.Get(),
+						_contentWidth,
+						_contentHeight,
+						&m_textLayout
+						)
+					);
+			}
+			_prevTime = timeTotal;
+		}
+		if (isAuto)
+		{
+			if (_hasVoice)
+			{
+				if (_charaVoice->IsEnded())
+				{
+					_autoPlayPrevTime = timeTotal;
+					ToNext();
+				}
+			}
+			else if (_autoPlayPrevTime + _autoPlayTimeSpan <= timeTotal)
 			{
 				_autoPlayPrevTime = timeTotal;
 				ToNext();
 			}
 		}
-		else if (_autoPlayPrevTime + _autoPlayTimeSpan <= timeTotal)
-		{
-			_autoPlayPrevTime = timeTotal;
-			ToNext();
-		}
+
 	}
 }
 
@@ -104,6 +114,7 @@ void ProjectAsahi::Common::Interpreter::Clear()
 	_contentValue.clear();
 	_contentTitle.clear();
 	_contentShowed.clear();
+	_hasFace = false;
 	m_face.Reset();
 	_charaVoice->Stop();
 	
@@ -146,6 +157,10 @@ void ProjectAsahi::Common::Interpreter::ToNext()
 void ProjectAsahi::Common::Interpreter::ClearAll()
 {
 	Clear();
+	_isReadyToDraw = false;
+	_hasBackground = false;
+	_hasChara = false;
+	_hasVoice = false;
 	_bgmPath = nullptr;
 	m_background = nullptr;
 	m_face = nullptr;
@@ -596,7 +611,17 @@ void ProjectAsahi::Common::Interpreter::BackgroundHandler(Element ^ element)
 			break;
 		}
 	}
-	_loader->CreateD2DEffectFromFile(_backgroundPath, &m_background, D2D1::Vector2F(_imageScale, _imageScale));
+	if (_backgroundPath == nullptr || _backgroundPath == L"null")
+	{
+		_hasBackground = false;
+		m_background.Reset();
+	}
+	else
+	{
+		_loader->CreateD2DEffectFromFile(_backgroundPath, &m_background, D2D1::Vector2F(_imageScale, _imageScale));
+		_hasBackground = true;
+	}
+	_isReadyToDraw = false;
 }
 
 void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element)
@@ -660,6 +685,7 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 			}
 		}
 	}
+	_hasChara = m_charaVector.size() != 0;
 }
 
 void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Element ^ element)
@@ -777,6 +803,7 @@ void ProjectAsahi::Common::Interpreter::FaceHandler(ScriptReader::Model::Element
 		}
 	}
 	_loader->CreateD2DEffectFromFile(path, &m_face, D2D1::Vector2F(_imageScale, _imageScale));
+	_hasFace = true;
 }
 
 void ProjectAsahi::Common::Interpreter::ToNextScript()

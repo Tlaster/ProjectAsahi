@@ -16,4 +16,9 @@ MenuScreen::MenuScreen(const std::shared_ptr<DX::DeviceResources>& deviceResourc
 	CreateWindowSizeDependentResources();
 }
 
+void ProjectAsahi::Screen::MenuScreen::Update(float timeTotal, float timeDelta)
+{
+	_interpreter->Update(timeTotal, timeDelta);
+}
+
 

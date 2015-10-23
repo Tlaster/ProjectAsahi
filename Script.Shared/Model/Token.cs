@@ -300,6 +300,7 @@ namespace ScriptReader.Model
         ImageWidth,
         ImageHeight,
         FontSize,
+        DefaultLanguage,
     }
 
     public enum TokenType

@@ -13,6 +13,7 @@ namespace ProjectAsahi
 		{
 		internal:
 			MenuScreen(const std::shared_ptr<DX::DeviceResources>& deviceResources, ProjectAsahi::Common::Interpreter^ interpreter);
+			void Update(float timeTotal, float timeDelta) override;
 		private:
 			//~MenuScreen()
 			//{
