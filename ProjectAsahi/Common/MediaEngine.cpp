@@ -140,6 +140,8 @@ void MediaEngine::Initialize()
 	DX::ThrowIfFailed(
 		m_spMediaEngine.Get()->QueryInterface(__uuidof(IMFMediaEngine), (void**)&m_spEngineEx)
 		);
+
+	SetURL(L"Why do I fucking need to pass an url when I play stream source?");
 }
 
 
@@ -160,14 +162,12 @@ void MediaEngine::OnMediaEngineEvent(DWORD meEvent)
 
 void MediaEngine::PlayMusic(Platform::String^ szURI, bool isLoop)
 {
-	szURI = L"ms-appx:///" + szURI;
-	auto uri = ref new Uri(szURI);
-	create_task(StorageFile::GetFileFromApplicationUriAsync(uri)).then([=](StorageFile^ file)
+	create_task(FileManager::Manager::GetFileStreamAsync(szURI)).then([=](IBuffer^ buf)
 	{
-		SetURL(file->Path);
-		create_task(file->OpenAsync(Windows::Storage::FileAccessMode::Read)).then([=](IRandomAccessStream^ streamHandle)
+		InMemoryRandomAccessStream^ memstream = ref new InMemoryRandomAccessStream();
+		create_task(memstream->WriteAsync(buf)).then([=](unsigned int progress)
 		{
-			SetBytestream(streamHandle);
+			SetBytestream(memstream);
 		});
 	});
 	if (m_spMediaEngine)
@@ -185,7 +185,6 @@ void MediaEngine::SetBytestream(IRandomAccessStream^ streamHandle)
 	DX::ThrowIfFailed(
 		m_spEngineEx->SetSourceFromByteStream(spMFByteStream.Get(), m_bstrURL)
 		);
-
 	return;
 }
 
@@ -203,7 +202,7 @@ void MediaEngine::SetURL(Platform::String^ szURL)
 	if (m_bstrURL == 0)
 	{
 		DX::ThrowIfFailed(E_OUTOFMEMORY);
-	}
+	}  
 
 	StringCchCopyW(m_bstrURL, cchAllocationSize, szURL->Data());
 

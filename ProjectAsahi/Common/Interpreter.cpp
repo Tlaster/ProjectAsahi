@@ -67,7 +67,6 @@ void ProjectAsahi::Common::Interpreter::Update(float timeTotal, float timeDelta)
 	{
 		_isReadyToDraw = _hasBackground ? m_background != nullptr : true &&
 			_hasFace ? m_face != nullptr : true && _isCharaReady;
-			
 	}
 	else
 	{
