@@ -15,6 +15,7 @@ namespace ProjectAsahi
 				Position_Y = pos_y;
 				CharaItem = nullptr;
 				Deep = deep;
+				AlphaValue = 0.f;
 			}
 			float Position_X;
 			float Position_Y;
@@ -22,6 +23,8 @@ namespace ProjectAsahi
 			ID2D1Effect * CharaItem;
 			Platform::String^ Name;
 			Platform::String^ FilePath;
+			property bool IsNew { bool get() { return AlphaValue >= 1.f; } }
+			float AlphaValue;
 		private:
 			~CharaModel() { CharaItem->Release(); }
 		};

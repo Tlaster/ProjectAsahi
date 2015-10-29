@@ -100,6 +100,7 @@ namespace ProjectAsahi
 			void ContentHandler(Platform::String^ value);
 			void FaceHandler(ScriptReader::Model::Element^ element);
 			void ToNextScript();
+			void UpdateFrameOpacity();
 
 			std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
@@ -120,6 +121,8 @@ namespace ProjectAsahi
 			MediaEngine^ _backGroundMusic;
 			MediaEngine^ _charaVoice;
 
+
+			Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> _color_black;
 			Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_textForeground;
 			Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_textBorderBrush;
 			Microsoft::WRL::ComPtr<ID2D1Effect> m_background;
@@ -160,6 +163,18 @@ namespace ProjectAsahi
 			float _autoPlayTimeSpan;
 			float _autoPlayPrevTime;
 			float _autoPlaySpeed;
+			float _initAlpha;
+			float _faceInitAlphaValue;
+
+			property float _initAlphaValue
+			{
+				float get() { return _initAlpha; }
+				void set(float value)
+				{
+					_initAlpha = value;
+					UpdateFrameOpacity();
+				}
+			}
 
 			bool _hasVoice;
 			bool _hasChara;
@@ -169,7 +184,21 @@ namespace ProjectAsahi
 			bool _isLoaded;
 			bool _isResourceChanged;
 			bool _isReadyToDraw;
-			bool _isFadeAnimeComplete;
+
+			property bool _isFadeAnimeComplete
+			{
+				bool get()
+				{
+					return _initAlphaValue >= 1.f;
+				}
+			}
+			property bool _isFaceFadeAnimateComplete
+			{
+				bool get()
+				{
+					return _faceInitAlphaValue >= 1.f;
+				}
+			}
 
 			property bool _isCharaReady
 			{

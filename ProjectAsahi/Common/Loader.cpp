@@ -28,6 +28,8 @@ void Loader::CreateD2DEffectFromFile(Platform::String^ fileName, ID2D1Effect ** 
 		{
 			ComPtr<IWICBitmapDecoder> decoder;
 			ComPtr<IStream> stream;
+			ComPtr<ID2D1Image> img;
+			ComPtr<ID2D1Effect> ef;
 			DX::ThrowIfFailed(CreateStreamOverRandomAccessStream(reinterpret_cast<IUnknown*>(memstream), IID_PPV_ARGS(&stream)));
 			DX::ThrowIfFailed(m_wicFactory->CreateDecoderFromStream(stream.Get(), nullptr, WICDecodeMetadataCacheOnDemand, &decoder));
 			ComPtr<IWICBitmapFrameDecode> frame;
@@ -51,6 +53,13 @@ void Loader::CreateD2DEffectFromFile(Platform::String^ fileName, ID2D1Effect ** 
 				(*effect)->SetValue(D2D1_BITMAPSOURCE_PROP_WIC_BITMAP_SOURCE, formatConvert.Get())
 				);
 			DX::ThrowIfFailed((*effect)->SetValue(D2D1_BITMAPSOURCE_PROP_SCALE, scale));
+			//ef->GetOutput(&img);
+			////DX::ThrowIfFailed(m_d2dContext->CreateEffect(CLSID_D2D1Composite, &(*effect)));
+			////DX::ThrowIfFailed(
+			////	(*effect)->SetValue(D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_DESTINATION_IN)
+			////	);
+			//(*effect)->SetInput(0, img.Get());
+			//ef.Reset();
 			decoder.Reset();
 			frame.Reset();
 			formatConvert.Reset();

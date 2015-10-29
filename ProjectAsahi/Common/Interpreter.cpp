@@ -49,14 +49,25 @@ void ProjectAsahi::Common::Interpreter::Render()
 {
 	auto d2dContext = m_deviceResources->GetD2DDeviceContext();
 	d2dContext->BeginDraw();
+	ComPtr<ID2D1Layer> layer;
 	m_deviceResources->GetD2DDeviceContext()->SetTransform(m_deviceResources->GetOrientationTransform2D());
 	d2dContext->Clear(D2D1::ColorF(D2D1::ColorF::Black));
-	if (_isLoaded && _isReadyToDraw)
+	if (_isReadyToDraw)
 	{
+		if (!_isFadeAnimeComplete)
+		{
+			d2dContext->CreateLayer(&layer);
+			d2dContext->PushLayer(D2D1::LayerParameters1(D2D1::InfiniteRect(), NULL, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), _initAlphaValue, _color_black.Get(), D2D1_LAYER_OPTIONS1_NONE), layer.Get());
+		}
 		BackGroundRenderHandler();
 		CharacterRenderHandler();
 		ContentRenderHandler();
 		FaceRenderHandler();
+		if (!_isFadeAnimeComplete)
+		{
+			d2dContext->PopLayer();
+			layer.Reset();
+		}
 	}
 	DX::ThrowIfFailed(d2dContext->EndDraw());
 }
@@ -67,6 +78,10 @@ void ProjectAsahi::Common::Interpreter::Update(float timeTotal, float timeDelta)
 	{
 		_isReadyToDraw = _hasBackground ? m_background != nullptr : true &&
 			_hasFace ? m_face != nullptr : true && _isCharaReady;
+	}
+	else if (!_isFadeAnimeComplete)
+	{
+		_initAlphaValue += 0.1f;
 	}
 	else
 	{
@@ -115,6 +130,7 @@ void ProjectAsahi::Common::Interpreter::Clear()
 	_contentShowed.clear();
 	_hasFace = false;
 	m_face.Reset();
+	_faceInitAlphaValue = 0.f;
 	_charaVoice->Stop();
 	
 	isSelection = false;
@@ -146,7 +162,6 @@ void ProjectAsahi::Common::Interpreter::ToNext()
 			{
 				Clear();
 				Push(_block->GetAt(_blockPosition++));
-				//OnWindowSizeChanged();
 			}
 			isEnded = _blockPosition == _block->Size;
 		}
@@ -167,6 +182,7 @@ void ProjectAsahi::Common::Interpreter::ClearAll()
 	_nextFilePath = nullptr;
 	_backGroundMusic->Stop();
 	_blockPosition = 0;
+	_initAlphaValue = 0.f;
 	_backLogList->Clear();
 	for (size_t i = 0; i < m_charaVector.size(); i++)
 	{
@@ -284,7 +300,7 @@ void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::Sa
 			_loader->CreateD2DEffectFromFile(charaitem->FilePath, &chara->CharaItem, D2D1::Vector2F(_imageScale, _imageScale));
 			m_charaVector.push_back(chara);
 		}
-		sort(m_charaVector.begin(), m_charaVector.end(), [](const CharaModel^ chara1, const CharaModel^ chara2) {return chara1->Deep < chara2->Deep; });
+		sort(m_charaVector.begin(), m_charaVector.end(), [](const CharaModel^ chara1, const CharaModel^ chara2) { return chara1->Deep < chara2->Deep; });
 	}
 	if (_backgroundPath != nullptr)
 	{
@@ -358,6 +374,7 @@ void ProjectAsahi::Common::Interpreter::Init()
 	_charaVoice = ref new MediaEngine();
 	_backLogList = ref new Platform::Collections::Vector<Model::BackLogModel^>();
 	_selectionList = ref new Platform::Collections::Vector<Model::SelectionModel^>();
+	m_deviceResources->GetD2DDeviceContext()->CreateSolidColorBrush(D2D1::ColorF(1.f, 1.f, 1.f, 1.f), &_color_black);
 }
 
 void ProjectAsahi::Common::Interpreter::SetDefault()
@@ -410,10 +427,19 @@ void ProjectAsahi::Common::Interpreter::CharacterRenderHandler()
 {
 	auto d2dContext = m_deviceResources->GetD2DDeviceContext();
 
+	ComPtr<ID2D1Layer> layer;			
 	for (size_t i = 0; i < m_charaVector.size(); i++)
 	{
-		if (m_charaVector[i]->CharaItem!=nullptr)
+		if (m_charaVector[i]->CharaItem != nullptr)
 		{
+			if (m_charaVector[i]->IsNew)
+			{
+				if (layer == nullptr)
+				{
+					d2dContext->CreateLayer(&layer);
+				}
+				d2dContext->PushLayer(D2D1::LayerParameters1(D2D1::InfiniteRect(), NULL, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), m_charaVector[i]->AlphaValue, _color_black.Get(), D2D1_LAYER_OPTIONS1_NONE), layer.Get());
+			}
 			d2dContext->DrawImage
 				(
 					m_charaVector[i]->CharaItem,
@@ -421,9 +447,18 @@ void ProjectAsahi::Common::Interpreter::CharacterRenderHandler()
 					(
 						_positionX + m_charaVector[i]->Position_X*_imageWidth->Value*_scale,
 						_positionY + m_charaVector[i]->Position_Y*_imageHeight->Value*_scale
-						)
-					);
+					)
+				);
+			if (m_charaVector[i]->IsNew)
+			{
+				m_charaVector[i]->AlphaValue += 0.2;
+				d2dContext->PopLayer();
+			}
 		}
+	}
+	if (layer != nullptr)
+	{
+		layer.Reset();
 	}
 }
 
@@ -447,7 +482,19 @@ void ProjectAsahi::Common::Interpreter::FaceRenderHandler()
 	if (m_face != nullptr)
 	{
 		auto d2dContext = m_deviceResources->GetD2DDeviceContext();
+		ComPtr<ID2D1Layer> layer;
+		if (!_isFaceFadeAnimateComplete)
+		{
+			d2dContext->CreateLayer(&layer);
+			d2dContext->PushLayer(D2D1::LayerParameters1(D2D1::InfiniteRect(), NULL, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), _faceInitAlphaValue, _color_black.Get(), D2D1_LAYER_OPTIONS1_NONE), layer.Get());
+		}
 		d2dContext->DrawImage(m_face.Get(), D2D1::Point2F(_positionX + _textLayoutPadding*_scale, _contentPosition_Y));
+		if (!_isFaceFadeAnimateComplete)
+		{
+			d2dContext->PopLayer();
+			_faceInitAlphaValue += 0.2f;
+			layer.Reset();
+		}
 	}
 }
 
@@ -455,7 +502,7 @@ void ProjectAsahi::Common::Interpreter::CreateWindowSizeDependentResources()
 {
 	auto logicalSize = m_deviceResources->GetLogicalSize();
 	auto outputSize = m_deviceResources->GetOutputSize();
-	_textLayoutPadding = 50.f;
+	_textLayoutPadding = 50.f;//TODO: set padding
 	_scale = min((logicalSize.Width / _imageWidth->Value), (logicalSize.Height / _imageHeight->Value));
 	_imageScale = min((outputSize.Width / _imageWidth->Value), (outputSize.Height / _imageHeight->Value));
 	_positionY = (logicalSize.Height - _imageHeight->Value*_scale) / 2.f;
@@ -621,6 +668,7 @@ void ProjectAsahi::Common::Interpreter::BackgroundHandler(Element ^ element)
 		_hasBackground = true;
 	}
 	_isReadyToDraw = false;
+	_initAlphaValue = 0.f;
 }
 
 void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element)
@@ -809,6 +857,11 @@ void ProjectAsahi::Common::Interpreter::ToNextScript()
 {
 	this->SetPathNLoad(this->_nextFilePath);
 	_nextFilePath = nullptr;
+}
+
+void ProjectAsahi::Common::Interpreter::UpdateFrameOpacity()
+{
+	App::RootFrame->Opacity = _initAlphaValue;
 }
 
 ProjectAsahi::Common::Interpreter::~Interpreter()
