@@ -8,10 +8,10 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"					  
         GlowBrush="{DynamicResource AccentColorBrush}"	
+        xmlns:avalonEdit="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-        xmlns:shbox="clr-namespace:AurelienRibon.Ui.SyntaxHighlightBox;assembly=AurelienRibon.Ui.SyntaxHighlightBox"
         Title="ScriptWriter" Height="350" Width="525">
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
@@ -172,7 +172,8 @@
                             </Menu>
                         </ToolBar>
                     </ToolBarTray>
-                    <shbox:SyntaxHighlightBox x:Name="shbox" DockPanel.Dock="Top" FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" FontSize="{Binding SelectedItem.Content, ElementName=comboBox}" TextForeground="{Binding Foreground, ElementName=metroWindow}"/>
+                    <avalonEdit:TextEditor xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" Name="textEditor" DockPanel.Dock="Top" FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" FontSize="{Binding SelectedItem.Content, ElementName=comboBox}" ShowLineNumbers="True"/>
+                    <!--<shbox:SyntaxHighlightBox x:Name="shbox" DockPanel.Dock="Top" FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" FontSize="{Binding SelectedItem.Content, ElementName=comboBox}" TextForeground="{Binding Foreground, ElementName=metroWindow}"/>-->
                 </DockPanel>
             </Grid>
         </wpf:DrawerHost>

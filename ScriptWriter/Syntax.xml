@@ -1,0 +1,29 @@
+﻿<SyntaxDefinition name="JTT"
+        xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="Comment" foreground="#008000" />
+    <Color name="String" foreground="#A31515" />
+    <Color name="Define" foreground="#808080"/>
+    <!-- This is the main ruleset. -->
+    <RuleSet>       
+      <Span color="Comment" begin="//" />
+      <Span color="Define" begin="#define" />
+        <Span color="String" begin="\$"/>
+        <Span color="String">
+            <Begin>"</Begin>
+            <End>"</End>
+            <RuleSet>
+                <Span begin="\\" end="." />
+            </RuleSet>
+        </Span>
+        <!-- Digits -->
+        <Rule foreground="#4EC9B0">
+         Path|Position_X|Position_Y|Name|Value|Method|Title|Time|Voice|Deep|NextFile|MultipleLanguage|TextLayoutBackground|ImageWidth|ImageHeight|FontSize|DefaultLanguage
+        </Rule>
+        <Rule foreground="#2B91AF">
+         (\#)?(BGM|Chara|Background|Face|Content)
+        </Rule>
+        <Rule foreground="#0000FF">
+          TAB|SELECTION|true|false
+        </Rule>
+    </RuleSet>
+</SyntaxDefinition>

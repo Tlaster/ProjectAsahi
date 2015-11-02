@@ -8,9 +8,12 @@ using System.Diagnostics.Contracts;
 using System.Windows.Input;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
-namespace AurelienRibon.Ui.SyntaxHighlightBox {
-	public partial class SyntaxHighlightBox : TextBox {
+namespace AurelienRibon.Ui.SyntaxHighlightBox
+{
+	public partial class SyntaxHighlightBox : TextBox
+    {
 
 		// --------------------------------------------------------------------
 		// Attributes
@@ -79,20 +82,32 @@ namespace AurelienRibon.Ui.SyntaxHighlightBox {
 				InvalidateVisual();
 			};
 
-			SizeChanged += (s, e) => 
+			SizeChanged += async (s, e) =>
             {
-				if (e.HeightChanged == false)
-					return;
-				UpdateBlocks();
-				InvalidateVisual();
-			};
+                if (e.HeightChanged == false)
+                    return;
+                await Task.Run(async () =>
+                {
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        UpdateBlocks();
+                    });
+                });
+                InvalidateVisual();
+            };
 
-			TextChanged += (s, e) =>
+			TextChanged += async (s, e) =>
             {
-				UpdateTotalLineCount();
-				InvalidateBlocks(e.Changes.First().Offset);
-				InvalidateVisual();
-			};
+                await Task.Run(async () =>
+                {
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        UpdateTotalLineCount();
+                        InvalidateBlocks(e.Changes.First().Offset);
+                    });
+                });
+                InvalidateVisual();
+            };
 		}
 
 		protected override void OnRender(DrawingContext drawingContext)
@@ -101,18 +116,24 @@ namespace AurelienRibon.Ui.SyntaxHighlightBox {
             base.OnRender(drawingContext);
         }
 
-		private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        private async void OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-			if (e.VerticalChange != 0)
-				UpdateBlocks();
-			InvalidateVisual();
-		}
+            if (e.VerticalChange != 0)
+                await Task.Run(async () =>
+                 {
+                     await Dispatcher.InvokeAsync(() =>
+                     {
+                         UpdateBlocks();
+                     });
+                 });
+            InvalidateVisual();
+        }
 
-		// -----------------------------------------------------------
-		// Updating & Block managing
-		// -----------------------------------------------------------
+        // -----------------------------------------------------------
+        // Updating & Block managing
+        // -----------------------------------------------------------
 
-		private void UpdateTotalLineCount()
+        private void UpdateTotalLineCount()
         {
 			totalLineCount = TextUtilities.GetLineCount(Text);
 		}
@@ -146,8 +167,8 @@ namespace AurelienRibon.Ui.SyntaxHighlightBox {
 					LineHeight);
 				block.RawText = block.GetSubString(Text);
 				block.LineNumbers = GetFormattedLineNumbers(block.LineStartIndex, block.LineEndIndex);
-                block.FormattedText.SetFontSize(FontSize);
-                block.FormattedText.SetFontFamily(FontFamily);
+                block.FormattedText?.SetFontSize(FontSize);
+                block.FormattedText?.SetFontFamily(FontFamily);
                 block.LineNumbers.SetFontSize(FontSize);
                 block.LineNumbers.SetFontFamily(FontFamily);
                 blocks.Add(block);

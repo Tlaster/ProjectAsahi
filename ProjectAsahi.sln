@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileManager", "FileManager\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptWriter", "ScriptWriter\ScriptWriter.csproj", "{76820DBD-807E-4C54-B069-70035E926753}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AurelienRibon.Ui.SyntaxHighlightBox", "AurelienRibon.Ui.SyntaxHighlightBox\AurelienRibon.Ui.SyntaxHighlightBox.csproj", "{10A9ECD3-AE1E-494D-9A27-8A32DD581759}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Script.Shared\Script.Shared.projitems*{76820dbd-807e-4c54-b069-70035e926753}*SharedItemsImports = 4
@@ -119,22 +117,6 @@ Global
 		{76820DBD-807E-4C54-B069-70035E926753}.Release|x64.Build.0 = Release|Any CPU
 		{76820DBD-807E-4C54-B069-70035E926753}.Release|x86.ActiveCfg = Release|Any CPU
 		{76820DBD-807E-4C54-B069-70035E926753}.Release|x86.Build.0 = Release|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Debug|ARM.Build.0 = Debug|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Debug|x64.Build.0 = Debug|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Debug|x86.Build.0 = Debug|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Release|ARM.ActiveCfg = Release|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Release|ARM.Build.0 = Release|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Release|x64.ActiveCfg = Release|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Release|x64.Build.0 = Release|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Release|x86.ActiveCfg = Release|Any CPU
-		{10A9ECD3-AE1E-494D-9A27-8A32DD581759}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
