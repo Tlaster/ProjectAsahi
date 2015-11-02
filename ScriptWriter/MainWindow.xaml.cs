@@ -14,7 +14,6 @@ namespace ScriptWriter
     /// </summary>
     public partial class MainWindow
     {
-        private Regex _regex = new Regex("(BGM|Chara|Background|Face|Content)|(Path|Position_X|Position_Y|Name|Value|Method|Title|Time|Voice|Deep|NextFile|MultipleLanguage|TextLayoutBackground|ImageWidth|ImageHeight|FontSize|DefaultLanguage)|(TAB|SELECTION)|(#define|#)|(true|false)");
         public MainWindow()
         {
             InitializeComponent();
