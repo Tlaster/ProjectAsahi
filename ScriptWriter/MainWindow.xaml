@@ -172,7 +172,7 @@
                             </Menu>
                         </ToolBar>
                     </ToolBarTray>
-                    <avalonEdit:TextEditor xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" Name="textEditor" DockPanel.Dock="Top" FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" FontSize="{Binding SelectedItem.Content, ElementName=comboBox}" ShowLineNumbers="True"/>
+                    <avalonEdit:TextEditor Name="textEditor" DockPanel.Dock="Top" FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" FontSize="{Binding SelectedItem.Content, ElementName=comboBox}" ShowLineNumbers="True"/>
                     <!--<shbox:SyntaxHighlightBox x:Name="shbox" DockPanel.Dock="Top" FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" FontSize="{Binding SelectedItem.Content, ElementName=comboBox}" TextForeground="{Binding Foreground, ElementName=metroWindow}"/>-->
                 </DockPanel>
             </Grid>
