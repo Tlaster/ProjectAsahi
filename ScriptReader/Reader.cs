@@ -17,11 +17,11 @@ namespace ScriptReader
             FileString = fileString;
         }
 
-        public IList<Block> GetBlock() => ReadLines(FileString);
+        public IList<IToken> GetBlock() => ReadLines(FileString);
 
-        private IList<Block> ReadLines(string str)
+        private IList<IToken> ReadLines(string str)
         {
-            List<Block> block = new List<Block>();
+            List<IToken> block = new List<IToken>();
             Lexer lexer = new Lexer();
             Parser parser = new Parser();
             var tokenList = lexer.ReadLine(str, 0);
@@ -35,7 +35,7 @@ namespace ScriptReader
                 {
                     block.Add(parser.Block);
                     parser.Reset();
-                    if (block[block.Count - 1].BlockType == BlockTypes.SETTINGS)
+                    if (block[block.Count - 1].Type == TokenType.Setting)
                     /// ACC will not push current item,
                     /// it will cause error 
                     {

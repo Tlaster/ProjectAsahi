@@ -2,40 +2,36 @@
 
 namespace ScriptReader.Model
 {
-    internal class Token
+    public interface IToken
     {
-        internal int Line { get; set; }
-        internal string Value { get; set; }
-        internal TokenType Type { get; }
+        int Line { get; }
+        string Value { get; }
+        TokenType Type { get; }
 
-        protected Token() { }
-
-        private Token(int line, TokenType type)
+    }
+    internal class Token : IToken
+    {
+        public TokenType Type { get; } = TokenType.Token;
+        public string Value { get; }
+        public int Line { get; }
+        internal SyntaxType ValueType { get; }
+        public Token(int line,string value,SyntaxType type)
         {
             Line = line;
-            Type = type;
-        }
-
-        internal Token(int line, string value, TokenType type) : this(line, type)
-        {
             Value = value;
+            ValueType = type;
         }
     }
-
-
-    internal sealed class TokenException : Exception
+    public sealed class Attribute: IToken
     {
-        internal TokenException(string message) : base(message) { }
-    }
+        public TokenType Type { get; } = TokenType.Attribute;
+        public bool IsGlobal { get; internal set; }
+        public int Line { get; }
+        public string Value { get; }
+        public AttributeTypes AttributeType { get; }
+        public AttributeValueType ValueType { get; }
 
-    internal class AttributeToken : Token
-    {
-        internal bool IsGlobal { get; set; }
-        internal new string Value { get; }
-        internal AttributeTypes AttributeType { get; }
-        internal AttributeValueType ValueType { get; }
-
-        internal AttributeToken(int line, AttributeTypes atttype, string value, AttributeValueType type,bool isGlobal = false)
+        internal Attribute(int line, AttributeTypes atttype, string value, AttributeValueType type, bool isGlobal = false)
         {
             Line = line;
             AttributeType = atttype;
@@ -81,15 +77,18 @@ namespace ScriptReader.Model
                 throw new ParseException($"{AttributeType.ToString()} can not have invalid attribute value at line {Line}");
             }
         }
-
-        internal AttributeToken Next { get; set; }
+        
+        public Attribute Next { get; internal set; }
     }
-
-    internal class ElementToken : Token
+    public sealed class Element: IToken
     {
-        internal ElementTypes ElementType { get; }
-        internal AttributeToken AttributeList { get; private set; }
-        internal ElementToken(int line, ElementTypes elementtype, AttributeToken list)
+        public TokenType Type { get; } = TokenType.Element;
+        public string Value { get; }
+        public int Line { get; }
+        public ElementTypes ElementType { get; }
+        public Attribute AttributeList { get; set; }
+
+        internal Element(int line, ElementTypes elementtype, Attribute list)
         {
             Line = line;
             ElementType = elementtype;
@@ -97,13 +96,12 @@ namespace ScriptReader.Model
             AttributeCheck();
         }
 
-        internal ElementToken(int line,ElementTypes types,string value)
+        internal Element(int line, ElementTypes types, string value)
         {
             Line = line;
             ElementType = types;
             ElementCheck(value);
         }
-
         private void ElementCheck(string value)
         {
             var type = AttributeTypes.Path;
@@ -115,9 +113,8 @@ namespace ScriptReader.Model
                 default:
                     break;
             }
-            AttributeList = new AttributeToken(Line, type, value, AttributeValueType.String);
+            AttributeList = new Attribute(Line, type, value, AttributeValueType.String);
         }
-
         private bool BgmElementCheck()
         {
             var hasPath = false;
@@ -238,31 +235,62 @@ namespace ScriptReader.Model
                 throw new ParseException($"{ElementType.ToString()} can not have invalid attribute at line {Line}");
             }
         }
-
-        internal ElementToken Next { get; set; }
+        
+        public Element Next { get; internal set; }
     }
 
-    internal class BlockToken : Token
+    public sealed class Content: IToken
     {
-        internal ElementToken ElementList { get; }
-        internal BlockTypes BlockType { get; }
-        internal AttributeToken SettingList { get; }
-        internal BlockToken(BlockTypes type, ElementToken element)
+        public string Value { get; }
+        public int Line { get; }
+        public TokenType Type { get; } = TokenType.Content;
+        internal Content(string value,int line=0)
         {
-            BlockType = type;
-            ElementList = element;
-        }
-        internal BlockToken(string value)
-        {
-            BlockType = BlockTypes.CONTENT;
+            Line = line;
             Value = value;
         }
-        internal BlockToken(AttributeToken settingList)
-        {
-            BlockType = BlockTypes.SETTINGS;
-            SettingList = settingList;
-        }
+    }
+    public sealed class Selection : IToken
+    {
+        public string Value { get; }
+        public int Line { get; }
+        public TokenType Type { get; } = TokenType.Selection;
+        public Element ElementList { get; private set; }
 
+        public Selection(Element elementlist)
+        {
+            ElementList = elementlist;
+        }
+    }
+    public sealed class Setting : IToken
+    {
+        public string Value { get; }
+        public int Line { get; }
+        public TokenType Type { get; } = TokenType.Setting;
+        public Attribute SettingList { get; private set; }
+        public Setting(Attribute list)
+        {
+            SettingList = list;
+        }
+    }
+    public sealed class Tab : IToken
+    {
+        public string Value { get; }
+        public int Line { get; }
+        public TokenType Type { get; } = TokenType.Tab;
+        public Element ElementList { get; }
+
+        internal Tab(Element element)
+        {
+            ElementList = element;
+        }
+        
+    }
+
+
+    internal sealed class TokenException : Exception
+    {
+        internal TokenException(string message) : base(message) { }
     }
 
     public enum AttributeValueType
@@ -303,7 +331,7 @@ namespace ScriptReader.Model
         DefaultLanguage,
     }
 
-    public enum TokenType
+    public enum SyntaxType
     {
         Sharp,
         USD,
@@ -317,13 +345,14 @@ namespace ScriptReader.Model
         Number,
         Boolean,
     }
-
-    public enum BlockTypes
+    public enum TokenType
     {
-        TAB,
-        SELECTION,
-        SETTINGS,
-        CONTENT,
+        Attribute,
+        Element,
+        Setting,
+        Content,
+        Selection,
+        Tab,
+        Token,
     }
-
 }

@@ -11,22 +11,22 @@ using namespace Concurrency;
 using namespace ScriptReader::Model;
 using namespace ScriptReader;
 
-void ProjectAsahi::Common::Interpreter::Push(ScriptReader::Model::Block ^ block)
+void ProjectAsahi::Common::Interpreter::Push(ScriptReader::Model::IToken ^ block)
 {
-	switch (block->BlockType)
+	switch (block->Type)
 	{
-	case BlockTypes::TAB:
-		for (auto element = block->ElementList; element != nullptr; element = element->Next)
+	case TokenType::Tab:
+		for (auto element = dynamic_cast<ScriptReader::Model::Tab^>(block)->ElementList; element != nullptr; element = element->Next)
 		{
 			PushTABElement(element);
 		}
 		break;
-	case BlockTypes::SELECTION:
-		PushSelectionBlock(block);
+	case TokenType::Selection:
+		PushSelectionBlock(dynamic_cast<ScriptReader::Model::Selection^>(block));
 		App::CurrentGameState = Entities::GameState::GS_SELECTION;
 		break;
-	case BlockTypes::SETTINGS:
-		for (auto element = block->SettingList; element != nullptr; element = element->Next)
+	case TokenType::Setting:
+		for (auto element = dynamic_cast<ScriptReader::Model::Setting^>(block)->SettingList; element != nullptr; element = element->Next)
 		{
 			PushSettingAttribute(element);
 		}
@@ -37,7 +37,7 @@ void ProjectAsahi::Common::Interpreter::Push(ScriptReader::Model::Block ^ block)
 		}
 		ToNext();
 		break;
-	case BlockTypes::CONTENT:
+	case TokenType::Content:
 		ContentHandler(block->Value);
 		break;
 	default:
@@ -321,13 +321,13 @@ void ProjectAsahi::Common::Interpreter::LoadFromSaveModel(FileManager::Model::Sa
 		auto blockitem = _block->GetAt(_blockPosition);
 		if (blockitem != nullptr)
 		{
-			switch (blockitem->BlockType)
+			switch (blockitem->Type)
 			{
-			case BlockTypes::CONTENT:
+			case TokenType::Content:
 				ContentHandler(blockitem->Value);
 				break;
-			case BlockTypes::TAB:
-				for (auto element = blockitem->ElementList; element != nullptr; element = element->Next)
+			case TokenType::Tab:
+				for (auto element = dynamic_cast<ScriptReader::Model::Tab^>(blockitem)->ElementList; element != nullptr; element = element->Next)
 				{
 					if (element->ElementType == ElementTypes::Content)
 					{
@@ -553,26 +553,26 @@ void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model
 	switch (attribute->AttributeType)
 	{
 	case AttributeTypes::NextFile:
-		_nextFilePath = attribute->AttributeValue;
+		_nextFilePath = attribute->Value;
 		break;
 	case AttributeTypes::MultipleLanguage:
 		if (!_isMultipleLanguage->IsSetted || !_isMultipleLanguage->IsGlobal)
 		{
-			_isMultipleLanguage->Value = attribute->AttributeValue == L"true";
+			_isMultipleLanguage->Value = attribute->Value == L"true";
 			_isMultipleLanguage->IsGlobal = attribute->IsGlobal;
 		}
 		break;
 	case AttributeTypes::TextLayoutBackground:
 		if (!_textLayoutBackground->IsSetted || !_textLayoutBackground->IsGlobal)
 		{
-			_textLayoutBackground->Value = attribute->AttributeValue;
+			_textLayoutBackground->Value = attribute->Value;
 			_textLayoutBackground->IsGlobal = attribute->IsGlobal;
 		}
 		break;
 	case ScriptReader::Model::AttributeTypes::ImageWidth:
 		if (!_imageWidth->IsSetted || !_imageWidth->IsGlobal)
 		{
-			_imageWidth->Value = _wtof(attribute->AttributeValue->Data());
+			_imageWidth->Value = _wtof(attribute->Value->Data());
 			_imageWidth->IsGlobal = attribute->IsGlobal;
 			_isResourceChanged = true;
 		}
@@ -580,7 +580,7 @@ void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model
 	case ScriptReader::Model::AttributeTypes::ImageHeight:
 		if (!_imageHeight->IsSetted || !_imageHeight->IsGlobal)
 		{
-			_imageHeight->Value = _wtof(attribute->AttributeValue->Data());
+			_imageHeight->Value = _wtof(attribute->Value->Data());
 			_imageHeight->IsGlobal = attribute->IsGlobal;
 			_isResourceChanged = true;
 		}
@@ -588,7 +588,7 @@ void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model
 	case ScriptReader::Model::AttributeTypes::FontSize:
 		if (!_fontSize->IsSetted || !_fontSize->IsGlobal)
 		{
-			_fontSize->Value = _wtof(attribute->AttributeValue->Data());
+			_fontSize->Value = _wtof(attribute->Value->Data());
 			_fontSize->IsGlobal = attribute->IsGlobal;
 			_isResourceChanged = true;
 		}
@@ -598,7 +598,7 @@ void ProjectAsahi::Common::Interpreter::PushSettingAttribute(ScriptReader::Model
 	}
 }
 
-void ProjectAsahi::Common::Interpreter::PushSelectionBlock(ScriptReader::Model::Block ^ block)
+void ProjectAsahi::Common::Interpreter::PushSelectionBlock(ScriptReader::Model::Selection ^ block)
 {
 	for (auto element = block->ElementList; element != nullptr; element = element->Next)
 	{
@@ -609,10 +609,10 @@ void ProjectAsahi::Common::Interpreter::PushSelectionBlock(ScriptReader::Model::
 			switch (att->AttributeType)
 			{
 			case ScriptReader::Model::AttributeTypes::Value:
-				content = att->AttributeValue;
+				content = att->Value;
 				break;
 			case ScriptReader::Model::AttributeTypes::NextFile:
-				filePath = att->AttributeValue;
+				filePath = att->Value;
 				break;
 			default:
 				break;
@@ -632,7 +632,7 @@ void ProjectAsahi::Common::Interpreter::BackgroundMusicHandler(Element ^ element
 		switch (att->AttributeType)
 		{
 		case AttributeTypes::Path:
-			_bgmPath = att->AttributeValue;
+			_bgmPath = att->Value;
 			break;
 		}
 	}
@@ -653,7 +653,7 @@ void ProjectAsahi::Common::Interpreter::BackgroundHandler(Element ^ element)
 		switch (att->AttributeType)
 		{
 		case AttributeTypes::Path:
-			_backgroundPath = att->AttributeValue;
+			_backgroundPath = att->Value;
 			break;
 		}
 	}
@@ -684,22 +684,22 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 		switch (att->AttributeType)
 		{
 		case ScriptReader::Model::AttributeTypes::Path:
-			path = att->AttributeValue;
+			path = att->Value;
 			break;
 		case ScriptReader::Model::AttributeTypes::Position_X:
-			pos_x = _wtof(att->AttributeValue->Data()) / 200.f;//TODO:check the position value
+			pos_x = _wtof(att->Value->Data()) / 200.f;//TODO:check the position value
 			break;
 		case ScriptReader::Model::AttributeTypes::Position_Y:
-			pos_y = _wtof(att->AttributeValue->Data()) / 200.f;
+			pos_y = _wtof(att->Value->Data()) / 200.f;
 			break;
 		case ScriptReader::Model::AttributeTypes::Name:
-			name = att->AttributeValue;
+			name = att->Value;
 			break;
 		case ScriptReader::Model::AttributeTypes::Method:
-			method = att->AttributeValue;
+			method = att->Value;
 			break;
 		case ScriptReader::Model::AttributeTypes::Deep:
-			deep = _wtoi(att->AttributeValue->Data());
+			deep = _wtoi(att->Value->Data());
 			break;
 		}
 	}
@@ -747,18 +747,18 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Elem
 		switch (att->AttributeType)
 		{
 		case AttributeTypes::Value:
-			contentValue = att->AttributeValue;
+			contentValue = att->Value;
 			_contentValue = contentValue->Data();
 			break;
 		case AttributeTypes::Voice:
-			voicePath = att->AttributeValue;
+			voicePath = att->Value;
 			hasVoice = true;
 			break;
 		case AttributeTypes::Time:
-			time = _wtof(att->AttributeValue->Data());
+			time = _wtof(att->Value->Data());
 			break;
 		case AttributeTypes::Title:
-			contentTitle = att->AttributeValue;
+			contentTitle = att->Value;
 			_contentTitle = (contentTitle + L"\n")->Data();
 			break;
 		}
@@ -845,7 +845,7 @@ void ProjectAsahi::Common::Interpreter::FaceHandler(ScriptReader::Model::Element
 		switch (att->AttributeType)
 		{
 		case AttributeTypes::Path:
-			path = att->AttributeValue;
+			path = att->Value;
 			break;
 		}
 	}

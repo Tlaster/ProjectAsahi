@@ -19,47 +19,47 @@ namespace ScriptReader
                 {
                     if (matches[i].Groups[3].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.Number));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.Number));
                     }
                     else if (matches[i].Groups[4].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value.Replace("\"", ""), TokenType.String));
+                        tokenList.Add(new Token(line, matches[i].Value.Replace("\"", ""), SyntaxType.String));
                     }
                     else if (matches[i].Groups[6].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.ElementName));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.ElementName));
                     }
                     else if (matches[i].Groups[7].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.Attribute));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.Attribute));
                     }
                     else if (matches[i].Groups[8].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.Type));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.Type));
                     }
                     else if (matches[i].Groups[9].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.Sharp));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.Sharp));
                     }
                     else if (matches[i].Groups[10].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.Boolean));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.Boolean));
                     }
                     else if (matches[i].Groups[11].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.Break));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.Break));
                     }
                     else if (matches[i].Groups[12].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.Equals));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.Equals));
                     }
                     else if (matches[i].Groups[13].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.Bracket));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.Bracket));
                     }
                     else if(matches[i].Groups[14].Success)
                     {
-                        tokenList.Add(new Token(line, matches[i].Value, TokenType.USD));
+                        tokenList.Add(new Token(line, matches[i].Value, SyntaxType.USD));
                     }
                     else
                     {

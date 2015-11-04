@@ -23,13 +23,12 @@ namespace ScriptTest
 
     class Reader
     {
-        public Block[] Block { get; set; }
         public void ReadFile()
         {
             Lexer lexer = new Lexer();
             Parser parser = new Parser();
             var lines = GetFileTextLinesAsync().ToList();
-            List<Block> block = new List<Block>();
+            List<IToken> block = new List<IToken>();
             for (int i = 0; i < lines.Count; i++)
             {
                 var tokenList = lexer.ReadLine(lines[i], i);
@@ -43,7 +42,7 @@ namespace ScriptTest
                     {
                         block.Add(parser.Block);
                         parser.Reset();
-                        if (block[block.Count - 1].BlockType == BlockTypes.SETTINGS)
+                        if (block[block.Count - 1].Type == TokenType.Setting)
                         /// ACC will not push current item,
                         /// it will cause error 
                         {
@@ -52,7 +51,6 @@ namespace ScriptTest
                     }
                 }
             }
-            Block = block.ToArray();
         }
         private IEnumerable<string> GetFileTextLinesAsync()
         {

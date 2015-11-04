@@ -17,7 +17,7 @@ namespace ScriptWriter
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
-    /// </summary>
+    /// </summary> 
     public partial class MainWindow
     {
         private FoldingManager _foldingManager;

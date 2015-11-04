@@ -111,6 +111,7 @@ void ProjectAsahiMain::CheckScreenType()
 		switch (App::CurrentGameState)
 		{
 		case ProjectAsahi::Entities::GameState::GS_LOGO:
+			App::RootFrame->Opacity = 1.f;
 			App::RootFrame->BackStack->Clear();
 			_gameStateStack->Clear();
 			App::RootFrame->Navigate(LogoPage::typeid);

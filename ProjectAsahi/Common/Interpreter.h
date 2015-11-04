@@ -34,7 +34,7 @@ namespace ProjectAsahi
 				SetDefault();
 				LoadResource();
 			}
-			void Push(ScriptReader::Model::Block^ block);
+			void Push(ScriptReader::Model::IToken^ block);
 			void Render();
 			void Update(float timeTotal, float timeDelta);
 			void Clear();
@@ -89,7 +89,7 @@ namespace ProjectAsahi
 
 			void PushTABElement(ScriptReader::Model::Element^ element);
 			void PushSettingAttribute(ScriptReader::Model::Attribute^ attribute);
-			void PushSelectionBlock(ScriptReader::Model::Block ^ block);
+			void PushSelectionBlock(ScriptReader::Model::Selection ^ block);
 
 			~Interpreter();
 
@@ -108,7 +108,7 @@ namespace ProjectAsahi
 			ScriptReader::Reader^ _reader;
 
 
-			Windows::Foundation::Collections::IVector<ScriptReader::Model::Block^>^ _block;
+			Windows::Foundation::Collections::IVector<ScriptReader::Model::IToken^>^ _block;
 			Platform::Collections::Vector<Model::BackLogModel^>^ _backLogList;
 			Platform::Collections::Vector<Model::SelectionModel^>^ _selectionList;
 			int _blockPosition;

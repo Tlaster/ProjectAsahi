@@ -99,28 +99,26 @@ namespace ScriptReader
         internal bool IsAccepted { get; private set; }
         internal bool IsLoopingForReduce { get; private set; }
 
-        private List<Token> _tokenStack;
+        private List<IToken> _tokenStack;
         private List<int> _stateStack;
-        private BlockToken _blockToken;
+        public IToken Block { get; private set; }
 
         internal Parser()
         {
-            _tokenStack = new List<Token>();
+            _tokenStack = new List<IToken>();
             _stateStack = new List<int>();
-            _tokenStack.Add(new Token(0, null, TokenType.Bracket));
+            _tokenStack.Add(new Token(0, null, SyntaxType.Bracket));
             _stateStack.Add(0);
             IsLoopingForReduce = false;
         }
-
-        internal Block Block { get; private set; }
+        
 
         internal void Reset()
         {
-            _tokenStack = new List<Token>();
+            _tokenStack = new List<IToken>();
             _stateStack = new List<int>();
-            _tokenStack.Add(new Token(0, null, TokenType.Bracket));
+            _tokenStack.Add(new Token(0, null, SyntaxType.Bracket));
             _stateStack.Add(0);
-            _blockToken = null;
             IsLoopingForReduce = false;
             IsAccepted = false;
         }
@@ -128,15 +126,15 @@ namespace ScriptReader
         internal void Push(Token token)
         {
             int wordtype;
-            switch (token.Type)
+            switch (token.ValueType)
             {
-                case TokenType.Number:
-                case TokenType.Boolean:
-                    wordtype = (int)TokenType.String;
+                case SyntaxType.Number:
+                case SyntaxType.Boolean:
+                    wordtype = (int)SyntaxType.String;
                     break;
 
                 default:
-                    wordtype = (int)token.Type;
+                    wordtype = (int)token.ValueType;
                     break;
             }
 
@@ -153,19 +151,17 @@ namespace ScriptReader
                 switch (action[1])
                 {
                     case '1'://ACC for elements
-                        var blocktype = (BlockTypes)System.Enum.Parse(typeof(BlockTypes), _tokenStack[1].Value);
-                        _blockToken = new BlockToken(blocktype, _tokenStack[_tokenStack.Count - 1] as ElementToken);
+                        Block = new Tab(_tokenStack[_tokenStack.Count - 1] as Element);
                         break;
 
                     case '2'://ACC for settings
-                        _blockToken = new BlockToken(_tokenStack[_tokenStack.Count - 1] as AttributeToken);
+                        Block = new Setting(_tokenStack[_tokenStack.Count - 1] as Attribute);
                         break;
 
                     case '3'://ACC for content
-                        _blockToken = new BlockToken(_tokenStack[_tokenStack.Count - 1].Value);
+                        Block = new Content(_tokenStack[_tokenStack.Count - 1].Value);
                         break;
                 }
-                Block = new Block(_blockToken);
             }
             else if (action[0] == 'S')
             {
@@ -201,8 +197,8 @@ namespace ScriptReader
                         break;
 
                     case 5:// Elements -> Elements Element
-                        var nextele = _tokenStack[_tokenStack.Count - 1] as ElementToken;
-                        var preele = _tokenStack[_tokenStack.Count - 2] as ElementToken;
+                        var nextele = _tokenStack[_tokenStack.Count - 1] as Element;
+                        var preele = _tokenStack[_tokenStack.Count - 2] as Element;
                         nextele.Next = preele;
                         _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
@@ -213,7 +209,7 @@ namespace ScriptReader
                     case 6:// Element -> Sharp Ename Equals Value Break
                         var eName = _tokenStack[_tokenStack.Count - 4].Value;
                         var eType = (ElementTypes)System.Enum.Parse(typeof(ElementTypes), eName);
-                        var setele = new ElementToken(_tokenStack[_tokenStack.Count - 5].Line, eType, _tokenStack[_tokenStack.Count - 2].Value);
+                        var setele = new Element(_tokenStack[_tokenStack.Count - 5].Line, eType, _tokenStack[_tokenStack.Count - 2].Value);
                         _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _tokenStack.Add(setele);
@@ -223,8 +219,8 @@ namespace ScriptReader
                     case 7:// Element -> EName Bracket Atts Bracket
                         var elementName = _tokenStack[_tokenStack.Count - 4].Value;
                         var elementType = (ElementTypes)System.Enum.Parse(typeof(ElementTypes), elementName);
-                        var atts = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
-                        var element = new ElementToken(atts.Line, elementType, atts);
+                        var atts = _tokenStack[_tokenStack.Count - 2] as Attribute;
+                        var element = new Element(atts.Line, elementType, atts);
                         _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _tokenStack.Add(element);
@@ -236,8 +232,8 @@ namespace ScriptReader
                         break;
 
                     case 9:// Settings -> Settings Setting
-                        var nextset = _tokenStack[_tokenStack.Count - 1] as AttributeToken;
-                        var preset = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
+                        var nextset = _tokenStack[_tokenStack.Count - 1] as Attribute;
+                        var preset = _tokenStack[_tokenStack.Count - 2] as Attribute;
                         nextset.Next = preset;
                         _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
@@ -249,7 +245,7 @@ namespace ScriptReader
                     case 11:// Setting -> Sharp Att
                         if (_tokenStack[_tokenStack.Count - _popCount[reducerule - 1]].Value.Contains("define"))
                         {
-                            (_tokenStack[_tokenStack.Count - 1] as AttributeToken).IsGlobal = true;
+                            (_tokenStack[_tokenStack.Count - 1] as Attribute).IsGlobal = true;
                         }
                         _tokenStack.RemoveAt(_tokenStack.Count - _popCount[reducerule - 1]);
                         _stateStack.RemoveAt(_stateStack.Count - _popCount[reducerule - 1]);
@@ -261,8 +257,8 @@ namespace ScriptReader
                         break;
 
                     case 13:// Atts -> Atts Att
-                        var nextatt = _tokenStack[_tokenStack.Count - 1] as AttributeToken;
-                        var preatt = _tokenStack[_tokenStack.Count - 2] as AttributeToken;
+                        var nextatt = _tokenStack[_tokenStack.Count - 1] as Attribute;
+                        var preatt = _tokenStack[_tokenStack.Count - 2] as Attribute;
                         nextatt.Next = preatt;
                         _tokenStack.RemoveRange(_tokenStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
                         _stateStack.RemoveRange(_stateStack.Count - _popCount[reducerule - 1], _popCount[reducerule - 1]);
@@ -272,18 +268,18 @@ namespace ScriptReader
 
                     case 14:// Att -> Name Equals Value Break
                         AttributeValueType valueType = AttributeValueType.String;
-                        switch (_tokenStack[_tokenStack.Count - 2].Type)
+                        switch ((_tokenStack[_tokenStack.Count - 2] as Token).ValueType)
                         {
-                            case TokenType.Number:
+                            case SyntaxType.Number:
                                 valueType = AttributeValueType.Number;
                                 break;
 
-                            case TokenType.Boolean:
+                            case SyntaxType.Boolean:
                                 valueType = AttributeValueType.Boolean;
                                 break;
                         }
                         AttributeTypes attType = (AttributeTypes)System.Enum.Parse(typeof(AttributeTypes), _tokenStack[_tokenStack.Count - 4].Value);
-                        AttributeToken att = new AttributeToken
+                        Attribute att = new Attribute
                             (
                                 _tokenStack[_tokenStack.Count - 2].Line,
                                 attType,

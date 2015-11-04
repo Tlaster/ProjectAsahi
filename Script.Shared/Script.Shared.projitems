@@ -10,8 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Lexer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Model\PublicToken.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Model\Token.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token.cs" />
   </ItemGroup>
 </Project>

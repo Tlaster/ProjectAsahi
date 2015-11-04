@@ -1,4 +1,14 @@
-﻿TAB
+﻿#define MultipleLanguage=false;
+#define TextLayoutBackground="Data\Image\System\TextLayoutBackground.png";
+#define ImageWidth=1280;
+#define ImageHeight=720;
+#define FontSize=30;
+TAB
+{
+	#BGM="Data\Sound\BGM\bgm50.m4a";
+	#Background="Data\Image\BackGround\Title.png";
+}
+TAB
 {
 	Content
 	{
