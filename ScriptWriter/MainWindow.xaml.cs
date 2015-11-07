@@ -12,6 +12,10 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Xml;
 using System.Linq;
+using ICSharpCode.AvalonEdit.CodeCompletion;
+using System.Text;
+using System.Diagnostics;
+using System;
 
 namespace ScriptWriter
 {
@@ -20,8 +24,21 @@ namespace ScriptWriter
     /// </summary> 
     public partial class MainWindow
     {
+        //BGM|Chara|Background|Face|Content)|(Path|Position_X|Position_Y|Name|Value|Method|Title|Time|Voice|Deep|NextFile|MultipleLanguage|TextLayoutBackground|ImageWidth|ImageHeight|FontSize|DefaultLanguage)|(TAB|SELECTION)|(#define
         private FoldingManager _foldingManager;
         private BraceFoldingStrategy _foldingStrategy;
+        private CompletionWindow _completionWindow;
+        private StringBuilder _inputText;
+        private IList<ICompletionData> _completeData { get; } 
+
+        private void OnComplete(CompletionData obj)
+        {
+            var index = textEditor.SelectionStart -_inputText.Length;
+            textEditor.Text = textEditor.Text.Remove(index, _inputText.Length);
+            textEditor.Text = textEditor.Text.Insert(index, obj.Text);
+            textEditor.SelectionStart = index + obj.Text.Length;
+            _inputText.Clear();
+        }
 
         public MainWindow()
         {
@@ -30,6 +47,41 @@ namespace ScriptWriter
             {
                 textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             }
+            _completeData = new List<ICompletionData>()
+            {
+                new CompletionData(OnComplete,"#define"),
+                new CompletionData(OnComplete,"#BGM"),
+                new CompletionData(OnComplete,"#Background"),
+                new CompletionData(OnComplete,"#Face"),
+                new CompletionData(OnComplete,"#Content"),
+                new CompletionData(OnComplete,"BGM"),
+                new CompletionData(OnComplete,"Background"),
+                new CompletionData(OnComplete,"Face"),
+                new CompletionData(OnComplete,"Chara"),
+                new CompletionData(OnComplete,"Content"),
+                new CompletionData(OnComplete,"Path"),
+                new CompletionData(OnComplete,"Position_X"),
+                new CompletionData(OnComplete,"Position_Y"),
+                new CompletionData(OnComplete,"Name"),
+                new CompletionData(OnComplete,"Value"),
+                new CompletionData(OnComplete,"Method"),
+                new CompletionData(OnComplete,"Title"),
+                new CompletionData(OnComplete,"Time"),
+                new CompletionData(OnComplete,"Voice"),
+                new CompletionData(OnComplete,"Deep"),
+                new CompletionData(OnComplete,"NextFile"),
+                new CompletionData(OnComplete,"MultipleLanguage"),
+                new CompletionData(OnComplete,"TextLayoutBackground"),
+                new CompletionData(OnComplete,"ImageWidth"),
+                new CompletionData(OnComplete,"ImageHeight"),
+                new CompletionData(OnComplete,"FontSize"),
+                new CompletionData(OnComplete,"DefaultLanguage"),
+                new CompletionData(OnComplete,"TAB"),
+                new CompletionData(OnComplete,"SELECTION"),
+            };
+
+            _inputText = new StringBuilder();
+            textEditor.TextArea.SelectionChanged += TextArea_SelectionChanged;
             textEditor.TextArea.PreviewKeyDown += TextArea_KeyDown;
             textEditor.TextArea.PreviewTextInput += TextArea_PreviewTextInput;
             _foldingManager = FoldingManager.Install(textEditor.TextArea);
@@ -38,8 +90,83 @@ namespace ScriptWriter
             textEditor.TextChanged += TextEditor_TextChanged;
         }
 
+        private void TextArea_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text.Length == 1)
+            {
+                switch (e.Text)
+                {
+                    case "{":
+                        SetText("{ }", 2);
+                        e.Handled = true;
+                        break;
+                    case "=":
+                        SetText("=\"\"", 2);
+                        e.Handled = true;
+                        break;
+                    case "\"":
+                        if (textEditor.SelectionStart != textEditor.Text.Length && textEditor.Text[textEditor.SelectionStart] == '\"')
+                            textEditor.SelectionStart++;
+                        else
+                            SetText("\"\"", 1);
+                        e.Handled = true;
+                        break;
+                    case "}":
+                        if (textEditor.SelectionStart != textEditor.Text.Length && textEditor.Text[textEditor.SelectionStart] == '}')
+                        {
+                            textEditor.SelectionStart++;
+                            e.Handled = true;
+                        }
+                        break;
+                    default:
+                        {
+                            if (e.Text != " " && e.Text != ";")
+                            {
+                                _inputText.Append(e.Text);
+                            }
+                            else
+                            {
+                                _inputText.Clear();
+                            }
+                            if (_inputText.Length > 0)
+                            {
+                                _completionWindow = new CompletionWindow(textEditor.TextArea);
+                                Debug.WriteLine(_inputText.ToString());
+                                foreach (var item in _completeData.Select(item => item.Text.StartsWith(_inputText.ToString(), StringComparison.CurrentCultureIgnoreCase) ? item : null))
+                                {
+                                    if (item != null)
+                                    {
+                                        _completionWindow.CompletionList.CompletionData.Add(item);
+                                    }
+                                }
+                                _completionWindow.Closed += delegate { _completionWindow = null; };
+                                if (_completionWindow.CompletionList.CompletionData.Count > 0)
+                                {
+                                    _completionWindow.Show();
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
+        private void TextArea_SelectionChanged(object sender, EventArgs e)//TODO:it doesn't work
+        {
+            _inputText.Clear();
+        }
+        
+
         private void TextArea_KeyDown(object sender, KeyEventArgs e)
         {
+            if (((int)e.Key < 44 || (int)e.Key > 69)&&e.Key != Key.Back)
+            {
+                _inputText.Clear();
+            }
+            else if(e.Key == Key.Back && _inputText.Length > 0)
+            {
+                _inputText.Remove(_inputText.Length - 1, 1);
+            }
             switch (e.Key)
             {
                 case Key.Return:
@@ -129,39 +256,6 @@ namespace ScriptWriter
             return isforward && isbackward;
         }
 
-        private void TextArea_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (e.Text.Length == 1)
-            {
-                switch (e.Text)
-                {
-                    case "{":
-                        SetText("{ }", 2);
-                        e.Handled = true;
-                        break;
-                    case "=":
-                        SetText("=\"\"", 2);
-                        e.Handled = true;
-                        break;
-                    case "\"":
-                        if (textEditor.SelectionStart != textEditor.Text.Length && textEditor.Text[textEditor.SelectionStart] == '\"')
-                            textEditor.SelectionStart++;
-                        else
-                            SetText("\"\"", 1);
-                        e.Handled = true;
-                        break;
-                    case "}":
-                        if (textEditor.SelectionStart != textEditor.Text.Length && textEditor.Text[textEditor.SelectionStart] == '}')
-                        {
-                            textEditor.SelectionStart++;
-                            e.Handled = true;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
 
         private void SetText(string insertStr, int select)
         {
@@ -170,7 +264,7 @@ namespace ScriptWriter
             textEditor.SelectionStart = index + select;
         }
 
-        private void TextEditor_TextChanged(object sender, System.EventArgs e)
+        private void TextEditor_TextChanged(object sender, EventArgs e)
         {
             _foldingStrategy.UpdateFoldings(_foldingManager, textEditor.Document);
         }
