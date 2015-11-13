@@ -1,27 +1,23 @@
-﻿using System;
+﻿using ScriptReader;
+using ScriptReader.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
-using ScriptReader;
-using ScriptReader.Model;
-using System.Text.RegularExpressions;
 
 namespace ScriptTest
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Reader reader = new Reader();
             reader.ReadFile();
         }
     }
 
-    class Reader
+    internal class Reader
     {
         public void ReadFile()
         {
@@ -44,7 +40,7 @@ namespace ScriptTest
                         parser.Reset();
                         if (block[block.Count - 1].Type == TokenType.Setting)
                         /// ACC will not push current item,
-                        /// it will cause error 
+                        /// it will cause error
                         {
                             parser.Push(item);
                         }
@@ -52,6 +48,7 @@ namespace ScriptTest
                 }
             }
         }
+
         private IEnumerable<string> GetFileTextLinesAsync()
         {
             var path = $"{AppDomain.CurrentDomain.BaseDirectory}1.txt";

@@ -1,10 +1,5 @@
-﻿using System;
+﻿using ScriptReader.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ScriptReader.Model;
-using Windows.Foundation;
-using Windows.Storage;
 
 namespace ScriptReader
 {
@@ -21,9 +16,9 @@ namespace ScriptReader
 
         private IList<IToken> ReadLines(string str)
         {
-            List<IToken> block = new List<IToken>();
-            Lexer lexer = new Lexer();
-            Parser parser = new Parser();
+            var block = new List<IToken>();
+            var lexer = new Lexer();
+            var parser = new Parser();
             var tokenList = lexer.ReadLine(str, 0);
             foreach (var item in tokenList)
             {
@@ -31,16 +26,14 @@ namespace ScriptReader
                 {
                     parser.Push(item);
                 } while (parser.IsLoopingForReduce);
-                if (parser.IsAccepted)
+                if (!parser.IsAccepted) continue;
+                block.Add(parser.Block);
+                parser.Reset();
+                if (block[block.Count - 1].Type == TokenType.Setting)
+                /// ACC will not push current item,
+                /// it will cause error
                 {
-                    block.Add(parser.Block);
-                    parser.Reset();
-                    if (block[block.Count - 1].Type == TokenType.Setting)
-                    /// ACC will not push current item,
-                    /// it will cause error 
-                    {
-                        parser.Push(item);
-                    }
+                    parser.Push(item);
                 }
             }
             return block;

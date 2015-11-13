@@ -1,39 +1,31 @@
-﻿using ICSharpCode.AvalonEdit.Document;
+﻿using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ScriptWriter.Common;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Resources;
-using System.Text.RegularExpressions;
+using System.Linq;
+using System.Text;
 using System.Windows.Input;
 using System.Xml;
-using System.Linq;
-using ICSharpCode.AvalonEdit.CodeCompletion;
-using System.Text;
-using System.Diagnostics;
-using System;
 
 namespace ScriptWriter
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
-    /// </summary> 
+    /// </summary>
     public partial class MainWindow
     {
-        //BGM|Chara|Background|Face|Content)|(Path|Position_X|Position_Y|Name|Value|Method|Title|Time|Voice|Deep|NextFile|MultipleLanguage|TextLayoutBackground|ImageWidth|ImageHeight|FontSize|DefaultLanguage)|(TAB|SELECTION)|(#define
-        private FoldingManager _foldingManager;
-        private BraceFoldingStrategy _foldingStrategy;
+        private readonly FoldingManager _foldingManager;
+        private readonly BraceFoldingStrategy _foldingStrategy;
         private CompletionWindow _completionWindow;
-        private StringBuilder _inputText;
-        private IList<ICompletionData> _completeData { get; } 
+        private readonly StringBuilder _inputText;
+        private IList<ICompletionData> _completeData { get; }
 
         private void OnComplete(CompletionData obj)
         {
-            var index = textEditor.SelectionStart -_inputText.Length;
+            var index = textEditor.SelectionStart - _inputText.Length;
             textEditor.Text = textEditor.Text.Remove(index, _inputText.Length);
             textEditor.Text = textEditor.Text.Insert(index, obj.Text);
             textEditor.SelectionStart = index + obj.Text.Length;
@@ -43,7 +35,7 @@ namespace ScriptWriter
         public MainWindow()
         {
             InitializeComponent();
-            using (XmlReader reader = XmlReader.Create("Syntax.xshd"))
+            using (var reader = XmlReader.Create("Syntax.xshd"))
             {
                 textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             }
@@ -92,62 +84,63 @@ namespace ScriptWriter
 
         private void TextArea_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (e.Text.Length == 1)
+            if (e.Text.Length != 1) return;
+            switch (e.Text)
             {
-                switch (e.Text)
-                {
-                    case "{":
-                        SetText("{ }", 2);
+                case "{":
+                    SetText("{ }", 2);
+                    e.Handled = true;
+                    break;
+
+                case "=":
+                    SetText("=\"\"", 2);
+                    e.Handled = true;
+                    break;
+
+                case "\"":
+                    if (textEditor.SelectionStart != textEditor.Text.Length && textEditor.Text[textEditor.SelectionStart] == '\"')
+                        textEditor.SelectionStart++;
+                    else
+                        SetText("\"\"", 1);
+                    e.Handled = true;
+                    break;
+
+                case "}":
+                    if (textEditor.SelectionStart != textEditor.Text.Length && textEditor.Text[textEditor.SelectionStart] == '}')
+                    {
+                        textEditor.SelectionStart++;
                         e.Handled = true;
-                        break;
-                    case "=":
-                        SetText("=\"\"", 2);
-                        e.Handled = true;
-                        break;
-                    case "\"":
-                        if (textEditor.SelectionStart != textEditor.Text.Length && textEditor.Text[textEditor.SelectionStart] == '\"')
-                            textEditor.SelectionStart++;
+                    }
+                    break;
+
+                default:
+                    {
+                        if (e.Text != " " && e.Text != ";")
+                        {
+                            _inputText.Append(e.Text);
+                        }
                         else
-                            SetText("\"\"", 1);
-                        e.Handled = true;
-                        break;
-                    case "}":
-                        if (textEditor.SelectionStart != textEditor.Text.Length && textEditor.Text[textEditor.SelectionStart] == '}')
                         {
-                            textEditor.SelectionStart++;
-                            e.Handled = true;
+                            _inputText.Clear();
                         }
-                        break;
-                    default:
+                        if (_inputText.Length > 0)
                         {
-                            if (e.Text != " " && e.Text != ";")
+                            _completionWindow = new CompletionWindow(textEditor.TextArea);
+                            foreach (var item in _completeData.Select(item => item.Text.StartsWith(_inputText.ToString(), StringComparison.CurrentCultureIgnoreCase) ? item : null))
                             {
-                                _inputText.Append(e.Text);
-                            }
-                            else
-                            {
-                                _inputText.Clear();
-                            }
-                            if (_inputText.Length > 0)
-                            {
-                                _completionWindow = new CompletionWindow(textEditor.TextArea);
-                                Debug.WriteLine(_inputText.ToString());
-                                foreach (var item in _completeData.Select(item => item.Text.StartsWith(_inputText.ToString(), StringComparison.CurrentCultureIgnoreCase) ? item : null))
+                                if (item != null)
                                 {
-                                    if (item != null)
-                                    {
-                                        _completionWindow.CompletionList.CompletionData.Add(item);
-                                    }
-                                }
-                                _completionWindow.Closed += delegate { _completionWindow = null; };
-                                if (_completionWindow.CompletionList.CompletionData.Count > 0)
-                                {
-                                    _completionWindow.Show();
+                                    _completionWindow.CompletionList.CompletionData.Add(item);
                                 }
                             }
+                            _completionWindow.Closed += delegate { _completionWindow = null; };
+                            if (_completionWindow.CompletionList.CompletionData.Count > 0)
+                            {
+                                _completionWindow.Show();
+                            }
                         }
-                        break;
-                }
+                    }
+                    break;
             }
         }
 
@@ -155,15 +148,14 @@ namespace ScriptWriter
         {
             _inputText.Clear();
         }
-        
 
         private void TextArea_KeyDown(object sender, KeyEventArgs e)
         {
-            if (((int)e.Key < 44 || (int)e.Key > 69)&&e.Key != Key.Back)
+            if (((int)e.Key < 44 || (int)e.Key > 69) && e.Key != Key.Back)
             {
                 _inputText.Clear();
             }
-            else if(e.Key == Key.Back && _inputText.Length > 0)
+            else if (e.Key == Key.Back && _inputText.Length > 0)
             {
                 _inputText.Remove(_inputText.Length - 1, 1);
             }
@@ -171,13 +163,14 @@ namespace ScriptWriter
             {
                 case Key.Return:
                     {
-                        if (FindSyntaxPair('{','}'))
+                        if (FindSyntaxPair('{', '}'))
                         {
                             BraceReturnHandler();
                             e.Handled = true;
                         }
                     }
                     break;
+
                 case Key.Back:
                     {
                         if (textEditor.SelectionStart == textEditor.Text.Length || textEditor.SelectionStart == 0)
@@ -191,6 +184,7 @@ namespace ScriptWriter
                         }
                     }
                     break;
+
                 default:
                     break;
             }
@@ -199,12 +193,10 @@ namespace ScriptWriter
         private void BraceReturnHandler()
         {
             var index = textEditor.SelectionStart;
-            var str = textEditor.Text.Split('\n');
             int count = 1;
             int brpos = 0;
             for (int i = index; i > 0; i--)
             {
-                var a = textEditor.Text[i];
                 if (textEditor.Text[i] == '\n')
                 {
                     brpos = i;
@@ -227,7 +219,7 @@ namespace ScriptWriter
             textEditor.SelectionStart = index + insertstr.Length - tab.Length;
         }
 
-        private bool FindSyntaxPair(char firstSyntex, char secondSyntex,bool allowSpace = true)
+        private bool FindSyntaxPair(char firstSyntex, char secondSyntex, bool allowSpace = true)
         {
             var index = textEditor.SelectionStart;
             if (!allowSpace)
@@ -240,10 +232,10 @@ namespace ScriptWriter
                     isforward = true;
                     break;
                 }
-                else if(textEditor.Text[i] != ' ' && textEditor.Text[i] != '\t')
+                else if (textEditor.Text[i] != ' ' && textEditor.Text[i] != '\t')
                     break;
             }
-            for (int i = index; i < textEditor.Text.Length ; i++)
+            for (int i = index; i < textEditor.Text.Length; i++)
             {
                 if (textEditor.Text[i] == secondSyntex)
                 {
@@ -255,7 +247,6 @@ namespace ScriptWriter
             }
             return isforward && isbackward;
         }
-
 
         private void SetText(string insertStr, int select)
         {

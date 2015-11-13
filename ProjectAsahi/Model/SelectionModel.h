@@ -9,7 +9,7 @@ namespace ProjectAsahi
 			property Platform::String^ Content;
 			property Platform::String^ NextFilePath;
 		internal:
-			SelectionModel(Platform::String^ content,Platform::String^ nextFilePath)
+			SelectionModel(Platform::String^ content, Platform::String^ nextFilePath)
 			{
 				Content = content;
 				NextFilePath = nextFilePath;

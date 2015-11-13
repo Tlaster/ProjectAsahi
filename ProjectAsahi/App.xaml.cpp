@@ -29,7 +29,6 @@ using namespace Windows::UI::Xaml::Interop;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-
 /// <summary>
 /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
 /// 已执行，逻辑上等同于 main() 或 WinMain()。
@@ -73,7 +72,6 @@ void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEvent
 	Windows::UI::Core::SystemNavigationManager::GetForCurrentView()->BackRequested += ref new Windows::Foundation::EventHandler<Windows::UI::Core::BackRequestedEventArgs ^>(this, &ProjectAsahi::App::OnBackRequested);
 }
 
-
 /// <summary>
 /// 在将要挂起应用程序执行时调用。  在不知道应用程序
 /// 无需知道应用程序会被终止还是会恢复，
@@ -83,8 +81,8 @@ void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEvent
 /// <param name="e">有关挂起请求的详细信息。</param>
 void App::OnSuspending(Object^ sender, SuspendingEventArgs^ e)
 {
-	(void) sender;	// 未使用的参数
-	(void) e;	// 未使用的参数
+	(void)sender;	// 未使用的参数
+	(void)e;	// 未使用的参数
 
 	m_directXPage->SaveInternalState(ApplicationData::Current->LocalSettings->Values);
 }
@@ -96,15 +94,13 @@ void App::OnSuspending(Object^ sender, SuspendingEventArgs^ e)
 /// <param name="args">有关恢复请求的详细信息。</param>
 void App::OnResuming(Object ^sender, Object ^args)
 {
-	(void) sender; // 未使用的参数
-	(void) args; // 未使用的参数
+	(void)sender; // 未使用的参数
+	(void)args; // 未使用的参数
 
 	m_directXPage->LoadInternalState(ApplicationData::Current->LocalSettings->Values);
 }
 
-
 void ProjectAsahi::App::OnBackRequested(Platform::Object ^sender, Windows::UI::Core::BackRequestedEventArgs ^args)
 {
-
 	Current->Exit();
 }

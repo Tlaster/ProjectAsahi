@@ -24,6 +24,5 @@ namespace ProjectAsahi
 			bool isNext;
 			bool isPressed;
 		};
-
 	}
 }

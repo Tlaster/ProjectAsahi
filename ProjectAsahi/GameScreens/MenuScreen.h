@@ -19,9 +19,6 @@ namespace ProjectAsahi
 			//{
 			//	GameScreenBase::Release();
 			//}
-
 		};
 	}
 }
-
-

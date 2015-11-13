@@ -10,21 +10,20 @@
 
     <SwapChainPanel>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <Button Click="{x:Bind Save}" Content="Save" Margin="4" Padding="4"/>
+            <Button Click="{x:Bind Save}" Content="Save" Margin="4" Padding="4" />
             <Button Click="{x:Bind Load}" Content="Load" Grid.Column="1" Margin="4" Padding="4" />
             <Button Click="{x:Bind BackLog}" Content="BackLog" Grid.Column="2" Margin="4" Padding="4" />
-            <Button Click="{x:Bind Back}" Content="Title" Grid.Column="3" Margin="4" Padding="4"/>
+            <Button Click="{x:Bind Back}" Content="Title" Grid.Column="3" Margin="4" Padding="4" />
         </Grid>
-
     </SwapChainPanel>
 </Page>

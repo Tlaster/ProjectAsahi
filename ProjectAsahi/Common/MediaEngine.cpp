@@ -9,7 +9,6 @@ using namespace concurrency;
 using namespace Windows::Foundation;
 using namespace Windows::Storage::Streams;
 
-
 class MediaEngineNotify : public IMFMediaEngineNotify
 {
 	long m_cRef;
@@ -73,8 +72,6 @@ public:
 	}
 };
 
-
-
 MediaEngine::MediaEngine()
 	:m_bstrURL(nullptr)
 {
@@ -100,8 +97,7 @@ void MediaEngine::Initialize()
 	ComPtr<IMFAttributes> spAttributes;
 	ComPtr<MediaEngineNotify> spNotify;
 
-
-	DX::ThrowIfFailed(MFStartup(MF_VERSION)); 
+	DX::ThrowIfFailed(MFStartup(MF_VERSION));
 	MULTI_QI mqi = { 0 };
 	mqi.hr = S_OK;
 	mqi.pIID = &__uuidof(IMFMediaEngineClassFactory);
@@ -144,7 +140,6 @@ void MediaEngine::Initialize()
 	SetURL(L"Why do I fucking need to pass an url when I play stream source?");
 }
 
-
 void MediaEngine::OnMediaEngineEvent(DWORD meEvent)
 {
 	switch (meEvent)
@@ -158,7 +153,6 @@ void MediaEngine::OnMediaEngineEvent(DWORD meEvent)
 
 	return;
 }
-
 
 void MediaEngine::PlayMusic(Platform::String^ szURI, bool isLoop)
 {
@@ -202,10 +196,9 @@ void MediaEngine::SetURL(Platform::String^ szURL)
 	if (m_bstrURL == 0)
 	{
 		DX::ThrowIfFailed(E_OUTOFMEMORY);
-	}  
+	}
 
 	StringCchCopyW(m_bstrURL, cchAllocationSize, szURL->Data());
 
 	return;
-
 }

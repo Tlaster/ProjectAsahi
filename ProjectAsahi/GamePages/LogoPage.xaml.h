@@ -20,6 +20,5 @@ namespace ProjectAsahi
 		void MediaEnded();
 
 		void MediaDoubleTapped();
-
 	};
 }

@@ -27,7 +27,7 @@ namespace ProjectAsahi
 			property Platform::String^ Content;
 			property Platform::String^ VoicePath;
 			property double FontSize;
-			void OnSizeChanged(Platform::Object ^sender, Windows::UI::Core::WindowSizeChangedEventArgs ^e) 
+			void OnSizeChanged(Platform::Object ^sender, Windows::UI::Core::WindowSizeChangedEventArgs ^e)
 			{
 				auto _scale = min((e->Size.Width / 1280.f), (e->Size.Height / 720.f));//TODO:change the value
 				FontSize = 30.f*_scale;
@@ -37,16 +37,16 @@ namespace ProjectAsahi
 				//for more:https://msdn.microsoft.com/en-us/library/windows/apps/jj160326.aspx about the HiloPage.cpp
 			}
 
-#pragma region INotifyPropertyChanged 
+#pragma region INotifyPropertyChanged
 		private:
 			bool _isPropertyChangedObserved;
 			event Windows::UI::Xaml::Data::PropertyChangedEventHandler^ _privatePropertyChanged;
 
 		protected:
-			/// <summary> 
-			/// Notifies listeners that a property value has changed. 
-			/// </summary> 
-			/// <param name="propertyName">Name of the property used to notify listeners.</param> 
+			/// <summary>
+			/// Notifies listeners that a property value has changed.
+			/// </summary>
+			/// <param name="propertyName">Name of the property used to notify listeners.</param>
 			void OnPropertyChanged(Platform::String^ propertyName)
 			{
 				if (_isPropertyChangedObserved)
@@ -77,9 +77,7 @@ namespace ProjectAsahi
 					}
 				}
 			}
-#pragma endregion 
+#pragma endregion
 		};
 	}
 }
-
-

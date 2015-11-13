@@ -17,5 +17,3 @@ namespace ProjectAsahi
 		};
 	}
 }
-
-

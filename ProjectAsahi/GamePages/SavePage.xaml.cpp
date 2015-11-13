@@ -72,8 +72,7 @@ void ProjectAsahi::SavePage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Naviga
 	_type = safe_cast<Entities::SavePageType>(e->Parameter);
 }
 
-
-void SavePage::SaveCommand(IUICommand^ command) 
+void SavePage::SaveCommand(IUICommand^ command)
 {
 	auto clickitem = dynamic_cast<FileManager::Model::SaveModel^>(SaveGridView->SelectedItem);
 	auto item = Common::CacheManager::SaveItemCache;
@@ -94,7 +93,6 @@ void ProjectAsahi::SavePage::Save()
 	dialog->Commands->Append(command);
 	dialog->Commands->Append(command2);
 	create_task(dialog->ShowAsync());
-
 }
 
 void ProjectAsahi::SavePage::LoadSaveList()

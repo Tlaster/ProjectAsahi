@@ -28,7 +28,6 @@ namespace ProjectAsahi
 
 		Entities::GameState GetCurrentGameState();
 
-
 	private:
 		void CheckScreenType();
 		void GoBack();

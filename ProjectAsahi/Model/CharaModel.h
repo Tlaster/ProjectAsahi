@@ -7,7 +7,7 @@ namespace ProjectAsahi
 		ref class CharaModel sealed
 		{
 		internal:
-			CharaModel(Platform::String^ filePath, Platform::String^ name, float pos_x, float pos_y,int deep)
+			CharaModel(Platform::String^ filePath, Platform::String^ name, float pos_x, float pos_y, int deep)
 			{
 				FilePath = filePath;
 				Name = name;
@@ -30,4 +30,3 @@ namespace ProjectAsahi
 		};
 	}
 }
-

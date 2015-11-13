@@ -61,13 +61,13 @@ namespace ProjectAsahi
 			FileManager::Model::SaveModel^ GetSaveModel();
 			Platform::Collections::Vector<Model::BackLogModel^>^ GetBackLogList();
 			property Platform::Collections::Vector<Model::SelectionModel^>^ SelectionList
-			{ 
+			{
 				Platform::Collections::Vector<Model::SelectionModel^>^ get()
-				{ 
+				{
 					auto list = _selectionList;
 					_selectionList = ref new Platform::Collections::Vector<Model::SelectionModel^>();
 					return list;
-				} 
+				}
 			};
 			void LoadFromSaveModel(FileManager::Model::SaveModel^ item);
 			void UpdateRootFrameMargin();
@@ -107,7 +107,6 @@ namespace ProjectAsahi
 			Loader^ _loader;
 			ScriptReader::Reader^ _reader;
 
-
 			Windows::Foundation::Collections::IVector<ScriptReader::Model::IToken^>^ _block;
 			Platform::Collections::Vector<Model::BackLogModel^>^ _backLogList;
 			Platform::Collections::Vector<Model::SelectionModel^>^ _selectionList;
@@ -120,7 +119,6 @@ namespace ProjectAsahi
 
 			MediaEngine^ _backGroundMusic;
 			MediaEngine^ _charaVoice;
-
 
 			Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> _color_black;
 			Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_textForeground;
@@ -146,7 +144,6 @@ namespace ProjectAsahi
 			Model::SettingModel<float>^ _imageHeight;
 			Model::SettingModel<float>^ _imageWidth;
 			Model::SettingModel<float>^ _fontSize;
-			
 
 			float _imageScale;
 			float _contentFontSize;
@@ -221,5 +218,3 @@ namespace ProjectAsahi
 		};
 	}
 }
-
-

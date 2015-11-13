@@ -7,7 +7,6 @@ using namespace DirectX;
 using namespace ProjectAsahi::Entities;
 using namespace ProjectAsahi::Common;
 
-
 MenuScreen::MenuScreen(const std::shared_ptr<DX::DeviceResources>& deviceResources, Interpreter^ interpreter)
 {
 	m_deviceResources = deviceResources;
@@ -20,5 +19,3 @@ void ProjectAsahi::Screen::MenuScreen::Update(float timeTotal, float timeDelta)
 {
 	_interpreter->Update(timeTotal, timeDelta);
 }
-
-

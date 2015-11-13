@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:ScriptWriter"
         mc:Ignorable="d"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"					  
-        GlowBrush="{DynamicResource AccentColorBrush}"	
+        Background="{DynamicResource MaterialDesignPaper}"
+        GlowBrush="{DynamicResource AccentColorBrush}"
         xmlns:avalonEdit="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
@@ -15,7 +15,7 @@
         Title="ScriptWriter" Height="350" Width="525">
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
-            <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton" Height="{Binding LeftWindowCommands.ActualHeight, ElementName=metroWindow, Mode=OneWay}" Width="{Binding Height, RelativeSource={RelativeSource Self}}"/>
+            <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton" Height="{Binding LeftWindowCommands.ActualHeight, ElementName=metroWindow, Mode=OneWay}" Width="{Binding Height, RelativeSource={RelativeSource Self}}" />
         </controls:WindowCommands>
     </controls:MetroWindow.LeftWindowCommands>
     <controls:MetroWindow.RightWindowCommands>
@@ -31,8 +31,8 @@
     </controls:MetroWindow.RightWindowCommands>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <wpf:DrawerHost Grid.Row="1" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
             <wpf:DrawerHost.LeftDrawerContent>
@@ -145,12 +145,12 @@
                                 </Viewbox>
                             </Button>
                             <Separator />
-                            <Label Content="Font size:" VerticalAlignment="Center"/>
+                            <Label Content="Font size:" VerticalAlignment="Center" />
                             <ComboBox x:Name="comboBox">
-                                <ComboBoxItem IsSelected="True" Content="14"/>
-                                <ComboBoxItem Content="16"/>
-                                <ComboBoxItem Content="18"/>
-                                <ComboBoxItem Content="20"/>
+                                <ComboBoxItem IsSelected="True" Content="14" />
+                                <ComboBoxItem Content="16" />
+                                <ComboBoxItem Content="18" />
+                                <ComboBoxItem Content="20" />
                             </ComboBox>
                             <CheckBox>
                                 Check
@@ -172,7 +172,7 @@
                             </Menu>
                         </ToolBar>
                     </ToolBarTray>
-                    <avalonEdit:TextEditor Name="textEditor" DockPanel.Dock="Top" FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" FontSize="{Binding SelectedItem.Content, ElementName=comboBox}" ShowLineNumbers="True"/>
+                    <avalonEdit:TextEditor Name="textEditor" DockPanel.Dock="Top" FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" FontSize="{Binding SelectedItem.Content, ElementName=comboBox}" ShowLineNumbers="True" />
                 </DockPanel>
             </Grid>
         </wpf:DrawerHost>

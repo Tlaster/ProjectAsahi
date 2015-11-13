@@ -26,7 +26,7 @@ namespace ProjectAsahi
 	private:
 		// XAML 低级渲染事件处理程序。
 		void OnRendering(Platform::Object^ sender, Platform::Object^ args);
-		
+
 		// DisplayInformation 事件处理程序。
 		void OnDpiChanged(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args);
 		void OnOrientationChanged(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args);
@@ -47,12 +47,10 @@ namespace ProjectAsahi
 
 		// 用于在 XAML 页面背景中呈现 DirectX 内容的资源。
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
-		std::unique_ptr<ProjectAsahiMain> m_main; 
+		std::unique_ptr<ProjectAsahiMain> m_main;
 		bool m_windowVisible;
-		
-		ProjectAsahi::Common::Timer^ m_timer;
-		void OnKeyDown(Platform::Object ^sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs ^e);	
 
+		ProjectAsahi::Common::Timer^ m_timer;
+		void OnKeyDown(Platform::Object ^sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs ^e);
 	};
 }
-

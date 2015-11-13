@@ -27,7 +27,7 @@ using namespace concurrency;
 using namespace ProjectAsahi::Entities;
 using namespace ProjectAsahi::Common;
 
-DirectXPage::DirectXPage():
+DirectXPage::DirectXPage() :
 	m_windowVisible(true),
 	m_coreInput(nullptr)
 {
@@ -53,7 +53,7 @@ DirectXPage::DirectXPage():
 	DisplayInformation::DisplayContentsInvalidated +=
 		ref new TypedEventHandler<DisplayInformation^, Object^>(this, &DirectXPage::OnDisplayContentsInvalidated);
 
-	swapChainPanel->CompositionScaleChanged += 
+	swapChainPanel->CompositionScaleChanged +=
 		ref new TypedEventHandler<SwapChainPanel^, Object^>(this, &DirectXPage::OnCompositionScaleChanged);
 	swapChainPanel->KeyDown += ref new Windows::UI::Xaml::Input::KeyEventHandler(this, &ProjectAsahi::DirectXPage::OnKeyDown);
 	swapChainPanel->SizeChanged +=
@@ -66,9 +66,8 @@ DirectXPage::DirectXPage():
 	App::RootFrame = rootFrame;
 	m_main = std::unique_ptr<ProjectAsahiMain>(new ProjectAsahiMain(m_deviceResources));
 	App::CurrentGameState = GameState::GS_LOGO;
-	m_timer = ref new Timer();	
+	m_timer = ref new Timer();
 	CompositionTarget::Rendering += ref new Windows::Foundation::EventHandler<Platform::Object ^>(this, &ProjectAsahi::DirectXPage::OnRendering);
-
 }
 
 DirectXPage::~DirectXPage()
@@ -88,7 +87,6 @@ void DirectXPage::SaveInternalState(IPropertySet^ state)
 // 针对恢复事件加载应用程序的当前状态。
 void DirectXPage::LoadInternalState(IPropertySet^ state)
 {
-
 }
 
 // 窗口事件处理程序。
@@ -99,7 +97,6 @@ void ProjectAsahi::DirectXPage::OnRendering(Platform::Object ^ sender, Platform:
 	m_main->Render();
 	m_deviceResources->Present();
 }
-
 
 // DisplayInformation 事件处理程序。
 
@@ -117,13 +114,11 @@ void DirectXPage::OnOrientationChanged(DisplayInformation^ sender, Object^ args)
 	m_main->CreateWindowSizeDependentResources();
 }
 
-
 void DirectXPage::OnDisplayContentsInvalidated(DisplayInformation^ sender, Object^ args)
 {
 	critical_section::scoped_lock lock(m_main->GetCriticalSection());
 	m_deviceResources->ValidateDevice();
 }
-
 
 void DirectXPage::OnPointerPressed(Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
@@ -158,4 +153,3 @@ void ProjectAsahi::DirectXPage::OnKeyDown(Platform::Object ^sender, Windows::UI:
 {
 	m_main->OnKeyDown(sender, e);
 }
-

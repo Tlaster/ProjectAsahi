@@ -6,7 +6,6 @@
 #include <mfapi.h>
 #include <strsafe.h>
 
-
 namespace ProjectAsahi
 {
 	namespace Common
@@ -45,5 +44,3 @@ namespace ProjectAsahi
 		};
 	}
 }
-
-

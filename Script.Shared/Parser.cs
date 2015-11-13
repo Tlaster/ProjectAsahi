@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using ScriptReader.Model;
+﻿using ScriptReader.Model;
+using System.Collections.Generic;
 
 namespace ScriptReader
 {
@@ -111,7 +110,6 @@ namespace ScriptReader
             _stateStack.Add(0);
             IsLoopingForReduce = false;
         }
-        
 
         internal void Reset()
         {

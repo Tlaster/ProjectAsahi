@@ -32,7 +32,6 @@ void ProjectAsahi::SelectionPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::N
 	SelectionList = dynamic_cast<Platform::Collections::Vector<Model::SelectionModel^>^>(e->Parameter);
 }
 
-
 void ProjectAsahi::SelectionPage::ListView_ItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e)
 {
 	//TODO:Finish Selection

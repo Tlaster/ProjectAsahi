@@ -7,16 +7,16 @@ namespace ProjectAsahi
 		ref struct SettingModel
 		{
 		internal:
-			property T Value 
+			property T Value
 			{
 				T get() { return _value; };
-				void set(T value) 
+				void set(T value)
 				{
 					_value = value;
 					_isSetted = true;
 				}
 			}
-		 	property bool IsGlobal;
+			property bool IsGlobal;
 			property bool IsSetted { bool get() { return _isSetted; }; };
 			void SetDefault(T value) { _value = value; };
 		private:

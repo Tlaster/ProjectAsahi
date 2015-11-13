@@ -50,11 +50,8 @@ void ProjectAsahiMain::CreateWindowSizeDependentResources()
 	}
 }
 
-
-
 void ProjectAsahiMain::Update(float timeTotal, float timeDelta)
 {
-
 	if (CurrentGameScreen != nullptr)
 	{
 		CurrentGameScreen->Update(timeTotal, timeDelta);
@@ -64,7 +61,6 @@ void ProjectAsahiMain::Update(float timeTotal, float timeDelta)
 
 void ProjectAsahiMain::Render()
 {
-
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
 	auto viewport = m_deviceResources->GetScreenViewport();
@@ -76,12 +72,10 @@ void ProjectAsahiMain::Render()
 	context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::Black);
 	context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-
 	if (CurrentGameScreen != nullptr)
 	{
 		CurrentGameScreen->Render();
 	}
-
 }
 
 void ProjectAsahi::ProjectAsahiMain::GoBack()
@@ -92,12 +86,10 @@ void ProjectAsahi::ProjectAsahiMain::GoBack()
 	App::CurrentGameState = _gameStateStack->GetAt(_gameStateStack->Size - 1);
 }
 
-
 Entities::GameState ProjectAsahi::ProjectAsahiMain::GetCurrentGameState()
 {
 	return _gameStateStack->GetAt(_gameStateStack->Size - 1);
 }
-
 
 void ProjectAsahiMain::CheckScreenType()
 {
@@ -175,12 +167,11 @@ void ProjectAsahiMain::CheckScreenType()
 			auto item = CacheManager::LoadItemCache;
 			if (item != nullptr)
 			{
-
 				if (_gameStateStack->Size > 1)
 				{
 					for (size_t i = 0; i < _gameStateStack->Size - 2; i++)
 					{
-						_gameStateStack->RemoveAtEnd();	
+						_gameStateStack->RemoveAtEnd();
 						App::RootFrame->BackStack->RemoveAtEnd();
 					}
 				}

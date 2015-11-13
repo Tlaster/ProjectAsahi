@@ -57,7 +57,7 @@ namespace ScriptReader
                     {
                         tokenList.Add(new Token(line, matches[i].Value, SyntaxType.Bracket));
                     }
-                    else if(matches[i].Groups[14].Success)
+                    else if (matches[i].Groups[14].Success)
                     {
                         tokenList.Add(new Token(line, matches[i].Value, SyntaxType.USD));
                     }

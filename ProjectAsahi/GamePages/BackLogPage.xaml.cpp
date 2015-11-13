@@ -46,7 +46,7 @@ void ProjectAsahi::BackLogPage::OnNavigatedTo(Windows::UI::Xaml::Navigation::Nav
 void ProjectAsahi::BackLogPage::ListItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e)
 {
 	auto clickitem = dynamic_cast<Model::BackLogModel^>(e->ClickedItem);
- 	if (clickitem->VoicePath != nullptr)
+	if (clickitem->VoicePath != nullptr)
 	{
 		_voice->PlayMusic(clickitem->VoicePath);
 	}

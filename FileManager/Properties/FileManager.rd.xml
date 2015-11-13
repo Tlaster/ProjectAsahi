@@ -28,6 +28,5 @@
   <Library Name="FileManager">
 
   	<!-- add directives for your library here -->
-
   </Library>
 </Directives>

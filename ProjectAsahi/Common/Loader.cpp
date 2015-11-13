@@ -9,15 +9,12 @@ using namespace ProjectAsahi::Common;
 using namespace Windows::Storage::Streams;
 using namespace concurrency;
 
-
 ProjectAsahi::Common::Loader::Loader(ID2D1DeviceContext1 * d2dContext, IDWriteFactory* dwFactory, IWICImagingFactory2 * wicFactory)
 	:m_d2dContext(d2dContext),
 	m_dwFactory(dwFactory),
 	m_wicFactory(wicFactory)
 {
-
 }
-
 
 void Loader::CreateD2DEffectFromFile(Platform::String^ fileName, ID2D1Effect ** effect, D2D1_VECTOR_2F &scale)
 {
@@ -66,4 +63,3 @@ void Loader::CreateD2DEffectFromFile(Platform::String^ fileName, ID2D1Effect ** 
 		});
 	});
 }
-

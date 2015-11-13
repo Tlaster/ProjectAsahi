@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "GameScreenBase.h"
 
-
 using namespace ProjectAsahi::Screen;
-
 
 void GameScreenBase::CreateWindowSizeDependentResources()
 {
@@ -13,5 +11,3 @@ void GameScreenBase::CreateWindowSizeDependentResources()
 	//m_positionX = (renderTargetSize.Width - 1280.f*m_scale) / 2.f;
 	_interpreter->OnWindowSizeChanged();
 }
-
-

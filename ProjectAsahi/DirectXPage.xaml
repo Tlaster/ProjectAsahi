@@ -8,6 +8,6 @@
     mc:Ignorable="d">
 
     <SwapChainPanel PointerMoved="OnPointerMoved" PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased" x:Name="swapChainPanel">
-        <Frame x:Name="rootFrame"/>
+        <Frame x:Name="rootFrame" />
     </SwapChainPanel>
 </Page>

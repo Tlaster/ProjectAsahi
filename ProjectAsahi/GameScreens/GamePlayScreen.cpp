@@ -14,7 +14,6 @@ GamePlayScreen::GamePlayScreen(const std::shared_ptr<DX::DeviceResources>& devic
 	CreateWindowSizeDependentResources();
 }
 
-
 void ProjectAsahi::Screen::GamePlayScreen::Update(float timeTotal, float timeDelta)
 {
 	if (isNext)
@@ -24,7 +23,6 @@ void ProjectAsahi::Screen::GamePlayScreen::Update(float timeTotal, float timeDel
 	}
 	_interpreter->Update(timeTotal, timeDelta);
 }
-
 
 void ProjectAsahi::Screen::GamePlayScreen::OnPointerPressed(Platform::Object ^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {

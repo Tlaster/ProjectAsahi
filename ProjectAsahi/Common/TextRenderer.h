@@ -79,8 +79,6 @@ namespace ProjectAsahi
 			Microsoft::WRL::ComPtr<ID2D1DeviceContext> D2DDeviceContext;
 			Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> outlineBrush;
 			Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> fillBrush;
-
 		};
 	}
 }
-

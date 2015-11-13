@@ -9,14 +9,14 @@
 
     <SwapChainPanel>
         <SwapChainPanel.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </SwapChainPanel.RowDefinitions>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind Start}" x:Name="StartButton" Content="Start" Padding="8" Margin="8" Style="{StaticResource MenuButtonStyle}"/>
-            <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind SaveList}" x:Name="SaveListButton" Content="Load" Padding="8" Margin="8" Style="{StaticResource MenuButtonStyle}"/>
-            <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind Exit}" x:Name="ExitButton" Content="Exit" Padding="8" Margin="8" Style="{StaticResource MenuButtonStyle}"/>
+            <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind Start}" x:Name="StartButton" Content="Start" Padding="8" Margin="8" Style="{StaticResource MenuButtonStyle}" />
+            <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind SaveList}" x:Name="SaveListButton" Content="Load" Padding="8" Margin="8" Style="{StaticResource MenuButtonStyle}" />
+            <Button FontSize="{ThemeResource HubHeaderThemeFontSize}" Click="{x:Bind Exit}" x:Name="ExitButton" Content="Exit" Padding="8" Margin="8" Style="{StaticResource MenuButtonStyle}" />
         </StackPanel>
     </SwapChainPanel>
 </Page>

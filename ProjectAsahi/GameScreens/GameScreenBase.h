@@ -3,7 +3,6 @@
 #include "Entities\GameState.h"
 #include "Common\Interpreter.h"
 
-
 namespace ProjectAsahi
 {
 	namespace Screen
@@ -42,14 +41,10 @@ namespace ProjectAsahi
 			float m_scale;
 			ProjectAsahi::Common::Interpreter^ _interpreter;
 
-
 			~GameScreenBase()
 			{
 				Release();
 			};
-
 		};
 	}
 }
-
-

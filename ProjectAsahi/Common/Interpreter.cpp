@@ -119,7 +119,6 @@ void ProjectAsahi::Common::Interpreter::Update(float timeTotal, float timeDelta)
 				ToNext();
 			}
 		}
-
 	}
 }
 
@@ -132,7 +131,7 @@ void ProjectAsahi::Common::Interpreter::Clear()
 	m_face.Reset();
 	_faceInitAlphaValue = 0.f;
 	_charaVoice->Stop();
-	
+
 	isSelection = false;
 	_hasVoice = false;
 }
@@ -212,7 +211,7 @@ void ProjectAsahi::Common::Interpreter::OnWindowSizeChanged()
 				DX::ThrowIfFailed(m_charaVector[i]->CharaItem->SetValue(D2D1_BITMAPSOURCE_PROP_SCALE, D2D1::Vector2F(_imageScale, _imageScale)));
 			}
 		}
-		if (!_contentShowed.empty()&&_contentShowed.size()>1&& m_textLayoutBackground!=nullptr)
+		if (!_contentShowed.empty() && _contentShowed.size()>1 && m_textLayoutBackground != nullptr)
 		{
 			DX::ThrowIfFailed(m_textLayout->SetMaxHeight(_contentHeight));
 			DX::ThrowIfFailed(m_textLayout->SetMaxWidth(_contentWidth));
@@ -361,7 +360,6 @@ void ProjectAsahi::Common::Interpreter::UpdateRootFrameMargin()
 	App::RootFrame->Margin = Windows::UI::Xaml::Thickness(positionX, positionY, positionX, positionY);
 }
 
-
 void ProjectAsahi::Common::Interpreter::Init()
 {
 	_imageHeight = ref new Model::SettingModel<float>();
@@ -427,7 +425,7 @@ void ProjectAsahi::Common::Interpreter::CharacterRenderHandler()
 {
 	auto d2dContext = m_deviceResources->GetD2DDeviceContext();
 
-	ComPtr<ID2D1Layer> layer;			
+	ComPtr<ID2D1Layer> layer;
 	for (size_t i = 0; i < m_charaVector.size(); i++)
 	{
 		if (m_charaVector[i]->CharaItem != nullptr)
@@ -447,8 +445,8 @@ void ProjectAsahi::Common::Interpreter::CharacterRenderHandler()
 					(
 						_positionX + m_charaVector[i]->Position_X*_imageWidth->Value*_scale,
 						_positionY + m_charaVector[i]->Position_Y*_imageHeight->Value*_scale
-					)
-				);
+						)
+					);
 			if (m_charaVector[i]->IsNew)
 			{
 				m_charaVector[i]->AlphaValue += 0.2;
@@ -464,7 +462,7 @@ void ProjectAsahi::Common::Interpreter::CharacterRenderHandler()
 
 void ProjectAsahi::Common::Interpreter::ContentRenderHandler()
 {
-	if (!_contentShowed.empty()&&_contentShowed.size()>1&& m_textLayoutBackground != nullptr)
+	if (!_contentShowed.empty() && _contentShowed.size() > 1 && m_textLayoutBackground != nullptr)
 	{
 		auto d2dContext = m_deviceResources->GetD2DDeviceContext();
 		d2dContext->DrawImage(m_textLayoutBackground.Get(), D2D1::Point2F(_positionX, _positionY));
@@ -716,7 +714,7 @@ void ProjectAsahi::Common::Interpreter::CharacterVectorHandler(Element ^ element
 	}
 	else if (method == L"ADD")
 	{
-		CharaModel^ chara = ref new CharaModel(path,name, pos_x, pos_y, deep);
+		CharaModel^ chara = ref new CharaModel(path, name, pos_x, pos_y, deep);
 		_loader->CreateD2DEffectFromFile(path, &chara->CharaItem, D2D1::Vector2F(_imageScale, _imageScale));
 		m_charaVector.push_back(chara);
 		sort(m_charaVector.begin(), m_charaVector.end(), [](const CharaModel^ chara1, const CharaModel^ chara2) {return chara1->Deep < chara2->Deep; });
@@ -809,7 +807,6 @@ void ProjectAsahi::Common::Interpreter::ContentHandler(ScriptReader::Model::Elem
 
 void ProjectAsahi::Common::Interpreter::ContentHandler(Platform::String ^ value)
 {
-	
 	_contentValue = value->Data();
 	_autoPlayTimeSpan = _contentValue.length() * _autoPlaySpeed;
 	_contentPosition = 1;

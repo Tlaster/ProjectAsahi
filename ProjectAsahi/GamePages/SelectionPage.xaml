@@ -6,24 +6,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:model="using:ProjectAsahi.Model"
-    >
+    xmlns:model="using:ProjectAsahi.Model">
 
     <SwapChainPanel>
         <ListView IsItemClickEnabled="True" SelectionMode="None" ItemClick="ListView_ItemClick" VerticalAlignment="Center" HorizontalAlignment="Center" ItemsSource="{x:Bind SelectionList,Mode=OneWay}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                    <Setter Property="Background" Value="#BF000000"/>
-                    <Setter Property="BorderBrush" Value="Gray"/>
-                    <Setter Property="BorderThickness" Value="2"/>
-                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="Background" Value="#BF000000" />
+                    <Setter Property="BorderBrush" Value="Gray" />
+                    <Setter Property="BorderThickness" Value="2" />
+                    <Setter Property="Margin" Value="4" />
                 </Style>
             </ListView.ItemContainerStyle>
 
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:SelectionModel">
-                    <TextBlock RequestedTheme="Dark" Text="{x:Bind Content,Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}"/>
+                    <TextBlock RequestedTheme="Dark" Text="{x:Bind Content,Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

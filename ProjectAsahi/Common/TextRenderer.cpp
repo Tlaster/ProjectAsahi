@@ -3,7 +3,6 @@
 
 using namespace ProjectAsahi::Common;
 
-
 TextRenderer::TextRenderer(
 	Microsoft::WRL::ComPtr<ID2D1Factory> D2DFactory,
 	Microsoft::WRL::ComPtr<ID2D1DeviceContext> D2DDeviceContext,
@@ -87,7 +86,6 @@ IFACEMETHODIMP TextRenderer::DrawGlyphRun(
 	return hr;
 }
 
-
 IFACEMETHODIMP TextRenderer::DrawUnderline(
 	_In_opt_ void* clientDrawingContext,
 	FLOAT baselineOriginX,
@@ -139,7 +137,6 @@ IFACEMETHODIMP TextRenderer::DrawUnderline(
 
 	return S_OK;
 }
-
 
 IFACEMETHODIMP TextRenderer::DrawStrikethrough(
 	_In_opt_ void* clientDrawingContext,
@@ -193,7 +190,6 @@ IFACEMETHODIMP TextRenderer::DrawStrikethrough(
 	return S_OK;
 }
 
-
 IFACEMETHODIMP TextRenderer::DrawInlineObject(
 	_In_opt_ void* clientDrawingContext,
 	FLOAT originX,
@@ -207,12 +203,10 @@ IFACEMETHODIMP TextRenderer::DrawInlineObject(
 	return E_NOTIMPL;
 }
 
-
 IFACEMETHODIMP_(unsigned long) TextRenderer::AddRef()
 {
 	return InterlockedIncrement(&refCount);
 }
-
 
 IFACEMETHODIMP_(unsigned long) TextRenderer::Release()
 {
@@ -226,7 +220,6 @@ IFACEMETHODIMP_(unsigned long) TextRenderer::Release()
 	return newCount;
 }
 
-
 IFACEMETHODIMP TextRenderer::IsPixelSnappingDisabled(
 	_In_opt_ void* clientDrawingContext,
 	_Out_ BOOL* isDisabled
@@ -236,7 +229,6 @@ IFACEMETHODIMP TextRenderer::IsPixelSnappingDisabled(
 	return S_OK;
 }
 
-
 IFACEMETHODIMP TextRenderer::GetCurrentTransform(
 	_In_opt_ void* clientDrawingContext,
 	_Out_ DWRITE_MATRIX* transform
@@ -245,7 +237,6 @@ IFACEMETHODIMP TextRenderer::GetCurrentTransform(
 	D2DDeviceContext->GetTransform(reinterpret_cast<D2D1_MATRIX_3X2_F*>(transform));
 	return S_OK;
 }
-
 
 IFACEMETHODIMP TextRenderer::GetPixelsPerDip(
 	_In_opt_ void* clientDrawingContext,
@@ -259,7 +250,6 @@ IFACEMETHODIMP TextRenderer::GetPixelsPerDip(
 
 	return S_OK;
 }
-
 
 IFACEMETHODIMP TextRenderer::QueryInterface(
 	IID const& riid,
@@ -288,4 +278,3 @@ IFACEMETHODIMP TextRenderer::QueryInterface(
 
 	return S_OK;
 }
-

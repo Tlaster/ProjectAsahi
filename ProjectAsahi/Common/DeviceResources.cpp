@@ -16,7 +16,7 @@ using namespace Platform;
 namespace ScreenRotation
 {
 	// 0 度 Z 旋转
-	static const XMFLOAT4X4 Rotation0( 
+	static const XMFLOAT4X4 Rotation0(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
@@ -40,7 +40,7 @@ namespace ScreenRotation
 		);
 
 	// 270 度 Z 旋转
-	static const XMFLOAT4X4 Rotation270( 
+	static const XMFLOAT4X4 Rotation270(
 		0.0f, -1.0f, 0.0f, 0.0f,
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
@@ -49,7 +49,7 @@ namespace ScreenRotation
 };
 
 // DeviceResources 的构造函数。
-DX::DeviceResources::DeviceResources() : 
+DX::DeviceResources::DeviceResources() :
 	m_screenViewport(),
 	m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_1),
 	m_d3dRenderTargetSize(),
@@ -109,7 +109,7 @@ void DX::DeviceResources::CreateDeviceIndependentResources()
 }
 
 // 配置 Direct3D 设备，并存储设备句柄和设备上下文。
-void DX::DeviceResources::CreateDeviceResources() 
+void DX::DeviceResources::CreateDeviceResources()
 {
 	// 此标志为颜色通道排序与 API 默认设置不同的图面
 	// 添加支持。要与 Direct2D 兼容，必须满足此要求。
@@ -127,7 +127,7 @@ void DX::DeviceResources::CreateDeviceResources()
 	// 请注意，应保留顺序。
 	// 请不要忘记在应用程序的说明中声明其所需的
 	// 最低功能级别。除非另行说明，否则假定所有应用程序均支持 9.1。
-	D3D_FEATURE_LEVEL featureLevels[] = 
+	D3D_FEATURE_LEVEL featureLevels[] =
 	{
 		D3D_FEATURE_LEVEL_11_1,
 		D3D_FEATURE_LEVEL_11_0,
@@ -158,7 +158,7 @@ void DX::DeviceResources::CreateDeviceResources()
 	if (FAILED(hr))
 	{
 		// 如果初始化失败，则回退到 WARP 设备。
-		// 有关 WARP 的详细信息，请参阅: 
+		// 有关 WARP 的详细信息，请参阅:
 		// http://go.microsoft.com/fwlink/?LinkId=286690
 		DX::ThrowIfFailed(
 			D3D11CreateDevice(
@@ -204,10 +204,10 @@ void DX::DeviceResources::CreateDeviceResources()
 }
 
 // 每次更改窗口大小时需要重新创建这些资源。
-void DX::DeviceResources::CreateWindowSizeDependentResources() 
+void DX::DeviceResources::CreateWindowSizeDependentResources()
 {
 	// 清除特定于上一窗口大小的上下文。
-	ID3D11RenderTargetView* nullViews[] = {nullptr};
+	ID3D11RenderTargetView* nullViews[] = { nullptr };
 	m_d3dContext->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
 	m_d3dRenderTargetView = nullptr;
 	m_d2dContext->SetTarget(nullptr);
@@ -218,7 +218,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 	// 计算必要的交换链并渲染目标大小(以像素为单位)。
 	m_outputSize.Width = m_logicalSize.Width * m_compositionScaleX;
 	m_outputSize.Height = m_logicalSize.Height * m_compositionScaleY;
-	
+
 	// 防止创建大小为零的 DirectX 内容。
 	m_outputSize.Width = max(m_outputSize.Width, 1);
 	m_outputSize.Height = max(m_outputSize.Height, 1);
@@ -248,7 +248,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 			// 如果出于任何原因移除了设备，将需要创建一个新的设备和交换链。
 			HandleDeviceLost();
 
-			// 现在一切都已设置完毕。不要继续执行此方法。HandleDeviceLost 将重新呈现此方法 
+			// 现在一切都已设置完毕。不要继续执行此方法。HandleDeviceLost 将重新呈现此方法
 			// 并正确设置新设备。
 			return;
 		}
@@ -260,7 +260,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 	else
 	{
 		// 否则，使用与现有 Direct3D 设备相同的适配器新建一个。
-		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = { 0 };
 
 		swapChainDesc.Width = lround(m_d3dRenderTargetSize.Width); // 匹配窗口的大小。
 		swapChainDesc.Height = lround(m_d3dRenderTargetSize.Height);
@@ -315,7 +315,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 				panelNative->SetSwapChain(m_swapChain.Get())
 				);
 		}, CallbackContext::Any));
-		
+
 		// 确保 DXGI 不会一次对多个帧排队。这样既可以减小延迟，
 		// 又可以确保应用程序将只在每个 VSync 之后渲染，从而最大程度地降低功率消耗。
 		DX::ThrowIfFailed(
@@ -337,21 +337,21 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		break;
 
 	case DXGI_MODE_ROTATION_ROTATE90:
-		m_orientationTransform2D = 
+		m_orientationTransform2D =
 			Matrix3x2F::Rotation(90.0f) *
 			Matrix3x2F::Translation(m_logicalSize.Height, 0.0f);
 		m_orientationTransform3D = ScreenRotation::Rotation270;
 		break;
 
 	case DXGI_MODE_ROTATION_ROTATE180:
-		m_orientationTransform2D = 
+		m_orientationTransform2D =
 			Matrix3x2F::Rotation(180.0f) *
 			Matrix3x2F::Translation(m_logicalSize.Width, m_logicalSize.Height);
 		m_orientationTransform3D = ScreenRotation::Rotation180;
 		break;
 
 	case DXGI_MODE_ROTATION_ROTATE270:
-		m_orientationTransform2D = 
+		m_orientationTransform2D =
 			Matrix3x2F::Rotation(270.0f) *
 			Matrix3x2F::Translation(0.0f, m_logicalSize.Width);
 		m_orientationTransform3D = ScreenRotation::Rotation90;
@@ -377,7 +377,6 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 	DX::ThrowIfFailed(
 		spSwapChain2->SetMatrixTransform(&inverseScale)
 		);
-	
 
 	// 创建交换链后台缓冲区的渲染目标视图。
 	ComPtr<ID3D11Texture2D> backBuffer;
@@ -395,7 +394,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 
 	// 根据需要创建用于 3D 渲染的深度模具视图。
 	CD3D11_TEXTURE2D_DESC depthStencilDesc(
-		DXGI_FORMAT_D24_UNORM_S8_UINT, 
+		DXGI_FORMAT_D24_UNORM_S8_UINT,
 		lround(m_d3dRenderTargetSize.Width),
 		lround(m_d3dRenderTargetSize.Height),
 		1, // 此深度模具视图只有一个纹理。
@@ -420,7 +419,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 			&m_d3dDepthStencilView
 			)
 		);
-	
+
 	// 设置用于确定整个窗口的 3D 渲染视区。
 	m_screenViewport = CD3D11_VIEWPORT(
 		0.0f,
@@ -433,7 +432,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 
 	// 创建与交换链后台缓冲区关联的 Direct2D 目标位图
 	// 并将其设置为当前目标。
-	D2D1_BITMAP_PROPERTIES1 bitmapProperties = 
+	D2D1_BITMAP_PROPERTIES1 bitmapProperties =
 		D2D1::BitmapProperties1(
 			D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
 			D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
@@ -524,7 +523,7 @@ void DX::DeviceResources::SetCompositionScale(float compositionScaleX, float com
 void DX::DeviceResources::ValidateDevice()
 {
 	// 如果默认适配器更改，D3D 设备将不再有效，因为该设备
-    // 已创建或该设备已移除。
+	// 已创建或该设备已移除。
 
 	// 首先，获取自设备创建以来的默认适配器信息。
 
@@ -609,7 +608,7 @@ void DX::DeviceResources::Trim()
 }
 
 // 将交换链的内容显示到屏幕上。
-void DX::DeviceResources::Present() 
+void DX::DeviceResources::Present()
 {
 	// 第一个参数指示 DXGI 进行阻止直到 VSync，这使应用程序
 	// 在下一个 VSync 前进入休眠。这将确保我们不会浪费任何周期渲染
